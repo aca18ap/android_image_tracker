@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Lab 5 Kotlin</string>
+    <string name="app_name">Team01TravelApp</string>
     <string name="title_activity_testing">testing_activity</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>

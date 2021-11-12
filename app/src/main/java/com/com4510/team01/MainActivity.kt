@@ -20,8 +20,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.com4510.team01.data.ImageData
-import com.com4510.team01.data.ImageDataDao
+import com.com4510.team01.model.data.database.ImageData
+import com.com4510.team01.model.data.database.ImageDataDao
 import kotlinx.coroutines.*
 import pl.aprilapps.easyphotopicker.*
 

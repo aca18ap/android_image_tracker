@@ -1,4 +1,4 @@
-package com.com4510.team01.data
+package com.com4510.team01.model.data.database
 
 import androidx.room.Dao
 import androidx.room.Delete

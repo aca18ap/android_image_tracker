@@ -10,7 +10,7 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.com4510.team01.data.ImageDataDao
+import com.com4510.team01.model.data.database.ImageDataDao
 import kotlinx.coroutines.*
 
 class ShowImageActivity : AppCompatActivity() {

@@ -1,4 +1,4 @@
-package com.com4510.team01.data
+package com.com4510.team01.model.data.database
 
 import android.content.Context
 import androidx.room.Database
@@ -23,7 +23,7 @@ abstract class ImageRoomDatabase: RoomDatabase() {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     ImageRoomDatabase::class.java,
-                    "lab5_database"
+                    "travelApp_database"
                 )
                     // Wipes and rebuilds instead of migrating if no Migration object specified.
                     .fallbackToDestructiveMigration()

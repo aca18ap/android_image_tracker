@@ -8,7 +8,7 @@ import android.widget.Button
 import android.widget.ImageView
 import androidx.appcompat.widget.Toolbar
 import com.google.android.material.textfield.TextInputEditText
-import com.com4510.team01.data.ImageDataDao
+import com.com4510.team01.model.data.database.ImageDataDao
 import kotlinx.coroutines.*
 
 class EditActivity : AppCompatActivity() {
