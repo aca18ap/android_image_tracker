@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.lab.lab5_kt">
+    package="com.com4510.team01">
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -19,7 +19,7 @@
     </queries>
 
     <application
-        android:name=".ImageApplication"
+        android:name="com.com4510.team01.ImageApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -27,10 +27,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Lab5_kt">
         <activity
-            android:name=".EditActivity"
+            android:name="com.com4510.team01.EditActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name="com.com4510.team01.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -39,7 +39,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ShowImageActivity"
+            android:name="com.com4510.team01.ShowImageActivity"
             android:exported="true" />
     </application>
 

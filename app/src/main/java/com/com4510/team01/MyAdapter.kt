@@ -1,4 +1,4 @@
-package com.lab.lab5_kt
+package com.com4510.team01
 
 import android.content.Context
 import android.content.Intent
@@ -9,7 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
-import com.lab.lab5_kt.data.ImageData
+import com.com4510.team01.data.ImageData
 import kotlinx.coroutines.*
 
 class MyAdapter : RecyclerView.Adapter<MyAdapter.ViewHolder> {

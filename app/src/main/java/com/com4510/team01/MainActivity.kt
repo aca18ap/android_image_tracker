@@ -1,4 +1,4 @@
-package com.lab.lab5_kt
+package com.com4510.team01
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -20,8 +20,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.lab.lab5_kt.data.ImageData
-import com.lab.lab5_kt.data.ImageDataDao
+import com.com4510.team01.data.ImageData
+import com.com4510.team01.data.ImageDataDao
 import kotlinx.coroutines.*
 import pl.aprilapps.easyphotopicker.*
 

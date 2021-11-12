@@ -1,4 +1,4 @@
-package com.lab.lab5_kt.data
+package com.com4510.team01.data
 
 import android.content.Context
 import androidx.room.Database

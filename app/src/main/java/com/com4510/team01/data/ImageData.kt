@@ -1,8 +1,7 @@
-package com.lab.lab5_kt.data
+package com.com4510.team01.data
 
 import android.graphics.Bitmap
 import androidx.room.*
-import pl.aprilapps.easyphotopicker.MediaFile
 
 /**
  * Entity data class represents a single row in the database.

@@ -1,8 +1,7 @@
-package com.lab.lab5_kt
+package com.com4510.team01
 import android.app.Activity
 import androidx.appcompat.widget.Toolbar
 import android.content.Intent
-import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
@@ -11,7 +10,7 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.lab.lab5_kt.data.ImageDataDao
+import com.com4510.team01.data.ImageDataDao
 import kotlinx.coroutines.*
 
 class ShowImageActivity : AppCompatActivity() {

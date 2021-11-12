@@ -1,4 +1,4 @@
-package com.lab.lab5_kt.data
+package com.com4510.team01.data
 
 import androidx.room.Dao
 import androidx.room.Delete

@@ -1,15 +1,14 @@
-package com.lab.lab5_kt
+package com.com4510.team01
 
 import android.app.Activity
 import android.content.Intent
-import android.graphics.BitmapFactory
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageView
 import androidx.appcompat.widget.Toolbar
 import com.google.android.material.textfield.TextInputEditText
-import com.lab.lab5_kt.data.ImageDataDao
+import com.com4510.team01.data.ImageDataDao
 import kotlinx.coroutines.*
 
 class EditActivity : AppCompatActivity() {
