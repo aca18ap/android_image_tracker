@@ -18,7 +18,7 @@ class Repository(application: Application) {
     }
 
     /**
-     *
+     * Returns every image in the databases
      */
     suspend fun getAllImages() : List<ImageData>? = withContext(Dispatchers.IO)
     {
@@ -34,28 +34,5 @@ class Repository(application: Application) {
     }
 
 
-
-    /*
-    suspend fun insertInBackground(vararg params: NumberData) = withContext(Dispatchers.IO)
-    {
-        for(param in params){
-            val insertedId: Int? = mDBDao?.insert(param)?.toInt()
-            // you may want to check if insertedId is null to confirm successful insertion
-            Log.i("MyRepository", "number generated: " + param.number.toString()
-                    + ", inserted with id: " + insertedId.toString() + "")
-        }
-    }
-    */
-
-    /**
-     * called by the UI to request the generation of a new random number
-     */
-    /*
-    suspend fun generateNewNumber() {
-        val r = Random()
-        val i1 = r.nextInt(10000 - 1) + 1
-        InsertAsyncTask(mDBDao).insertInBackground(NumberData(number = i1))
-    }
-    */
 
 }

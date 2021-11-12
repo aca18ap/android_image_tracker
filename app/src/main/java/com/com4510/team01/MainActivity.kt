@@ -14,16 +14,15 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.com4510.team01.model.data.database.ImageData
-import com.com4510.team01.model.data.database.ImageDataDao
 import com.com4510.team01.viewModel.TravelViewModel
 import kotlinx.coroutines.*
 import pl.aprilapps.easyphotopicker.*
@@ -32,11 +31,9 @@ import java.util.ArrayList
 
 class MainActivity : AppCompatActivity() {
 
-    private val viewModel: TravelViewModel by viewModels()
+    private var viewModel: TravelViewModel? = null
     private lateinit var mAdapter: Adapter<RecyclerView.ViewHolder>
     private lateinit var mRecyclerView: RecyclerView
-
-    //TO REFACTOR(Maybe):Should this be taken out of the Activity? To be determined
     private lateinit var easyImage: EasyImage
 
     companion object {
@@ -66,21 +63,16 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContentView(R.layout.activity_gallery)
-        val toolbar: androidx.appcompat.widget.Toolbar = findViewById(R.id.toolbar)
 
-
+        viewModel = ViewModelProvider(this)[TravelViewModel::class.java]
         mRecyclerView = findViewById(R.id.grid_recycler_view)
         // set up the RecyclerView
         val numberOfColumns = 4
         mRecyclerView.layoutManager = GridLayoutManager(this, numberOfColumns)
 
-        //Set up updating the adapter dataset
-        //ToChange: Change the entire adapter class to not have that companion itemslist (So that you could have multiple different adapters)
-        mAdapter = MyAdapter(viewModel.getImagesAsList()) as Adapter<RecyclerView.ViewHolder>
-
-
+        //Current issue with the adapter being initialized empty since (my current guess), the coroutine didn't have time to update the viewModel
+        mAdapter = MyAdapter(viewModel!!.getImagesAsList()) as Adapter<RecyclerView.ViewHolder>
         mRecyclerView.adapter = mAdapter
 
         // required by Android 6.0 +
@@ -93,8 +85,8 @@ class MainActivity : AppCompatActivity() {
             easyImage.openChooser(this@MainActivity)
         })
 
-        //To refactor: Place this code in the xml.
-        viewModel.getImages().observe(this, Observer<MutableList<ImageData>>{ images ->
+        //Binds the adapter to the viewModel. To refactor: Place this code in the xml.
+        viewModel!!.getImageList().observe(this, Observer<MutableList<ImageData>>{ images ->
             MyAdapter.items = images
         })
     }
@@ -112,10 +104,6 @@ class MainActivity : AppCompatActivity() {
             .build()
     }
 
-    /**
-     * Init data by loading from the database
-     */
-
 
     /**
      * insert a ImageData into the database
@@ -129,7 +117,10 @@ class MainActivity : AppCompatActivity() {
         easyImage.handleActivityResult(requestCode, resultCode, data, this,
             object : DefaultCallback() {
                 override fun onMediaFilesPicked(imageFiles: Array<MediaFile>, source: MediaSource) {
-                    onPhotosReturned(imageFiles)
+                    viewModel?.onPhotosReturned(imageFiles)
+                    // we tell the adapter that the data is changed
+                    mAdapter.notifyDataSetChanged()
+                    mRecyclerView.scrollToPosition(imageFiles.size - 1)
                 }
 
                 override fun onImagePickerError(error: Throwable, source: MediaSource) {
@@ -140,42 +131,6 @@ class MainActivity : AppCompatActivity() {
                     super.onCanceled(source)
                 }
             })
-    }
-
-    /**
-     * add the selected images to the grid
-     * @param returnedPhotos
-     */
-    @SuppressLint("NotifyDataSetChanged")
-    private fun onPhotosReturned(returnedPhotos: Array<MediaFile>) {
-        viewModel.addImages(getImageData(returnedPhotos))
-
-        // we tell the adapter that the data is changed and hence the grid needs
-        mAdapter.notifyDataSetChanged()
-        mRecyclerView.scrollToPosition(returnedPhotos.size - 1)
-    }
-
-    /**
-     * given a list of photos, it creates a list of ImageData objects
-     * we do not know how many elements we will have
-     * @param returnedPhotos
-     * @return
-     */
-    private fun getImageData(returnedPhotos: Array<MediaFile>): List<ImageData> {
-        val imageDataList: MutableList<ImageData> = ArrayList<ImageData>()
-        for (mediaFile in returnedPhotos) {
-            val fileNameAsTempTitle = mediaFile.file.name
-            var imageData = ImageData(
-                imageTitle = fileNameAsTempTitle,
-                imageUri = mediaFile.file.absolutePath
-            )
-            // Update the database with the newly created object
-            //var id = insertData(imageData)
-            var id = viewModel.insertDataReturnId(imageData)
-            imageData.id = id
-            imageDataList.add(imageData)
-        }
-        return imageDataList
     }
 
     /**
