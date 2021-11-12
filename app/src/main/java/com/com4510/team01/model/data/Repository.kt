@@ -1,8 +1,14 @@
 package com.com4510.team01.model.data
 
 import android.app.Application
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import com.com4510.team01.model.data.database.ImageData
 import com.com4510.team01.model.data.database.ImageDataDao
 import com.com4510.team01.model.data.database.ImageRoomDatabase
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.DisposableHandle
+import kotlinx.coroutines.withContext
 
 class Repository(application: Application) {
     private var imageDataDao: ImageDataDao? = null
@@ -10,6 +16,14 @@ class Repository(application: Application) {
     init {
         val db: ImageRoomDatabase? = ImageRoomDatabase.getDatabase(application)
         if (db != null) { imageDataDao = db.imageDataDao() }
+    }
+
+    /**
+     *
+     */
+    suspend fun getAllImages() : List<ImageData>? = withContext(Dispatchers.IO)
+    {
+        imageDataDao?.getItems()
     }
 
     /*

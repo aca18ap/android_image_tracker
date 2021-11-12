@@ -40,20 +40,6 @@ class MyAdapter : RecyclerView.Adapter<MyAdapter.ViewHolder> {
         //Use the provided View Holder on the onCreateViewHolder method to populate the
         // current row on the RecyclerView
 
-        // OLD CODE
-        // if (items[position].image != -1) {
-        //     holder.imageView.setImageResource(items[position].image)
-        // } else if (items[position].file != null) {
-        //         items[position].file?.file?.absolutePath?.let{
-        //             @OptIn(DelicateCoroutinesApi::class)
-        //             GlobalScope.launch(Dispatchers.IO){
-        //                 val myBitmap = MyAdapter.decodeSampledBitmapFromResource(it,150, 150)
-        //                 holder.imageView.setImageBitmap(myBitmap)
-        //             }
-        //         }
-
-        // }
-
         if (items[position].thumbnail == null) {
             items[position].let {
                 scope.launch {
