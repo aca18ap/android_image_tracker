@@ -9,9 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.com4510.team01.ImageApplication
 import com.com4510.team01.model.data.Repository
 import com.com4510.team01.model.data.database.ImageData
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 class TravelViewModel (application: Application) : AndroidViewModel(application) {
     private var mRepository: Repository = Repository(application)
@@ -24,13 +22,12 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
             initImagesFromDatabase()
         }
     }
-
     fun getImages(): LiveData<MutableList<ImageData>> {
         return imageList
     }
 
     /**
-     * Returns the list of images as a List, or, if it doesn't exist, it returns an empty list of images rather than null
+     * Returns the list of images as a List, or, if there are no Images, returns an empty list of images
      */
     fun getImagesAsList():List<ImageData>
     {
@@ -58,43 +55,22 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
         }
     }
 
-
-
-    //Initialize observable data
-    /*
-    init {
-        this.numberDataToDisplay = this.mRepository.getNumberData()
-    }
-    */
-
-
+    // To do: Find a way not to block the ui thread here. Worst case scenario provide a function that inserst multiple ImageData's at a time each on its own coroutine
     /**
-     * getter for the live data
-     * @return
+     * Inserts an imageData into the database and returns the id it was associated with. Warning: This does block the UI thread.
      */
-    /*
-    fun getNumberDataToDisplay(): LiveData<NumberData?>? {
-        if (this.numberDataToDisplay == null) {
-            this.numberDataToDisplay = MutableLiveData<NumberData>()
-        }
-        return this.numberDataToDisplay
+    fun insertDataReturnId(imageData: ImageData): Int = runBlocking{
+            var deferredId = async{ mRepository.insertDataReturnId(imageData)}
+            deferredId.await()
     }
-    */
-
-    /**
-     * Code that should be called by the ui that has some logic + references database. But the logic isn't necessarily
-     * applied on a model object
-     */
-    /*
-    fun generateNewNumber() {
-        viewModelScope.launch(Dispatchers.IO) { mRepository.generateNewNumber() }
-    }
-     */
-
 }
+
 
 fun  MutableLiveData<MutableList<ImageData>>.append(list: List<ImageData>) {
     val value = this.value ?: arrayListOf()
     value.addAll(list)
     this.value = value
 }
+
+
+

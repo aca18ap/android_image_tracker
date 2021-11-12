@@ -31,13 +31,13 @@ import pl.aprilapps.easyphotopicker.*
 import java.util.ArrayList
 
 class MainActivity : AppCompatActivity() {
-//    private var myDataset: MutableList<ImageData> = ArrayList<ImageData>()
+
     private val viewModel: TravelViewModel by viewModels()
-    private lateinit var daoObj: ImageDataDao
     private lateinit var mAdapter: Adapter<RecyclerView.ViewHolder>
     private lateinit var mRecyclerView: RecyclerView
+
+    //TO REFACTOR(Maybe):Should this be taken out of the Activity? To be determined
     private lateinit var easyImage: EasyImage
-    val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 
     companion object {
         val ADAPTER_ITEM_DELETED = 100
@@ -66,14 +66,11 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.activity_gallery)
         val toolbar: androidx.appcompat.widget.Toolbar = findViewById(R.id.toolbar)
 
-        //(Temporary)TO remove and add to viewModel:
 
-        daoObj = (this@MainActivity.application as ImageApplication).databaseObj.imageDataDao()
-
-        // Log.d("TAG", "message")
         mRecyclerView = findViewById(R.id.grid_recycler_view)
         // set up the RecyclerView
         val numberOfColumns = 4
@@ -96,6 +93,7 @@ class MainActivity : AppCompatActivity() {
             easyImage.openChooser(this@MainActivity)
         })
 
+        //To refactor: Place this code in the xml.
         viewModel.getImages().observe(this, Observer<MutableList<ImageData>>{ images ->
             MyAdapter.items = images
         })
@@ -124,10 +122,6 @@ class MainActivity : AppCompatActivity() {
      * Called for each image the user adds by clicking the fab button
      * Then retrieves the same image so we can have the automatically assigned id field
      */
-    private fun insertData(imageData: ImageData): Int = runBlocking {
-        var insertJob = async { daoObj.insert(imageData) }
-        insertJob.await().toInt()
-    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -176,8 +170,8 @@ class MainActivity : AppCompatActivity() {
                 imageUri = mediaFile.file.absolutePath
             )
             // Update the database with the newly created object
-//            var id = insertData(imageData)
-            var id = insertData(imageData)
+            //var id = insertData(imageData)
+            var id = viewModel.insertDataReturnId(imageData)
             imageData.id = id
             imageDataList.add(imageData)
         }
