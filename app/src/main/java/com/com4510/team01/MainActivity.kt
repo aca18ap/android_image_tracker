@@ -72,7 +72,7 @@ class MainActivity : AppCompatActivity() {
 
         //Current issue with the adapter being initialized empty since (my current guess), the coroutine didn't have time to update the viewModel
         mAdapter = MyAdapter(ArrayList<ImageData>()) as Adapter<RecyclerView.ViewHolder>
-        //Binds the adapter to the viewModel. To refactor: Place this code in the xml.
+
         mRecyclerView.adapter = mAdapter
 
         // required by Android 6.0 +
@@ -84,7 +84,7 @@ class MainActivity : AppCompatActivity() {
         fabGallery.setOnClickListener(View.OnClickListener {
             easyImage.openChooser(this@MainActivity)
         })
-
+        //Binds the adapter to the viewModel. To refactor: Place this code in the xml.
         viewModel!!.getImageList().observe(this, Observer<MutableList<ImageData>>{ images ->
             MyAdapter.items = images
         })
