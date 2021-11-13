@@ -1,4 +1,4 @@
-package com.com4510.team01
+package com.com4510.team01.view
 
 import android.app.Application
 import com.com4510.team01.model.data.database.ImageRoomDatabase

@@ -1,4 +1,4 @@
-package com.com4510.team01
+package com.com4510.team01.view
 
 import android.app.Activity
 import android.content.Intent
@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageView
 import androidx.appcompat.widget.Toolbar
+import com.com4510.team01.R
 import com.google.android.material.textfield.TextInputEditText
 import com.com4510.team01.model.data.database.ImageDataDao
 import kotlinx.coroutines.*

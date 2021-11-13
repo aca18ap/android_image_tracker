@@ -1,4 +1,4 @@
-package com.com4510.team01
+package com.com4510.team01.view
 import android.app.Activity
 import androidx.appcompat.widget.Toolbar
 import android.content.Intent
@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import com.com4510.team01.R
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.com4510.team01.model.data.database.ImageDataDao
 import kotlinx.coroutines.*

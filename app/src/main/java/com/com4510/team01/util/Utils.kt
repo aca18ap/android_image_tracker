@@ -19,9 +19,6 @@ fun Array<MediaFile>.convertToImageDataWithoutId(): List<ImageData> {
             imageTitle = fileNameAsTempTitle,
             imageUri = mediaFile.file.absolutePath
         )
-        // Update the database with the newly created object
-        //var id = insertDataReturnId(imageData)
-        //imageData.id = id
         imageDataList.add(imageData)
     }
     return imageDataList

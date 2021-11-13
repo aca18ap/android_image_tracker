@@ -1,4 +1,4 @@
-package com.com4510.team01
+package com.com4510.team01.view
 
 import android.Manifest
 import android.app.Activity
@@ -10,7 +10,6 @@ import android.content.pm.PackageManager
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -21,6 +20,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.Adapter
+import com.com4510.team01.R
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.com4510.team01.model.data.database.ImageData
 import com.com4510.team01.viewModel.TravelViewModel

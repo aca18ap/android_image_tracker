@@ -11,12 +11,12 @@ class UtilsKtTest : TestCase() {
     fun setup()
     {
         a = 5
-        print("Before all tests: a")
+        print("Before all tests:")
     }
 
     @Test
     fun testConvertToImageDataWithoutId() {
-
+        print("Start test my message")
         a = a + 1
         assertEquals(6,a)
 
@@ -24,7 +24,7 @@ class UtilsKtTest : TestCase() {
 
     @Test
     fun testAppend() {
-
+        print("Start test my message2")
         a = a + 2
         assertEquals(7,a)
     }

@@ -1,4 +1,4 @@
-package com.com4510.team01
+package com.com4510.team01.view
 
 import android.content.Context
 import android.content.Intent
@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
+import com.com4510.team01.R
 import com.com4510.team01.model.data.database.ImageData
 import kotlinx.coroutines.*
 
@@ -16,11 +17,11 @@ class MyAdapter : RecyclerView.Adapter<MyAdapter.ViewHolder> {
     private lateinit var context: Context
 
     constructor(items: List<ImageData>) : super() {
-        MyAdapter.items = items as MutableList<ImageData>
+        Companion.items = items as MutableList<ImageData>
     }
 
     constructor(cont: Context, items: List<ImageData>) : super() {
-        MyAdapter.items = items as MutableList<ImageData>
+        Companion.items = items as MutableList<ImageData>
         context = cont
     }
 
@@ -31,7 +32,7 @@ class MyAdapter : RecyclerView.Adapter<MyAdapter.ViewHolder> {
             parent, false
         )
 
-        val holder: MyAdapter.ViewHolder = ViewHolder(v)
+        val holder: ViewHolder = ViewHolder(v)
         context = parent.context
         return holder
     }
