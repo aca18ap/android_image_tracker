@@ -47,6 +47,8 @@ dependencies {
 
     // Testing libs
     testImplementation "junit:junit:$junit_version"
+    // For mocking
+    testImplementation "org.mockito:mockito-core:3.+"
     androidTestImplementation "androidx.test.ext:junit:$androix_junit_ext_version"
     // AndroidX testing lib
     androidTestImplementation "androidx.test.espresso:espresso-core:$expresso_test_version"

@@ -20,7 +20,7 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
     /**
      * Observable list of images. Contains all images a user has taken or added to the Travel app represented as ImageData.
      */
-    private var imageList: MutableLiveData<MutableList<ImageData>> = MutableLiveData<MutableList<ImageData>>()
+    private val imageList: MutableLiveData<MutableList<ImageData>> = MutableLiveData<MutableList<ImageData>>()
     init
     {
         initImageListFromDatabase()
