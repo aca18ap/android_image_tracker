@@ -1,7 +1,6 @@
 package com.com4510.team01
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
@@ -11,6 +10,7 @@ import android.content.pm.PackageManager
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -26,8 +26,6 @@ import com.com4510.team01.model.data.database.ImageData
 import com.com4510.team01.viewModel.TravelViewModel
 import kotlinx.coroutines.*
 import pl.aprilapps.easyphotopicker.*
-
-import java.util.ArrayList
 
 class MainActivity : AppCompatActivity() {
 
@@ -65,6 +63,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_gallery)
 
+
         viewModel = ViewModelProvider(this)[TravelViewModel::class.java]
         mRecyclerView = findViewById(R.id.grid_recycler_view)
         // set up the RecyclerView
@@ -72,7 +71,8 @@ class MainActivity : AppCompatActivity() {
         mRecyclerView.layoutManager = GridLayoutManager(this, numberOfColumns)
 
         //Current issue with the adapter being initialized empty since (my current guess), the coroutine didn't have time to update the viewModel
-        mAdapter = MyAdapter(viewModel!!.getImagesAsList()) as Adapter<RecyclerView.ViewHolder>
+        mAdapter = MyAdapter(ArrayList<ImageData>()) as Adapter<RecyclerView.ViewHolder>
+        //Binds the adapter to the viewModel. To refactor: Place this code in the xml.
         mRecyclerView.adapter = mAdapter
 
         // required by Android 6.0 +
@@ -85,7 +85,6 @@ class MainActivity : AppCompatActivity() {
             easyImage.openChooser(this@MainActivity)
         })
 
-        //Binds the adapter to the viewModel. To refactor: Place this code in the xml.
         viewModel!!.getImageList().observe(this, Observer<MutableList<ImageData>>{ images ->
             MyAdapter.items = images
         })
@@ -117,7 +116,7 @@ class MainActivity : AppCompatActivity() {
         easyImage.handleActivityResult(requestCode, resultCode, data, this,
             object : DefaultCallback() {
                 override fun onMediaFilesPicked(imageFiles: Array<MediaFile>, source: MediaSource) {
-                    viewModel?.onPhotosReturned(imageFiles)
+                    viewModel?.insertArrayMediaFiles(imageFiles)
                     // we tell the adapter that the data is changed
                     mAdapter.notifyDataSetChanged()
                     mRecyclerView.scrollToPosition(imageFiles.size - 1)

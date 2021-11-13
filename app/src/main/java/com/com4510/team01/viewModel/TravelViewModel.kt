@@ -20,10 +20,12 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
     /**
      * Observable list of images. Contains all images a user has taken or added to the Travel app represented as ImageData.
      */
-    private val imageList: MutableLiveData<MutableList<ImageData>> =
-        MutableLiveData<MutableList<ImageData>>().also{
-            initImagesFromDatabase()
+    private var imageList: MutableLiveData<MutableList<ImageData>> = MutableLiveData<MutableList<ImageData>>()
+    init
+    {
+        initImageListFromDatabase()
     }
+
     fun getImageList(): LiveData<MutableList<ImageData>> {
         return imageList
     }
@@ -33,17 +35,17 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
      * Inserts an imageData into the database and returns the id it was associated with. Warning: This does block the UI thread.
      */
     fun insertDataReturnId(imageData: ImageData): Int = runBlocking{
-        var deferredId = async{ mRepository.insertDataReturnId(imageData)}
+        var deferredId = async { mRepository.insertDataReturnId(imageData) }
         deferredId.await()
     }
 
     /**
-     * Handles the photos returned by EasyImage.
+     * Handles the photos returned by EasyImage. Inserts an array of MediaFiles into the database
      */
-    fun onPhotosReturned(returnedPhotos: Array<MediaFile>) {
-        var imageDataList = returnedPhotos.convertToImageDataWithoutId()
+    fun insertArrayMediaFiles(mediaFileArray: Array<MediaFile>) {
+        var imageDataList = mediaFileArray.convertToImageDataWithoutId()
         insertAndUpdateImageDataList(imageDataList)
-        addToObservableImageList(imageDataList)
+        imageList.append(imageDataList)
     }
 
     /**
@@ -55,27 +57,19 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
     }
 
     /**
-     * Function that initializes the imageList. Only gets called once, the first time imageList is used.
+     * Internal function that initializes the imageList.
      */
-    private fun initImagesFromDatabase()
+    private fun initImageListFromDatabase()
     {
         viewModelScope.launch{
-            mRepository.getAllImages()?.let { imageList.append(it) }
-            Log.d("DebugViewModel","LoadedImages:" + imageList.value.toString())
+            imageList.value = mRepository.getAllImages() as MutableList<ImageData>
         }
-    }
-    /**
-     * Internal function to add images to the imageList(No persistence)
-     */
-    private fun addToObservableImageList(list : List<ImageData>)
-    {
-        imageList.append(list)
     }
 
     //REFACTOR this to spawn a coroutine at each iteration, then wait at the end for the results to improve runtime
     //Maybe add this as a function of the Repository?
     /**
-     * Inserts a list of ImageData objects into the database. Updates the list with their generated id's
+     * Internal function that inserts a list of ImageData objects into the database. Updates the list with their generated id's
      */
     private fun insertAndUpdateImageDataList(imageDataList : List<ImageData>)
     {
