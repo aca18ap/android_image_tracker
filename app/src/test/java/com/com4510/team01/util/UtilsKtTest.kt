@@ -54,6 +54,7 @@ class UtilsKtTest : TestCase() {
             val biggerIt = it + 6
             ImageData(it, "Path$biggerIt","ImageDataTitle$biggerIt","ImageDataDescription$biggerIt","ImageDataThumbnailUrl$biggerIt")
         }
+
     }
 
     @Test

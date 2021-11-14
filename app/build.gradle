@@ -49,9 +49,14 @@ dependencies {
     testImplementation "junit:junit:$junit_version"
     // For mocking
     testImplementation "org.mockito:mockito-core:3.+"
+
+    //Android testing
     androidTestImplementation "androidx.test.ext:junit:$androix_junit_ext_version"
+    androidTestImplementation "androidx.arch.core:core-testing:2.1.0"
     // AndroidX testing lib
     androidTestImplementation "androidx.test.espresso:espresso-core:$expresso_test_version"
+    //For mocking
+    androidTestImplementation "org.mockito:mockito-android:3.12.4"
 
     // Lifecycle libs
     // implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
