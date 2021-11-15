@@ -1,4 +1,4 @@
-package com.com4510.team01
+package com.com4510.team01.view
 
 import android.Manifest
 import android.app.Activity
@@ -10,7 +10,6 @@ import android.content.pm.PackageManager
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -21,6 +20,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.Adapter
+import com.com4510.team01.R
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.com4510.team01.model.data.database.ImageData
 import com.com4510.team01.viewModel.TravelViewModel
@@ -54,6 +54,7 @@ class MainActivity : AppCompatActivity() {
                             -1, 0 -> mAdapter.notifyDataSetChanged()
                             else -> mAdapter.notifyItemRemoved(pos)
                         }
+
                     }
                 }
             }
@@ -63,16 +64,13 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_gallery)
 
-
         viewModel = ViewModelProvider(this)[TravelViewModel::class.java]
+
         mRecyclerView = findViewById(R.id.grid_recycler_view)
         // set up the RecyclerView
         val numberOfColumns = 4
         mRecyclerView.layoutManager = GridLayoutManager(this, numberOfColumns)
-
-        //Current issue with the adapter being initialized empty since (my current guess), the coroutine didn't have time to update the viewModel
         mAdapter = MyAdapter(ArrayList<ImageData>()) as Adapter<RecyclerView.ViewHolder>
-
         mRecyclerView.adapter = mAdapter
 
         // required by Android 6.0 +
@@ -84,10 +82,12 @@ class MainActivity : AppCompatActivity() {
         fabGallery.setOnClickListener(View.OnClickListener {
             easyImage.openChooser(this@MainActivity)
         })
-        //Binds the adapter to the viewModel. To refactor: Place this code in the xml.
-        viewModel!!.getImageList().observe(this, Observer<MutableList<ImageData>>{ images ->
+        //TO REFACTOR: Move this to xml. Add an observer to the imageList LiveData. This binds the adapter to the imageList.
+        viewModel!!.imageList.observe(this, Observer<MutableList<ImageData>>{ images ->
             MyAdapter.items = images
+            mAdapter.notifyDataSetChanged()
         })
+        viewModel!!.initImageListFromDatabase() // Populate the imageList observable with all the images in the database
     }
 
     /**
@@ -118,8 +118,7 @@ class MainActivity : AppCompatActivity() {
                 override fun onMediaFilesPicked(imageFiles: Array<MediaFile>, source: MediaSource) {
                     viewModel?.insertArrayMediaFiles(imageFiles)
                     // we tell the adapter that the data is changed
-                    mAdapter.notifyDataSetChanged()
-                    mRecyclerView.scrollToPosition(imageFiles.size - 1)
+                    //mRecyclerView.scrollToPosition(imageFiles.size - 1)
                 }
 
                 override fun onImagePickerError(error: Throwable, source: MediaSource) {

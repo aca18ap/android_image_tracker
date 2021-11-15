@@ -17,6 +17,12 @@ class Repository(application: Application) {
         if (db != null) { imageDataDao = db.imageDataDao() }
     }
 
+    //Separate constructor that allows passing a custom dao. For testing
+    constructor(dataSource : ImageDataDao,app : Application) : this(app)
+    {
+        imageDataDao = dataSource
+    }
+
     /**
      * Returns every image in the databases
      */
