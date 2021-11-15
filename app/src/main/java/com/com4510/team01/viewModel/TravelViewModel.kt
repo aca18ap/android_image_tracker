@@ -47,6 +47,24 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
         _imageList.append(imageDataList)
     }
 
+    /**
+     * Updates an imageData in the database. TO ADD: Functionality for updating position
+     */
+    fun updateImageInDatabase(imageData : ImageData, title : String? = null, description : String? = null)
+    {
+        var updatedImage : ImageData = ImageData(imageData.id,
+            imageData.imageUri,
+            title ?: imageData.imageTitle,
+        description ?: imageData.imageDescription,
+        imageData.thumbnailUri,
+        imageData.position)
+        updatedImage.thumbnail = imageData.thumbnail
+        viewModelScope.launch {
+            mRepository.updateImage(updatedImage)
+        }
+
+    }
+
 
     /**
      * Initializes the imageList to hold every image from the database

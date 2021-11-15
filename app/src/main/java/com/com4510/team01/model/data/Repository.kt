@@ -39,6 +39,14 @@ class Repository(application: Application) {
         defferedID.await()?.toInt()!!
     }
 
+    /**
+     *  Updates the database given an imageData object
+     */
+    suspend fun updateImage(imageData : ImageData) = withContext(Dispatchers.IO)
+    {
+        imageDataDao?.update(imageData)
+    }
+
 
 
 }
