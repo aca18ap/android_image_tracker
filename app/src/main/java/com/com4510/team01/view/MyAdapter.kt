@@ -53,6 +53,7 @@ class MyAdapter : RecyclerView.Adapter<MyAdapter.ViewHolder> {
                 }
             }
         }
+        else {holder.imageView.setImageBitmap(items[position].thumbnail)}
 
         holder.itemView.setOnClickListener(View.OnClickListener {
             // val intent = Intent(context, ShowImageActivity::class.java)
