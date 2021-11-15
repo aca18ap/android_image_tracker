@@ -19,6 +19,7 @@
             app:popupTheme="@style/AppTheme.PopupOverlay" />
     </com.google.android.material.appbar.AppBarLayout>
 
+
     <include layout="@layout/content_camera" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -29,4 +30,5 @@
         android:layout_margin="@dimen/fab_margin"
         app:fabSize="normal"
         android:src="@drawable/ic_gallery_black_24dp" />
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
