@@ -26,7 +26,8 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
      * Observable list of images. Contains all images in the database
      */
     private val _imageList: MutableLiveData<MutableList<ImageData>> = MutableLiveData<MutableList<ImageData>>()
-    val imageList : LiveData<MutableList<ImageData>> get() = _imageList
+    val imageList : LiveData<MutableList<ImageData>>
+    get() = _imageList
 
     /**
      * Observable list of images to be used with searching. The search function given a string updates this livedata with
