@@ -3,7 +3,6 @@ package com.com4510.team01.viewModel
 import android.app.Application
 import android.content.Context
 import android.net.Uri
-import android.util.Log
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
@@ -60,7 +59,7 @@ class TravelViewModelTest : TestCase() {
     fun testInitData()
     {
 
-        viewModel.initImageListFromDatabase()
+        viewModel.updateImageList()
         val returnedImageList = viewModel.imageList.getOrAwaitValue()
         //Check that the livedata update is correct
 
@@ -78,7 +77,7 @@ class TravelViewModelTest : TestCase() {
             54, "Path54","ImageDataTitle54","ImageDataDescription54","ImageDataThumbnailUrl54"))
 
         //Test that it's inserted into the database
-        viewModel.initImageListFromDatabase()
+        viewModel.updateImageList()
         val returnedImageList = viewModel.imageList.getOrAwaitValue()
 
         val insertedImageExtractFromDatabase = returnedImageList.find{

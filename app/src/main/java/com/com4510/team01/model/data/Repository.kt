@@ -35,6 +35,10 @@ class Repository(application: Application) {
     {
         imageDataDao?.search(query)
     }
+    suspend fun delete(imageData: ImageData) = withContext(Dispatchers.IO)
+    {
+        imageDataDao?.delete(imageData)
+    }
 
     /**
      * Inserts an imageData object into the database. Returns the id it was assigned to

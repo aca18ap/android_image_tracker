@@ -51,10 +51,12 @@ class MainActivity : AppCompatActivity() {
                 if (pos != -1 && id != -1) {
                     if (result.resultCode == Activity.RESULT_OK) {
                         when(del_flag){
-                            -1, 0 -> mAdapter.notifyDataSetChanged()
-                            else -> mAdapter.notifyItemRemoved(pos)
+                            // TO DELETE COMMENT: Possible source of bug: I deleted the -1 and I don't know what I'm doing
+                            0,1 ->
+                            { // If anything was updated or deleted, update the imageList liveData to reflect the database
+                                viewModel?.updateImageList()
+                            }
                         }
-
                     }
                 }
             }
@@ -87,7 +89,7 @@ class MainActivity : AppCompatActivity() {
             MyAdapter.items = images
             mAdapter.notifyDataSetChanged()
         })
-        viewModel!!.initImageListFromDatabase() // Populate the imageList observable with all the images in the database
+        viewModel!!.initObservable() // Populate the imageList observable with all the images in the database
     }
 
     /**
