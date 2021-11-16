@@ -7,25 +7,19 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageView
 import androidx.appcompat.widget.Toolbar
-import androidx.lifecycle.ViewModelProvider
 import com.com4510.team01.R
 import com.google.android.material.textfield.TextInputEditText
 import com.com4510.team01.model.data.database.ImageDataDao
-import com.com4510.team01.viewModel.TravelViewModel
 import kotlinx.coroutines.*
 
 class EditActivity : AppCompatActivity() {
 
-    private var viewModel: TravelViewModel? = null
     lateinit var daoObj: ImageDataDao
     val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit)
-        viewModel = ViewModelProvider(this)[TravelViewModel::class.java]
-        viewModel!!.initImageListFromDatabase() // Populate the imageList observable with all the images in the database
-
 
         daoObj = (this@EditActivity.application as ImageApplication)
             .databaseObj.imageDataDao()

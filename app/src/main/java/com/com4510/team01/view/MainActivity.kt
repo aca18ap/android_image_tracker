@@ -10,11 +10,7 @@ import android.content.pm.PackageManager
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
 import android.view.View
-import android.widget.SearchView
-import android.widget.Toolbar
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
@@ -28,7 +24,6 @@ import com.com4510.team01.R
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.com4510.team01.model.data.database.ImageData
 import com.com4510.team01.viewModel.TravelViewModel
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.*
 import pl.aprilapps.easyphotopicker.*
 
@@ -38,7 +33,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var mAdapter: Adapter<RecyclerView.ViewHolder>
     private lateinit var mRecyclerView: RecyclerView
     private lateinit var easyImage: EasyImage
-    private lateinit var mDebugSearchView : SearchView
 
     companion object {
         val ADAPTER_ITEM_DELETED = 100
@@ -60,6 +54,7 @@ class MainActivity : AppCompatActivity() {
                             -1, 0 -> mAdapter.notifyDataSetChanged()
                             else -> mAdapter.notifyItemRemoved(pos)
                         }
+
                     }
                 }
             }
@@ -68,13 +63,10 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_gallery)
+
         viewModel = ViewModelProvider(this)[TravelViewModel::class.java]
 
-
         mRecyclerView = findViewById(R.id.grid_recycler_view)
-        mDebugSearchView = findViewById(R.id.debug_search_view)
-
-
         // set up the RecyclerView
         val numberOfColumns = 4
         mRecyclerView.layoutManager = GridLayoutManager(this, numberOfColumns)
@@ -90,39 +82,13 @@ class MainActivity : AppCompatActivity() {
         fabGallery.setOnClickListener(View.OnClickListener {
             easyImage.openChooser(this@MainActivity)
         })
-        mDebugSearchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener
-        {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                //TO ADD BEHVAIOUR: MAKE LIVEDATA SHOW QUERY STUFF
-                if (query == null)
-                    Snackbar.make(mRecyclerView, "Query was null", Snackbar.LENGTH_LONG).show()
-                else
-                    Snackbar.make(mRecyclerView, query, Snackbar.LENGTH_LONG).show()
-                return false
-            }
-            override fun onQueryTextChange(newText: String?): Boolean {
-                viewModel!!.search(newText)
-                return false
-            }
-
-        })
-        mDebugSearchView.setOnCloseListener(object : SearchView.OnCloseListener{
-            override fun onClose(): Boolean {
-                //TO ADD BEHVIOUR: Make livedata show all images
-                Snackbar.make(mRecyclerView, "Here you're reseting the view", Snackbar.LENGTH_LONG).show()
-                return false
-            }
-        })
-
         //TO REFACTOR: Move this to xml. Add an observer to the imageList LiveData. This binds the adapter to the imageList.
-        viewModel!!.searchResults.observe(this, Observer<List<ImageData>>{ images ->
-            MyAdapter.items = images as MutableList<ImageData>
+        viewModel!!.imageList.observe(this, Observer<MutableList<ImageData>>{ images ->
+            MyAdapter.items = images
             mAdapter.notifyDataSetChanged()
         })
         viewModel!!.initImageListFromDatabase() // Populate the imageList observable with all the images in the database
-
     }
-
 
     /**
      * it initialises EasyImage
@@ -248,7 +214,7 @@ class MainActivity : AppCompatActivity() {
                     this,
                     arrayOf(Manifest.permission.CAMERA),
                     REQUEST_CAMERA_CODE
-                )
+                );
             }
         }
     }
