@@ -31,6 +31,11 @@ class Repository(application: Application) {
         imageDataDao?.getItems()
     }
 
+    suspend fun search(query : String) : List<ImageData>? = withContext(Dispatchers.IO)
+    {
+        imageDataDao?.search(query)
+    }
+
     /**
      * Inserts an imageData object into the database. Returns the id it was assigned to
      */

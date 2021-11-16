@@ -101,6 +101,7 @@ class MainActivity : AppCompatActivity() {
                 return false
             }
             override fun onQueryTextChange(newText: String?): Boolean {
+                viewModel!!.search(newText)
                 return false
             }
 
@@ -114,8 +115,8 @@ class MainActivity : AppCompatActivity() {
         })
 
         //TO REFACTOR: Move this to xml. Add an observer to the imageList LiveData. This binds the adapter to the imageList.
-        viewModel!!.imageList.observe(this, Observer<MutableList<ImageData>>{ images ->
-            MyAdapter.items = images
+        viewModel!!.searchResults.observe(this, Observer<List<ImageData>>{ images ->
+            MyAdapter.items = images as MutableList<ImageData>
             mAdapter.notifyDataSetChanged()
         })
         viewModel!!.initImageListFromDatabase() // Populate the imageList observable with all the images in the database
@@ -247,7 +248,7 @@ class MainActivity : AppCompatActivity() {
                     this,
                     arrayOf(Manifest.permission.CAMERA),
                     REQUEST_CAMERA_CODE
-                );
+                )
             }
         }
     }

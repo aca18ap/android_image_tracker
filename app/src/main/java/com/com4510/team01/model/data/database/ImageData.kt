@@ -18,3 +18,11 @@ data class ImageData(
     @Ignore
     var thumbnail: Bitmap? = null
 }
+
+
+@Entity(tableName = "image_fts")
+@Fts4(contentEntity = ImageData::class)
+data class ImageDataFTS(
+    @ColumnInfo(name="title") var imageTitle: String,
+    @ColumnInfo(name="description") var imageDescription: String? = null,
+    )

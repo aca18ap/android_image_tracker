@@ -17,6 +17,20 @@ interface ImageDataDao {
     @Query("SELECT * from image ORDER by id ASC")
     suspend fun getItems(): List<ImageData>
 
+
+    // Possible future bug: This JOIN is not happening on primary keys. I'm no database expert, but I
+    // assume this could lead to issues where you have multiple images having the same title?
+    /**
+     * Returns a list of ImageData whose title OR description contain a keyword in a given query
+     */
+    @Query("""
+    SELECT *
+    FROM image
+    JOIN image_fts ON image.title = image_fts.title
+    WHERE image_fts MATCH :query
+  """)
+    suspend fun search(query: String): List<ImageData>
+
     @Query("SELECT * from image WHERE id = :id")
     fun getItem(id: Int): ImageData
 

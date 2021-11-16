@@ -3,7 +3,9 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/dev/uni/androidModule/assignment/com4510androiddev/app/src/main/res/layout/activity_edit.xml" value="0.46875" />
         <entry key="..\:/dev/uni/androidModule/assignment/com4510androiddev/app/src/main/res/layout/activity_gallery.xml" value="0.33" />
+        <entry key="..\:/dev/uni/androidModule/assignment/com4510androiddev/app/src/main/res/layout/activity_show_image.xml" value="0.46875" />
         <entry key="..\:/dev/uni/androidModule/assignment/com4510androiddev/app/src/main/res/layout/content_camera.xml" value="0.23252279635258358" />
         <entry key="..\:/dev/uni/androidModule/assignment/com4510androiddev/app/src/main/res/layout/search_view_debug.xml" value="0.44635416666666666" />
         <entry key="..\:/dev/uni/androidModule/assignment/com4510androiddev/app/src/main/res/menu/menu_test.xml" value="0.478125" />

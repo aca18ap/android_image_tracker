@@ -1,5 +1,6 @@
 package com.com4510.team01.util
 
+import android.text.Editable
 import androidx.lifecycle.MutableLiveData
 import com.com4510.team01.model.data.database.ImageData
 import pl.aprilapps.easyphotopicker.MediaFile
@@ -31,4 +32,14 @@ fun MutableLiveData<MutableList<ImageData>>.append(list: List<ImageData>) {
     val value = this.value ?: arrayListOf()
     value.addAll(list)
     this.value = value
+}
+/**
+ * Sanitizes a string to pass to search.
+ */
+fun sanitizeSearchQuery(query: String?): String {
+    if (query == null) {
+        return "";
+    }
+    val queryWithEscapedQuotes = query.replace(Regex.fromLiteral("\""), "\"\"")
+    return "*\"$queryWithEscapedQuotes\"*"
 }

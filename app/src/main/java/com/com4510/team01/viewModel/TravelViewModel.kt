@@ -2,6 +2,7 @@ package com.com4510.team01.viewModel
 
 
 import android.app.Application
+import android.text.Editable
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -10,6 +11,7 @@ import com.com4510.team01.model.data.Repository
 import com.com4510.team01.model.data.database.ImageData
 import com.com4510.team01.util.append
 import com.com4510.team01.util.convertToImageDataWithoutId
+import com.com4510.team01.util.sanitizeSearchQuery
 import kotlinx.coroutines.*
 import pl.aprilapps.easyphotopicker.MediaFile
 
@@ -27,6 +29,13 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
     private val _imageList: MutableLiveData<MutableList<ImageData>> = MutableLiveData<MutableList<ImageData>>()
     val imageList : LiveData<MutableList<ImageData>> get() = _imageList
 
+    /**
+     * Observable list of images to be used with searching. The search function given a string updates this livedata with
+     * a list of all ImageData that contains one of the keywords of the string in either the Title or its Description
+     * */
+    private val _searchResults  = MutableLiveData<MutableList<ImageData>>()
+    val searchResults : LiveData<MutableList<ImageData>>
+    get() = _searchResults
 
     // To do: Find a way not to block the ui thread here. Worst case scenario provide a function that inserts multiple ImageData's at a time each on its own coroutine
     /**
@@ -47,12 +56,12 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
         _imageList.append(imageDataList)
     }
 
-    /**
+    /**NOT TESTED BUT PROBABLY WORKS
      * Updates an imageData in the database. TO ADD: Functionality for updating position
      */
     fun updateImageInDatabase(imageData : ImageData, title : String? = null, description : String? = null)
     {
-        var updatedImage : ImageData = ImageData(imageData.id,
+        var updatedImage = ImageData(imageData.id,
             imageData.imageUri,
             title ?: imageData.imageTitle,
         description ?: imageData.imageDescription,
@@ -62,7 +71,6 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
         viewModelScope.launch {
             mRepository.updateImage(updatedImage)
         }
-
     }
 
 
@@ -73,7 +81,25 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
     {
         viewModelScope.launch{
             _imageList.value = mRepository.getAllImages() as MutableList<ImageData>
-            print("DebugPrint")
+            _searchResults.value = mRepository.getAllImages() as MutableList<ImageData>
+        }
+    }
+
+    /**
+     * Given a query, it updates the _searchResults livedata
+     */
+    fun search(query: String?) {
+        viewModelScope.launch {
+            if (query.isNullOrBlank())
+            {
+                _searchResults.value = mRepository.getAllImages() as MutableList<ImageData>
+            } else
+            {
+                val sanitizedQuery = sanitizeSearchQuery(query)
+                mRepository.search(sanitizedQuery).let {
+                    _searchResults.value = it as MutableList<ImageData>
+                }
+            }
         }
     }
 
@@ -90,6 +116,7 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
             imageData.id = id
         }
     }
+
 }
 
 
