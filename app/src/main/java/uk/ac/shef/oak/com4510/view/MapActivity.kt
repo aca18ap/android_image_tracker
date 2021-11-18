@@ -1,15 +1,13 @@
-package com.com4510.team01.view
+package uk.ac.shef.oak.com4510.view
 
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import com.com4510.team01.R
+import uk.ac.shef.oak.com4510.R
 import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
-import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.GoogleMap
@@ -25,6 +23,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
     companion object {
         private const val REQUEST_ACCESS_COARSE_LOCATION = 1121 // Used in section 1.1.2 of brief
         private const val REQUEST_ACCESS_FINE_LOCATION = 1122 // Used in section 1.1.2 of brief
+        private const val REQUEST_CLOSE_MAP = 1129
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,7 +44,8 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onMapReady(googleMap: GoogleMap) {
         println("Created Map")
         mMap = googleMap;
-        var position = if (ActivityCompat.checkSelfPermission(
+
+        if (ActivityCompat.checkSelfPermission(
                 this,
                 Manifest.permission.ACCESS_FINE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
@@ -64,7 +64,47 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
                 arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
                 REQUEST_ACCESS_FINE_LOCATION
             )
-            arrayOf(0 as Double, 0 as Double)
+        }
+
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            finishActivity(REQUEST_CLOSE_MAP)
+        } else {
+            println("Getting location...")
+            var locationCts = CancellationTokenSource()
+            var location = locationClient.getCurrentLocation(100, locationCts.token) // High accuracy
+            var position = arrayOf(location.result.latitude, location.result.longitude)
+            println("Got location")
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(position[0], position[1]), 15F))
+            println("Moved camera")
+        }
+
+        /*var position = if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            println("Asking for location permissions...")
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION),
+                REQUEST_ACCESS_COARSE_LOCATION
+            )
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                REQUEST_ACCESS_FINE_LOCATION
+            )
+            arrayOf(0.toDouble(), 0.toDouble())
         } else {
             print("Getting location...")
             var locationCts = CancellationTokenSource()
@@ -73,7 +113,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
         }
         println("Got location")
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(position[0], position[1]), 15F))
-        println("Moved camera")
+        println("Moved camera")*/
 
     }
 }
