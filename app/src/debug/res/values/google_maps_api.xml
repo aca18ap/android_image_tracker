@@ -9,10 +9,10 @@
     You can also add your credentials to an existing key, using these values:
 
     Package name:
-    com.com4510.team01
+    uk.ac.shef.oak.com4510
 
     SHA-1 certificate fingerprint:
-    B8:0E:12:D3:98:2C:26:8F:35:63:7D:39:91:A6:97:4B:8B:BB:EF:BA
+    09:02:DC:8D:0A:C3:9A:5D:D1:8E:82:15:CE:39:80:BB:46:A4:77:B7
 
     Alternatively, follow the directions here:
     https://developers.google.com/maps/documentation/android/start#get-key
@@ -20,5 +20,5 @@
     Once you have your key (it starts with "AIza"), replace the "google_maps_key"
     string in this file.
     -->
-    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyBpv6LDqQVBBVqK9uk-oY2WBmQqT83_bE4</string>
+    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyAQ4ZDGyQlHdzmY28GwFEG_JxtPFQ59sAU</string>
 </resources>
