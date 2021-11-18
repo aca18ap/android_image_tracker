@@ -2,9 +2,18 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'kotlin-kapt'
+    id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
 }
 
 android {
+    signingConfigs {
+        debug {
+            storeFile file('C:\\Users\\Daniel\\AndroidStudioProjects\\keyStore.jks')
+            storePassword 'com4510iscool'
+            keyAlias 'com4510'
+            keyPassword 'com4510iscool'
+        }
+    }
     compileSdk 31
 
     defaultConfig {
@@ -44,6 +53,8 @@ dependencies {
     implementation "androidx.appcompat:appcompat:$appcompat_version"
     // Constraint layout lib
     implementation "androidx.constraintlayout:constraintlayout:$constraintlayout_version"
+    implementation 'com.google.android.gms:play-services-maps:18.0.0'
+    implementation 'com.google.android.gms:play-services-location:18.0.0'
 
     // Testing libs
     testImplementation "junit:junit:$junit_version"

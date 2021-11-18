@@ -11,6 +11,11 @@
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="28" />
+    <uses-permission
+        android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission
+        android:name="android.permission.ACCESS_FINE_LOCATION" />
+
 
     <queries>
         <intent>
@@ -41,6 +46,12 @@
         <activity
             android:name="com.com4510.team01.view.ShowImageActivity"
             android:exported="true" />
+        <activity
+            android:name="com.com4510.team01.view.MapActivity"
+            android:exported="true" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
     </application>
 
 </manifest>
