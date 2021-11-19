@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
+import com.com4510.team01.GalleryFragment
 import com.com4510.team01.R
 import com.com4510.team01.model.data.database.ImageData
 import kotlinx.coroutines.*
@@ -59,7 +60,7 @@ class MyAdapter : RecyclerView.Adapter<MyAdapter.ViewHolder> {
             // val intent = Intent(context, ShowImageActivity::class.java)
             // intent.putExtra("position", position)
             // context.startActivity(intent)
-            val mainActivityContext = context as MainActivityOld
+            val mainActivityContext = context as GalleryFragment
             mainActivityContext.startForResult.launch(
                 Intent(context, ShowImageActivity::class.java).apply {
                     putExtra("position", position)
