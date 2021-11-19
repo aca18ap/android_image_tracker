@@ -59,7 +59,7 @@ class MyAdapter : RecyclerView.Adapter<MyAdapter.ViewHolder> {
             // val intent = Intent(context, ShowImageActivity::class.java)
             // intent.putExtra("position", position)
             // context.startActivity(intent)
-            val mainActivityContext = context as MainActivity
+            val mainActivityContext = context as MainActivityOld
             mainActivityContext.startForResult.launch(
                 Intent(context, ShowImageActivity::class.java).apply {
                     putExtra("position", position)

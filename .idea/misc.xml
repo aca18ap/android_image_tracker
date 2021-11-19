@@ -4,7 +4,18 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/albip/Documents/University/Year4/COM4510Mobile/com4510androiddev/app/src/main/res/layout/activity_edit.xml" value="0.2546875" />
+        <entry key="..\:/Users/albip/Documents/University/Year4/COM4510Mobile/com4510androiddev/app/src/main/res/layout/activity_gallery.xml" value="0.18125" />
+        <entry key="..\:/Users/albip/Documents/University/Year4/COM4510Mobile/com4510androiddev/app/src/main/res/layout/activity_main.xml" value="0.22916666666666666" />
         <entry key="..\:/Users/albip/Documents/University/Year4/COM4510Mobile/com4510androiddev/app/src/main/res/layout/activity_show_image.xml" value="0.22" />
+        <entry key="..\:/Users/albip/Documents/University/Year4/COM4510Mobile/com4510androiddev/app/src/main/res/layout/content_camera.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/albip/Documents/University/Year4/COM4510Mobile/com4510androiddev/app/src/main/res/layout/edit.xml" value="0.27447916666666666" />
+        <entry key="..\:/Users/albip/Documents/University/Year4/COM4510Mobile/com4510androiddev/app/src/main/res/layout/fragment_gallery.xml" value="0.2604166666666667" />
+        <entry key="..\:/Users/albip/Documents/University/Year4/COM4510Mobile/com4510androiddev/app/src/main/res/layout/fragment_home.xml" value="0.27447916666666666" />
+        <entry key="..\:/Users/albip/Documents/University/Year4/COM4510Mobile/com4510androiddev/app/src/main/res/layout/gallery.xml" value="0.16197916666666667" />
+        <entry key="..\:/Users/albip/Documents/University/Year4/COM4510Mobile/com4510androiddev/app/src/main/res/layout/gallery_host.xml" value="0.20572916666666666" />
+        <entry key="..\:/Users/albip/Documents/University/Year4/COM4510Mobile/com4510androiddev/app/src/main/res/layout/main_activit_host.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/albip/Documents/University/Year4/COM4510Mobile/com4510androiddev/app/src/main/res/layout/show_image.xml" value="0.16197916666666667" />
+        <entry key="..\:/Users/albip/Documents/University/Year4/COM4510Mobile/com4510androiddev/app/src/main/res/layout/show_image_fragment.xml" value="0.2604166666666667" />
       </map>
     </option>
   </component>
