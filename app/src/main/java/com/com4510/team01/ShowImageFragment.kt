@@ -14,6 +14,7 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.Toolbar
 import androidx.databinding.DataBindingUtil
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import com.com4510.team01.databinding.FragmentShowImageBinding
 import com.com4510.team01.model.data.database.ImageDataDao
@@ -33,9 +34,7 @@ import kotlinx.coroutines.SupervisorJob
  */
 class ShowImageFragment : Fragment() {
     val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
-    lateinit var daoObj: ImageDataDao
-    val args: ShowImageFragmentArgs by navArgs()
-    private var position: Int = -1
+    private val args: ShowImageFragmentArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,8 +42,8 @@ class ShowImageFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val binding = DataBindingUtil.inflate<FragmentShowImageBinding>(inflater, R.layout.fragment_show_image, container, false)
-        if (args.pos != null){
-            displayData(args.pos, binding)
+        if (args.position != -1){
+            displayData(args.position, binding)
         }
 
         return binding.root
@@ -70,9 +69,11 @@ class ShowImageFragment : Fragment() {
             descriptionTextView.text = MyAdapter.items[position].imageDescription
 
 
+
             val fabEdit: FloatingActionButton = binding.fabEdit
             fabEdit.setOnClickListener(View.OnClickListener {
-                //TODO link to navigation from showimage to editimage
+                val action = ShowImageFragmentDirections.actionShowImageFragmentToEditImageFragment(position)
+                it.findNavController().navigate(action)
             })
 
             buttonShowDescription.setOnClickListener(View.OnClickListener {

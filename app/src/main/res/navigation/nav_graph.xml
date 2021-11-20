@@ -31,8 +31,21 @@
         android:label="ShowImageFragment"
         tools:layout="@layout/fragment_show_image" >
         <argument
-            android:name="pos"
+            android:name="position"
             app:argType="integer"
-            android:defaultValue="0"/>
+            android:defaultValue="-1"/>
+        <action
+            android:id="@+id/action_showImageFragment_to_editImageFragment"
+            app:destination="@id/editImageFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/editImageFragment"
+        android:name="com.com4510.team01.EditImageFragment"
+        android:label="EditImageFragment"
+        tools:layout="@layout/fragment_edit_image">
+        <argument
+            android:name="position"
+            app:argType="integer"
+            android:defaultValue="-1"/>
     </fragment>
 </navigation>
