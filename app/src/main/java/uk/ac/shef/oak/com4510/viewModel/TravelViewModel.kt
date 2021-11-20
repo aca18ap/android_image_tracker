@@ -17,7 +17,7 @@ import pl.aprilapps.easyphotopicker.MediaFile
 class TravelViewModel (application: Application) : AndroidViewModel(application) {
     private var mRepository: Repository = Repository(application)
 
-    //Separate constructor to allow passing a different repository. For testing
+    //Separate constructor to allow passing a different repository. For testing code
     constructor(repository: Repository, app : Application) : this(app) {
         mRepository = repository
     }
