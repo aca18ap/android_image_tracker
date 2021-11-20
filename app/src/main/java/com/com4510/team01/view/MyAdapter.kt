@@ -4,13 +4,15 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
-import com.com4510.team01.GalleryFragment
-import com.com4510.team01.R
+import com.com4510.team01.*
+import com.com4510.team01.ShowImageFragmentArgs
 import com.com4510.team01.model.data.database.ImageData
 import kotlinx.coroutines.*
 
@@ -35,6 +37,14 @@ class MyAdapter : RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
         val holder: ViewHolder = ViewHolder(v)
         context = parent.context
+        holder.itemView.setOnClickListener(View.OnClickListener {
+            // val intent = Intent(context, ShowImageActivity::class.java)
+            // intent.putExtra("position", position)
+            // context.startActivity(intent)
+
+            it.findNavController().navigate(R.id.action_galleryFragment_to_showImageFragment)
+
+        })
         return holder
     }
 
@@ -55,26 +65,21 @@ class MyAdapter : RecyclerView.Adapter<MyAdapter.ViewHolder> {
             }
         }
         else {holder.imageView.setImageBitmap(items[position].thumbnail)}
+        holder.itemView.setOnClickListener{view: View ->
+            val action = GalleryFragmentDirections.actionGalleryFragmentToShowImageFragment(position)
+            view.findNavController().navigate(action)
+        }
 
-        holder.itemView.setOnClickListener(View.OnClickListener {
-            // val intent = Intent(context, ShowImageActivity::class.java)
-            // intent.putExtra("position", position)
-            // context.startActivity(intent)
-            val mainActivityContext = context as GalleryFragment
-            mainActivityContext.startForResult.launch(
-                Intent(context, ShowImageActivity::class.java).apply {
-                    putExtra("position", position)
-                }
-            )
-        })
     }
 
     override fun getItemCount(): Int {
         return items.size
     }
 
-    class ViewHolder constructor(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class ViewHolder constructor(itemView: View) : RecyclerView.ViewHolder(itemView){
         var imageView: ImageView = itemView.findViewById<View>(R.id.image_item) as ImageView
+
+
 
     }
 

@@ -10,7 +10,6 @@
         android:name="com.com4510.team01.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home">
-
         <action
             android:id="@+id/action_homeFragment_to_galleryFragment"
             app:destination="@id/galleryFragment" />
@@ -19,5 +18,21 @@
         android:id="@+id/galleryFragment"
         android:name="com.com4510.team01.GalleryFragment"
         android:label="fragment_gallery"
-        tools:layout="@layout/fragment_gallery" />
+        tools:layout="@layout/fragment_gallery" >
+        <action
+            android:id="@+id/action_galleryFragment_to_showImageFragment"
+            android:name="com.com4510.team01.ShowImageAction"
+            app:destination="@id/showImageFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/showImageFragment"
+        android:name="com.com4510.team01.ShowImageFragment"
+        android:label="ShowImageFragment"
+        tools:layout="@layout/fragment_show_image" >
+        <argument
+            android:name="pos"
+            app:argType="integer"
+            android:defaultValue="0"/>
+    </fragment>
 </navigation>
