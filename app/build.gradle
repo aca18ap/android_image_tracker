@@ -6,14 +6,14 @@ plugins {
 }
 
 android {
-  //  signingConfigs {
-       // debug {
-         //   storeFile file('C:\\Users\\Daniel\\AndroidStudioProjects\\keyStore.jks')
-         //   storePassword 'com4510iscool'
-         //   keyAlias 'com4510'
-         //   keyPassword 'com4510iscool'
-       // }
-    //}
+    signingConfigs {
+        debug {
+            storeFile file('keyStore.jks')
+            storePassword 'com4510iscool'
+            keyAlias 'com4510'
+            keyPassword 'com4510iscool'
+        }
+    }
     compileSdk 31
 
     defaultConfig {
