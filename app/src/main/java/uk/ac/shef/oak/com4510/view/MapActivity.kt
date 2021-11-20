@@ -66,54 +66,23 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
             )
         }
 
-        if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            finishActivity(REQUEST_CLOSE_MAP)
-        } else {
-            println("Getting location...")
-            var locationCts = CancellationTokenSource()
-            var location = locationClient.getCurrentLocation(100, locationCts.token) // High accuracy
-            var position = arrayOf(location.result.latitude, location.result.longitude)
-            println("Got location")
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(position[0], position[1]), 15F))
-            println("Moved camera")
-        }
-
-        /*var position = if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            println("Asking for location permissions...")
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION),
-                REQUEST_ACCESS_COARSE_LOCATION
-            )
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                REQUEST_ACCESS_FINE_LOCATION
-            )
-            arrayOf(0.toDouble(), 0.toDouble())
-        } else {
-            print("Getting location...")
-            var locationCts = CancellationTokenSource()
-            var location = locationClient.getCurrentLocation(100, locationCts.token) // High accuracy
-            arrayOf(location.result.latitude, location.result.longitude)
-        }
-        println("Got location")
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(position[0], position[1]), 15F))
-        println("Moved camera")*/
-
+//        if (ActivityCompat.checkSelfPermission(
+//                this,
+//                Manifest.permission.ACCESS_FINE_LOCATION
+//            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+//                this,
+//                Manifest.permission.ACCESS_COARSE_LOCATION
+//            ) != PackageManager.PERMISSION_GRANTED
+//        ) {
+//            finishActivity(REQUEST_CLOSE_MAP)
+//        } else {
+//            println("Getting location...")
+//            var locationCts = CancellationTokenSource()
+//            var location = locationClient.getCurrentLocation(100, locationCts.token) // High accuracy
+//            var position = arrayOf(location.result.latitude, location.result.longitude)
+//            println("Got location")
+//            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(position[0], position[1]), 15F))
+//            println("Moved camera")
+//        }
     }
 }
