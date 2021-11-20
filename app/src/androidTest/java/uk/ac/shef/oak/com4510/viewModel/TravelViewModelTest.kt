@@ -10,7 +10,11 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import uk.ac.shef.oak.com4510.model.data.Repository
 import uk.ac.shef.oak.com4510.model.data.database.ImageData
 import uk.ac.shef.oak.com4510.model.data.database.ImageRoomDatabase
+<<<<<<< HEAD:app/src/androidTest/java/uk/ac/shef/oak/com4510/viewModel/TravelViewModelTest.kt
 import com.getOrAwaitValue
+=======
+import uk.getOrAwaitValue
+>>>>>>> Member1PrivateWork:app/src/androidTest/java/com/com4510/team01/viewModel/TravelViewModelTest.kt
 import junit.framework.TestCase
 import org.junit.Before
 import org.junit.Rule
@@ -59,7 +63,7 @@ class TravelViewModelTest : TestCase() {
     fun testInitData()
     {
 
-        viewModel.initImageListFromDatabase()
+        viewModel.updateImageList()
         val returnedImageList = viewModel.imageList.getOrAwaitValue()
         //Check that the livedata update is correct
 
@@ -73,11 +77,13 @@ class TravelViewModelTest : TestCase() {
     @Test
     fun insertDataReturnId() {
 
-        val id = viewModel.insertDataReturnId(ImageData(
-            54, "Path54","ImageDataTitle54","ImageDataDescription54","ImageDataThumbnailUrl54"))
+        val id = viewModel.insertDataReturnId(
+            ImageData(
+            54, "Path54","ImageDataTitle54","ImageDataDescription54","ImageDataThumbnailUrl54")
+        )
 
         //Test that it's inserted into the database
-        viewModel.initImageListFromDatabase()
+        viewModel.updateImageList()
         val returnedImageList = viewModel.imageList.getOrAwaitValue()
 
         val insertedImageExtractFromDatabase = returnedImageList.find{

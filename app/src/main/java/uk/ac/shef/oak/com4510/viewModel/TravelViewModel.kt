@@ -18,15 +18,16 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
     private var mRepository: Repository = Repository(application)
 
     //Separate constructor to allow passing a different repository. For testing
-    constructor(repository:Repository,app : Application) : this(app) {
+    constructor(repository: Repository, app : Application) : this(app) {
         mRepository = repository
     }
 
     /**
-     * Observable list of images. Contains all images a user has taken or added to the Travel app represented as ImageData.
+     * Observable list of images. Contains all images in the database
      */
     private val _imageList: MutableLiveData<MutableList<ImageData>> = MutableLiveData<MutableList<ImageData>>()
-    val imageList : LiveData<MutableList<ImageData>> get() = _imageList
+    val imageList : LiveData<MutableList<ImageData>>
+    get() = _imageList
 
     /**
      * Observable list of images to be used with searching. The search function given a string updates this livedata with
@@ -39,7 +40,7 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
     // To do: Find a way not to block the ui thread here. Worst case scenario provide a function that inserts multiple ImageData's at a time each on its own coroutine
     /**
      * Inserts an imageData into the database and returns the id it was associated with. Warning: This does block the UI thread.
-     * This does not update the imageList livedata object
+     * This does not update any liveData object
      */
     fun insertDataReturnId(imageData: ImageData): Int = runBlocking{
         var deferredId = async { mRepository.insertDataReturnId(imageData) }
@@ -55,8 +56,8 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
         _imageList.append(imageDataList)
     }
 
-    /**NOT TESTED BUT PROBABLY WORKS
-     * Updates an imageData in the database. TO ADD: Functionality for updating position
+    /**
+     * Updates an imageData in the database. Does not update the observable LiveData TO ADD: Functionality for updating position
      */
     fun updateImageInDatabase(imageData : ImageData, title : String? = null, description : String? = null)
     {
@@ -68,20 +69,50 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
         imageData.position)
         updatedImage.thumbnail = imageData.thumbnail
         viewModelScope.launch {
-            mRepository.updateImage(updatedImage)
+             mRepository.updateImage(updatedImage)
         }
+    }
+
+    /**
+     * Given an imageData, it deletes it from the database and updates the observable liveadata
+     */
+    fun deleteImageInDatabase(imageData : ImageData)
+    {
+        viewModelScope.launch {
+            mRepository.delete(imageData)
+        }
+        //Update the livedata
+        updateImageList()
     }
 
 
     /**
-     * Initializes the imageList to hold every image from the database
+     * Initialize all observable LiveData
      */
-    fun initImageListFromDatabase()
+    fun initObservable()
+    {
+        updateImageList()
+        initSearchResults()
+    }
+    /**
+     * Updates the imageList LiveData to reflect what is in the database
+     */
+    fun updateImageList()
     {
         viewModelScope.launch{
             _imageList.value = mRepository.getAllImages() as MutableList<ImageData>
+        }
+    }
+
+    /**
+     * Initializes the searchResults LiveData to hold every image from the database
+     */
+    fun initSearchResults()
+    {
+        viewModelScope.launch{
             _searchResults.value = mRepository.getAllImages() as MutableList<ImageData>
         }
+
     }
 
     /**

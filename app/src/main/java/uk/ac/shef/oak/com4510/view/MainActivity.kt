@@ -27,6 +27,7 @@ import uk.ac.shef.oak.com4510.R
 import kotlinx.coroutines.*
 import pl.aprilapps.easyphotopicker.*
 
+
 class MainActivity : AppCompatActivity() {
 
     private var viewModel: TravelViewModel? = null
@@ -51,10 +52,15 @@ class MainActivity : AppCompatActivity() {
                 if (pos != -1 && id != -1) {
                     if (result.resultCode == Activity.RESULT_OK) {
                         when(del_flag){
-                            -1, 0 -> mAdapter.notifyDataSetChanged()
-                            else -> mAdapter.notifyItemRemoved(pos)
+                            // POTENTIAL BUG: Possible source of bug: I deleted the -1 and I don't know what I'm doing
+                            0,1 ->
+                            { // If anything was updated or deleted, update the imageList liveData to reflect the database
+                                //Comment to alberto doing the merge: This is the sort of things we could delete since we're gonna use the same
+                                //viewModel on different fragments. There would be no need to wait for the return of anything, the fragment itself
+                                //can change the livedata since it has the same viewModel
+                                viewModel?.updateImageList()
+                            }
                         }
-
                     }
                 }
             }
@@ -87,7 +93,7 @@ class MainActivity : AppCompatActivity() {
             MyAdapter.items = images
             mAdapter.notifyDataSetChanged()
         })
-        viewModel!!.initImageListFromDatabase() // Populate the imageList observable with all the images in the database
+        viewModel!!.initObservable() // Populate the imageList observable with all the images in the database
     }
 
     /**
@@ -117,8 +123,6 @@ class MainActivity : AppCompatActivity() {
             object : DefaultCallback() {
                 override fun onMediaFilesPicked(imageFiles: Array<MediaFile>, source: MediaSource) {
                     viewModel?.insertArrayMediaFiles(imageFiles)
-                    // we tell the adapter that the data is changed
-                    //mRecyclerView.scrollToPosition(imageFiles.size - 1)
                 }
 
                 override fun onImagePickerError(error: Throwable, source: MediaSource) {

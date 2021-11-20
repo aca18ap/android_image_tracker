@@ -15,7 +15,6 @@ import uk.ac.shef.oak.com4510.model.data.database.ImageDataDao
 import kotlinx.coroutines.*
 
 class ShowImageActivity : AppCompatActivity() {
-    val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
     lateinit var daoObj: ImageDataDao
 
     val startForResult =
