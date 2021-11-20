@@ -1,4 +1,4 @@
-package com.com4510.team01.view
+package com.com4510.team01.viewModel
 
 import android.content.Context
 import android.content.Intent
@@ -12,8 +12,9 @@ import android.widget.ImageView
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.com4510.team01.*
-import com.com4510.team01.ShowImageFragmentArgs
+import com.com4510.team01.view.ShowImageFragmentArgs
 import com.com4510.team01.model.data.database.ImageData
+import com.com4510.team01.view.GalleryFragmentDirections
 import kotlinx.coroutines.*
 
 class MyAdapter : RecyclerView.Adapter<MyAdapter.ViewHolder> {
@@ -38,9 +39,6 @@ class MyAdapter : RecyclerView.Adapter<MyAdapter.ViewHolder> {
         val holder: ViewHolder = ViewHolder(v)
         context = parent.context
         holder.itemView.setOnClickListener(View.OnClickListener {
-            // val intent = Intent(context, ShowImageActivity::class.java)
-            // intent.putExtra("position", position)
-            // context.startActivity(intent)
 
             it.findNavController().navigate(R.id.action_galleryFragment_to_showImageFragment)
 
@@ -57,7 +55,7 @@ class MyAdapter : RecyclerView.Adapter<MyAdapter.ViewHolder> {
                 scope.launch {
                     val bitmap =
                         decodeSampledBitmapFromResource(it.imageUri, 150, 150)
-                    bitmap?.let {
+                    bitmap.let {
                         items[position].thumbnail = it
                         holder.imageView.setImageBitmap(items[position].thumbnail)
                     }

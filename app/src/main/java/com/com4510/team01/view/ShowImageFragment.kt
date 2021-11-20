@@ -1,27 +1,16 @@
-package com.com4510.team01
+package com.com4510.team01.view
 
-import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.TextView
-import androidx.activity.result.ActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.widget.Toolbar
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
+import com.com4510.team01.R
 import com.com4510.team01.databinding.FragmentShowImageBinding
-import com.com4510.team01.model.data.database.ImageDataDao
-import com.com4510.team01.view.EditActivity
-import com.com4510.team01.view.ImageApplication
-import com.com4510.team01.view.MyAdapter
-import com.google.android.gms.maps.MapView
+import com.com4510.team01.viewModel.MyAdapter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -41,7 +30,8 @@ class ShowImageFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val binding = DataBindingUtil.inflate<FragmentShowImageBinding>(inflater, R.layout.fragment_show_image, container, false)
+        val binding = DataBindingUtil.inflate<FragmentShowImageBinding>(inflater,
+            R.layout.fragment_show_image, container, false)
         if (args.position != -1){
             displayData(args.position, binding)
         }
@@ -64,9 +54,9 @@ class ShowImageFragment : Fragment() {
 
             val imageData = MyAdapter.items[position]
 
-            imageView.setImageBitmap(MyAdapter.items[position].thumbnail!!)
-            titleToolbar.title = MyAdapter.items[position].imageTitle
-            descriptionTextView.text = MyAdapter.items[position].imageDescription
+            imageView.setImageBitmap(imageData.thumbnail!!)
+            titleToolbar.title = imageData.imageTitle
+            descriptionTextView.text = imageData.imageDescription
 
 
 

@@ -1,4 +1,4 @@
-package com.com4510.team01.view
+package com.com4510.team01.util
 
 import pl.aprilapps.easyphotopicker.MediaFile
 

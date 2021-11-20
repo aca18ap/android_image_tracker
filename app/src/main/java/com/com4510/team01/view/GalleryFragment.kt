@@ -1,13 +1,7 @@
-package com.com4510.team01
+package com.com4510.team01.view
 
-import android.Manifest
 import android.app.Activity
-import android.app.AlertDialog
-import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -15,21 +9,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
-import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.com4510.team01.R
 import com.com4510.team01.databinding.FragmentGalleryBinding
 import com.com4510.team01.model.data.database.ImageData
-import com.com4510.team01.view.MainActivity
-import com.com4510.team01.view.MainActivityOld
-import com.com4510.team01.view.MyAdapter
+import com.com4510.team01.viewModel.MyAdapter
 import com.com4510.team01.viewModel.TravelViewModel
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import pl.aprilapps.easyphotopicker.*
 
 
@@ -70,7 +59,8 @@ class GalleryFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val binding : FragmentGalleryBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_gallery, container, false)
+        val binding : FragmentGalleryBinding = DataBindingUtil.inflate(inflater,
+            R.layout.fragment_gallery, container, false)
         viewModel = ViewModelProvider(this)[TravelViewModel::class.java]
 
 

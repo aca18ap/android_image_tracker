@@ -1,4 +1,4 @@
-package com.com4510.team01
+package com.com4510.team01.view
 
 import android.app.Activity
 import android.content.Intent
@@ -11,11 +11,11 @@ import android.widget.Button
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
+import com.com4510.team01.R
 import com.com4510.team01.databinding.FragmentEditImageBinding
 import com.com4510.team01.model.data.database.ImageDataDao
-import com.com4510.team01.view.ImageApplication
-import com.com4510.team01.view.MyAdapter
-import com.google.android.material.textfield.TextInputEditText
+import com.com4510.team01.viewModel.ImageApplication
+import com.com4510.team01.viewModel.MyAdapter
 import kotlinx.coroutines.*
 
 /**
@@ -35,7 +35,8 @@ class EditImageFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val binding= DataBindingUtil.inflate<FragmentEditImageBinding>(inflater, R.layout.fragment_edit_image, container, false )
+        val binding= DataBindingUtil.inflate<FragmentEditImageBinding>(inflater,
+            R.layout.fragment_edit_image, container, false )
         if (args.position != -1){
             MyAdapter.items[args.position].let{
                 binding.editImage.setImageBitmap(it.thumbnail)

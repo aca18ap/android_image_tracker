@@ -19,16 +19,14 @@
     </queries>
 
     <application
-        android:name="com.com4510.team01.view.ImageApplication"
+        android:name="com.com4510.team01.viewModel.ImageApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Lab5_kt">
-        <activity
-            android:name="com.com4510.team01.view.EditActivity"
-            android:exported="false" />
+
         <activity
             android:name="com.com4510.team01.view.MainActivity"
             android:exported="true">
@@ -38,9 +36,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name="com.com4510.team01.view.ShowImageActivity"
-            android:exported="true" />
+
     </application>
 
 </manifest>
