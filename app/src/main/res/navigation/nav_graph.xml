@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.com4510.team01.view.HomeFragment"
+        android:name="uk.ac.shef.oak.com4510.view.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home">
         <action
@@ -17,10 +17,13 @@
             app:exitAnim="@android:anim/fade_out"
             app:popEnterAnim="@android:anim/fade_in"
             app:popExitAnim="@android:anim/fade_out" />
+        <action
+            android:id="@+id/action_homeFragment_to_newTripFragment"
+            app:destination="@id/newTripFragment" />
     </fragment>
     <fragment
         android:id="@+id/galleryFragment"
-        android:name="com.com4510.team01.view.GalleryFragment"
+        android:name="uk.ac.shef.oak.com4510.view.GalleryFragment"
         android:label="fragment_gallery"
         tools:layout="@layout/fragment_gallery" >
         <action
@@ -35,7 +38,7 @@
 
     <fragment
         android:id="@+id/showImageFragment"
-        android:name="com.com4510.team01.view.ShowImageFragment"
+        android:name="uk.ac.shef.oak.com4510.view.ShowImageFragment"
         android:label="ShowImageFragment"
         tools:layout="@layout/fragment_show_image" >
         <argument
@@ -52,7 +55,7 @@
     </fragment>
     <fragment
         android:id="@+id/editImageFragment"
-        android:name="com.com4510.team01.view.EditImageFragment"
+        android:name="uk.ac.shef.oak.com4510.view.EditImageFragment"
         android:label="EditImageFragment"
         tools:layout="@layout/fragment_edit_image">
         <argument
@@ -60,4 +63,9 @@
             app:argType="integer"
             android:defaultValue="-1"/>
     </fragment>
+    <fragment
+        android:id="@+id/newTripFragment"
+        android:name="uk.ac.shef.oak.com4510.view.NewTripFragment"
+        android:label="NewTripFragment"
+        tools:layout="@layout/fragment_new_trip"/>
 </navigation>

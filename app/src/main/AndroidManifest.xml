@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.com4510.team01">
+    package="uk.ac.shef.oak.com4510">
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -19,7 +19,7 @@
     </queries>
 
     <application
-        android:name="com.com4510.team01.viewModel.ImageApplication"
+        android:name="uk.ac.shef.oak.com4510.viewModel.ImageApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -28,7 +28,7 @@
         android:theme="@style/Theme.Lab5_kt">
 
         <activity
-            android:name="com.com4510.team01.view.MainActivity"
+            android:name="uk.ac.shef.oak.com4510.view.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
