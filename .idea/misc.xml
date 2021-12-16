@@ -3,12 +3,15 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/albip/Documents/University/Year4/COM4510Mobile/assignment/com4510androiddev/app/src/main/res/drawable/empty_tall_divider.xml" value="0.14635416666666667" />
         <entry key="..\:/Users/albip/Documents/University/Year4/COM4510Mobile/assignment/com4510androiddev/app/src/main/res/layout/activity_main.xml" value="0.13020833333333334" />
+        <entry key="..\:/Users/albip/Documents/University/Year4/COM4510Mobile/assignment/com4510androiddev/app/src/main/res/layout/activity_map.xml" value="0.1" />
         <entry key="..\:/Users/albip/Documents/University/Year4/COM4510Mobile/assignment/com4510androiddev/app/src/main/res/layout/content_camera.xml" value="0.13020833333333334" />
         <entry key="..\:/Users/albip/Documents/University/Year4/COM4510Mobile/assignment/com4510androiddev/app/src/main/res/layout/fragment_gallery.xml" value="0.13020833333333334" />
         <entry key="..\:/Users/albip/Documents/University/Year4/COM4510Mobile/assignment/com4510androiddev/app/src/main/res/layout/fragment_home.xml" value="0.13020833333333334" />
         <entry key="..\:/Users/albip/Documents/University/Year4/COM4510Mobile/assignment/com4510androiddev/app/src/main/res/layout/fragment_new_trip.xml" value="0.13020833333333334" />
         <entry key="..\:/Users/albip/Documents/University/Year4/COM4510Mobile/assignment/com4510androiddev/app/src/main/res/layout/fragment_show_image.xml" value="0.13020833333333334" />
+        <entry key="..\:/Users/albip/Documents/University/Year4/COM4510Mobile/assignment/com4510androiddev/app/src/main/res/layout/fragment_travelling.xml" value="0.1" />
         <entry key="..\:/Users/albip/Documents/University/Year4/COM4510Mobile/assignment/com4510androiddev/app/src/main/res/layout/list_item_image.xml" value="0.13020833333333334" />
         <entry key="..\:/Users/albip/Documents/University/Year4/COM4510Mobile/com4510androiddev/app/src/main/res/layout/activity_edit.xml" value="0.2546875" />
         <entry key="..\:/Users/albip/Documents/University/Year4/COM4510Mobile/com4510androiddev/app/src/main/res/layout/activity_gallery.xml" value="0.18125" />

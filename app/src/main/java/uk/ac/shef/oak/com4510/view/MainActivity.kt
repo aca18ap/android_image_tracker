@@ -12,6 +12,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.tasks.CancellationTokenSource
 import uk.ac.shef.oak.com4510.R
 import uk.ac.shef.oak.com4510.databinding.ActivityMainBinding
 import pl.aprilapps.easyphotopicker.EasyImage
@@ -123,6 +126,7 @@ class MainActivity : AppCompatActivity() {
                     REQUEST_CAMERA_CODE
                 );
             }
+
         }
     }
 }

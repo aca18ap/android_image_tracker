@@ -18,7 +18,7 @@ public class FragmentNewTripBindingImpl extends FragmentNewTripBinding  {
         sViewsWithIds.put(R.id.title_label, 2);
         sViewsWithIds.put(R.id.title_input, 3);
         sViewsWithIds.put(R.id.date_and_time, 4);
-        sViewsWithIds.put(R.id.start_trip, 5);
+        sViewsWithIds.put(R.id.start_trip_button, 5);
     }
     // views
     // variables

@@ -24,7 +24,7 @@ public abstract class FragmentNewTripBinding extends ViewDataBinding {
   public final ConstraintLayout homeConstraint;
 
   @NonNull
-  public final Button startTrip;
+  public final Button startTripButton;
 
   @NonNull
   public final TextInputEditText titleInput;
@@ -36,12 +36,12 @@ public abstract class FragmentNewTripBinding extends ViewDataBinding {
   public final TextView welcomeMessage;
 
   protected FragmentNewTripBinding(Object _bindingComponent, View _root, int _localFieldCount,
-      TextView dateAndTime, ConstraintLayout homeConstraint, Button startTrip,
+      TextView dateAndTime, ConstraintLayout homeConstraint, Button startTripButton,
       TextInputEditText titleInput, TextView titleLabel, TextView welcomeMessage) {
     super(_bindingComponent, _root, _localFieldCount);
     this.dateAndTime = dateAndTime;
     this.homeConstraint = homeConstraint;
-    this.startTrip = startTrip;
+    this.startTripButton = startTripButton;
     this.titleInput = titleInput;
     this.titleLabel = titleLabel;
     this.welcomeMessage = welcomeMessage;

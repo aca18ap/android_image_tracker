@@ -2010,6 +2010,7 @@ id action_menu_presenter
 id action_mode_bar
 id action_mode_bar_stub
 id action_mode_close_button
+id action_newTripFragment_to_travellingFragment
 id action_showImageFragment_to_editImageFragment
 id action_text
 id actions
@@ -2208,6 +2209,9 @@ id line3
 id linear
 id listMode
 id list_item
+id map
+id map_appBarLayout
+id map_toolbar
 id masked
 id match_constraint
 id match_parent
@@ -2387,7 +2391,7 @@ id start
 id startHorizontal
 id startToEnd
 id startVertical
-id start_trip
+id start_trip_button
 id staticLayout
 id staticPostLayout
 id status_bar_latest_event_content
@@ -2450,7 +2454,10 @@ id transition_layout_save
 id transition_position
 id transition_scene_layoutid_cache
 id transition_transform
+id travellingConstraint
+id travellingFragment
 id triangle
+id trip_information
 id unchecked
 id uniform
 id unlabeled
@@ -2567,6 +2574,7 @@ layout fragment_gallery
 layout fragment_home
 layout fragment_new_trip
 layout fragment_show_image
+layout fragment_travelling
 layout list_item_image
 layout material_chip_input_combo
 layout material_clock_display
@@ -2722,6 +2730,8 @@ string imageDescription
 string imageTitle
 string image_title_label
 string item_view_role_description
+string latitude
+string longitude
 string material_clock_display_divider
 string material_clock_toggle_content_description
 string material_hour_selection
@@ -2742,6 +2752,7 @@ string material_timepicker_minute
 string material_timepicker_pm
 string material_timepicker_select_time
 string material_timepicker_text_input_mode_description
+string more_info
 string mtrl_badge_numberless_content_description
 string mtrl_chip_close_icon_content_description
 string mtrl_exceed_max_badge_number_content_description

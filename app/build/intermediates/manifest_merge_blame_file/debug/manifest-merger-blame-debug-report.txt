@@ -17,140 +17,143 @@
 13        android:required="true" />
 13-->C:\Users\albip\Documents\University\Year4\COM4510Mobile\assignment\com4510androiddev\app\src\main\AndroidManifest.xml:7:9-32
 14
-15    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-15-->C:\Users\albip\Documents\University\Year4\COM4510Mobile\assignment\com4510androiddev\app\src\main\AndroidManifest.xml:9:5-10:67
-15-->C:\Users\albip\Documents\University\Year4\COM4510Mobile\assignment\com4510androiddev\app\src\main\AndroidManifest.xml:10:9-64
-16    <uses-permission
-16-->C:\Users\albip\Documents\University\Year4\COM4510Mobile\assignment\com4510androiddev\app\src\main\AndroidManifest.xml:11:5-13:38
-17        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
-17-->C:\Users\albip\Documents\University\Year4\COM4510Mobile\assignment\com4510androiddev\app\src\main\AndroidManifest.xml:12:9-65
-18        android:maxSdkVersion="28" />
-18-->C:\Users\albip\Documents\University\Year4\COM4510Mobile\assignment\com4510androiddev\app\src\main\AndroidManifest.xml:13:9-35
-19
-20    <queries>
-20-->C:\Users\albip\Documents\University\Year4\COM4510Mobile\assignment\com4510androiddev\app\src\main\AndroidManifest.xml:15:5-19:15
-21        <intent>
-21-->C:\Users\albip\Documents\University\Year4\COM4510Mobile\assignment\com4510androiddev\app\src\main\AndroidManifest.xml:16:9-18:18
-22            <action android:name="android.media.action.IMAGE_CAPTURE" />
-22-->C:\Users\albip\Documents\University\Year4\COM4510Mobile\assignment\com4510androiddev\app\src\main\AndroidManifest.xml:17:13-73
-22-->C:\Users\albip\Documents\University\Year4\COM4510Mobile\assignment\com4510androiddev\app\src\main\AndroidManifest.xml:17:21-70
-23        </intent>
-24    </queries>
-25
-26    <!-- Include required permissions for Google Maps API to run. -->
-27    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-27-->[com.google.android.gms:play-services-maps:17.0.0] C:\Users\albip\.gradle\caches\transforms-3\491fb1afa0a78aa9049cbae01defe465\transformed\jetified-play-services-maps-17.0.0\AndroidManifest.xml:23:5-79
-27-->[com.google.android.gms:play-services-maps:17.0.0] C:\Users\albip\.gradle\caches\transforms-3\491fb1afa0a78aa9049cbae01defe465\transformed\jetified-play-services-maps-17.0.0\AndroidManifest.xml:23:22-76
-28    <uses-permission android:name="android.permission.INTERNET" />
-28-->[com.google.android.gms:play-services-maps:17.0.0] C:\Users\albip\.gradle\caches\transforms-3\491fb1afa0a78aa9049cbae01defe465\transformed\jetified-play-services-maps-17.0.0\AndroidManifest.xml:24:5-67
-28-->[com.google.android.gms:play-services-maps:17.0.0] C:\Users\albip\.gradle\caches\transforms-3\491fb1afa0a78aa9049cbae01defe465\transformed\jetified-play-services-maps-17.0.0\AndroidManifest.xml:24:22-64
-29
-30    <uses-feature
-30-->[com.google.android.gms:play-services-maps:17.0.0] C:\Users\albip\.gradle\caches\transforms-3\491fb1afa0a78aa9049cbae01defe465\transformed\jetified-play-services-maps-17.0.0\AndroidManifest.xml:26:5-28:35
-31        android:glEsVersion="0x00020000"
-31-->[com.google.android.gms:play-services-maps:17.0.0] C:\Users\albip\.gradle\caches\transforms-3\491fb1afa0a78aa9049cbae01defe465\transformed\jetified-play-services-maps-17.0.0\AndroidManifest.xml:27:9-41
-32        android:required="true" />
-32-->[com.google.android.gms:play-services-maps:17.0.0] C:\Users\albip\.gradle\caches\transforms-3\491fb1afa0a78aa9049cbae01defe465\transformed\jetified-play-services-maps-17.0.0\AndroidManifest.xml:28:9-32
-33
-34    <application
-34-->C:\Users\albip\Documents\University\Year4\COM4510Mobile\assignment\com4510androiddev\app\src\main\AndroidManifest.xml:21:5-40:19
-35        android:name="uk.ac.shef.oak.com4510.viewModel.ImageApplication"
-35-->C:\Users\albip\Documents\University\Year4\COM4510Mobile\assignment\com4510androiddev\app\src\main\AndroidManifest.xml:22:9-73
-36        android:allowBackup="true"
-36-->C:\Users\albip\Documents\University\Year4\COM4510Mobile\assignment\com4510androiddev\app\src\main\AndroidManifest.xml:23:9-35
-37        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
-37-->[androidx.core:core:1.7.0-rc01] C:\Users\albip\.gradle\caches\transforms-3\0778f3b24c55a7c796be2775a4850540\transformed\core-1.7.0-rc01\AndroidManifest.xml:24:18-86
-38        android:debuggable="true"
-39        android:icon="@mipmap/ic_launcher"
-39-->C:\Users\albip\Documents\University\Year4\COM4510Mobile\assignment\com4510androiddev\app\src\main\AndroidManifest.xml:24:9-43
-40        android:label="@string/app_name"
-40-->C:\Users\albip\Documents\University\Year4\COM4510Mobile\assignment\com4510androiddev\app\src\main\AndroidManifest.xml:25:9-41
-41        android:roundIcon="@mipmap/ic_launcher_round"
-41-->C:\Users\albip\Documents\University\Year4\COM4510Mobile\assignment\com4510androiddev\app\src\main\AndroidManifest.xml:26:9-54
-42        android:supportsRtl="true"
-42-->C:\Users\albip\Documents\University\Year4\COM4510Mobile\assignment\com4510androiddev\app\src\main\AndroidManifest.xml:27:9-35
-43        android:testOnly="true"
-44        android:theme="@style/Theme.Lab5_kt" >
-44-->C:\Users\albip\Documents\University\Year4\COM4510Mobile\assignment\com4510androiddev\app\src\main\AndroidManifest.xml:28:9-45
-45        <activity
-45-->C:\Users\albip\Documents\University\Year4\COM4510Mobile\assignment\com4510androiddev\app\src\main\AndroidManifest.xml:30:9-38:20
-46            android:name="uk.ac.shef.oak.com4510.view.MainActivity"
-46-->C:\Users\albip\Documents\University\Year4\COM4510Mobile\assignment\com4510androiddev\app\src\main\AndroidManifest.xml:31:13-68
-47            android:exported="true" >
-47-->C:\Users\albip\Documents\University\Year4\COM4510Mobile\assignment\com4510androiddev\app\src\main\AndroidManifest.xml:32:13-36
-48            <intent-filter>
-48-->C:\Users\albip\Documents\University\Year4\COM4510Mobile\assignment\com4510androiddev\app\src\main\AndroidManifest.xml:33:13-37:29
-49                <action android:name="android.intent.action.MAIN" />
-49-->C:\Users\albip\Documents\University\Year4\COM4510Mobile\assignment\com4510androiddev\app\src\main\AndroidManifest.xml:34:17-69
-49-->C:\Users\albip\Documents\University\Year4\COM4510Mobile\assignment\com4510androiddev\app\src\main\AndroidManifest.xml:34:25-66
-50
-51                <category android:name="android.intent.category.LAUNCHER" />
-51-->C:\Users\albip\Documents\University\Year4\COM4510Mobile\assignment\com4510androiddev\app\src\main\AndroidManifest.xml:36:17-77
-51-->C:\Users\albip\Documents\University\Year4\COM4510Mobile\assignment\com4510androiddev\app\src\main\AndroidManifest.xml:36:27-74
-52            </intent-filter>
-53        </activity>
-54
-55        <!-- Needs to be explicitly declared on P+ -->
-56        <uses-library
-56-->[com.google.android.gms:play-services-maps:17.0.0] C:\Users\albip\.gradle\caches\transforms-3\491fb1afa0a78aa9049cbae01defe465\transformed\jetified-play-services-maps-17.0.0\AndroidManifest.xml:33:9-35:40
-57            android:name="org.apache.http.legacy"
-57-->[com.google.android.gms:play-services-maps:17.0.0] C:\Users\albip\.gradle\caches\transforms-3\491fb1afa0a78aa9049cbae01defe465\transformed\jetified-play-services-maps-17.0.0\AndroidManifest.xml:34:13-50
-58            android:required="false" />
-58-->[com.google.android.gms:play-services-maps:17.0.0] C:\Users\albip\.gradle\caches\transforms-3\491fb1afa0a78aa9049cbae01defe465\transformed\jetified-play-services-maps-17.0.0\AndroidManifest.xml:35:13-37
-59
-60        <activity
-60-->[com.google.android.gms:play-services-base:17.0.0] C:\Users\albip\.gradle\caches\transforms-3\72ce582dadba4321524f9e0041771f80\transformed\jetified-play-services-base-17.0.0\AndroidManifest.xml:23:9-26:75
-61            android:name="com.google.android.gms.common.api.GoogleApiActivity"
-61-->[com.google.android.gms:play-services-base:17.0.0] C:\Users\albip\.gradle\caches\transforms-3\72ce582dadba4321524f9e0041771f80\transformed\jetified-play-services-base-17.0.0\AndroidManifest.xml:24:13-79
-62            android:exported="false"
-62-->[com.google.android.gms:play-services-base:17.0.0] C:\Users\albip\.gradle\caches\transforms-3\72ce582dadba4321524f9e0041771f80\transformed\jetified-play-services-base-17.0.0\AndroidManifest.xml:25:13-37
-63            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-63-->[com.google.android.gms:play-services-base:17.0.0] C:\Users\albip\.gradle\caches\transforms-3\72ce582dadba4321524f9e0041771f80\transformed\jetified-play-services-base-17.0.0\AndroidManifest.xml:26:13-72
-64
-65        <meta-data
-65-->[com.google.android.gms:play-services-basement:17.0.0] C:\Users\albip\.gradle\caches\transforms-3\0b26e31f78efe74f486f233525185174\transformed\jetified-play-services-basement-17.0.0\AndroidManifest.xml:23:9-25:69
-66            android:name="com.google.android.gms.version"
-66-->[com.google.android.gms:play-services-basement:17.0.0] C:\Users\albip\.gradle\caches\transforms-3\0b26e31f78efe74f486f233525185174\transformed\jetified-play-services-basement-17.0.0\AndroidManifest.xml:24:13-58
-67            android:value="@integer/google_play_services_version" />
-67-->[com.google.android.gms:play-services-basement:17.0.0] C:\Users\albip\.gradle\caches\transforms-3\0b26e31f78efe74f486f233525185174\transformed\jetified-play-services-basement-17.0.0\AndroidManifest.xml:25:13-66
-68
-69        <provider
-69-->[com.github.jkwiecien:EasyImage:3.2.0] C:\Users\albip\.gradle\caches\transforms-3\00ae3239123118bfe824ff0d5dbc3784\transformed\jetified-EasyImage-3.2.0\AndroidManifest.xml:12:9-20:20
-70            android:name="pl.aprilapps.easyphotopicker.EasyImageFileProvider"
-70-->[com.github.jkwiecien:EasyImage:3.2.0] C:\Users\albip\.gradle\caches\transforms-3\00ae3239123118bfe824ff0d5dbc3784\transformed\jetified-EasyImage-3.2.0\AndroidManifest.xml:13:13-78
-71            android:authorities="com.lab.lab5_kt.easyphotopicker.fileprovider"
-71-->[com.github.jkwiecien:EasyImage:3.2.0] C:\Users\albip\.gradle\caches\transforms-3\00ae3239123118bfe824ff0d5dbc3784\transformed\jetified-EasyImage-3.2.0\AndroidManifest.xml:14:13-80
-72            android:exported="false"
-72-->[com.github.jkwiecien:EasyImage:3.2.0] C:\Users\albip\.gradle\caches\transforms-3\00ae3239123118bfe824ff0d5dbc3784\transformed\jetified-EasyImage-3.2.0\AndroidManifest.xml:15:13-37
-73            android:grantUriPermissions="true" >
-73-->[com.github.jkwiecien:EasyImage:3.2.0] C:\Users\albip\.gradle\caches\transforms-3\00ae3239123118bfe824ff0d5dbc3784\transformed\jetified-EasyImage-3.2.0\AndroidManifest.xml:16:13-47
-74            <meta-data
-74-->[com.github.jkwiecien:EasyImage:3.2.0] C:\Users\albip\.gradle\caches\transforms-3\00ae3239123118bfe824ff0d5dbc3784\transformed\jetified-EasyImage-3.2.0\AndroidManifest.xml:17:13-19:63
-75                android:name="android.support.FILE_PROVIDER_PATHS"
-75-->[com.github.jkwiecien:EasyImage:3.2.0] C:\Users\albip\.gradle\caches\transforms-3\00ae3239123118bfe824ff0d5dbc3784\transformed\jetified-EasyImage-3.2.0\AndroidManifest.xml:18:17-67
-76                android:resource="@xml/easyimage_filepaths" />
-76-->[com.github.jkwiecien:EasyImage:3.2.0] C:\Users\albip\.gradle\caches\transforms-3\00ae3239123118bfe824ff0d5dbc3784\transformed\jetified-EasyImage-3.2.0\AndroidManifest.xml:19:17-60
-77        </provider>
-78
-79        <service
-79-->[androidx.room:room-runtime:2.3.0] C:\Users\albip\.gradle\caches\transforms-3\a7d387da0017a702ac679ccf8c376bea\transformed\room-runtime-2.3.0\AndroidManifest.xml:25:9-28:40
-80            android:name="androidx.room.MultiInstanceInvalidationService"
-80-->[androidx.room:room-runtime:2.3.0] C:\Users\albip\.gradle\caches\transforms-3\a7d387da0017a702ac679ccf8c376bea\transformed\room-runtime-2.3.0\AndroidManifest.xml:26:13-74
-81            android:directBootAware="true"
-81-->[androidx.room:room-runtime:2.3.0] C:\Users\albip\.gradle\caches\transforms-3\a7d387da0017a702ac679ccf8c376bea\transformed\room-runtime-2.3.0\AndroidManifest.xml:27:13-43
-82            android:exported="false" />
-82-->[androidx.room:room-runtime:2.3.0] C:\Users\albip\.gradle\caches\transforms-3\a7d387da0017a702ac679ccf8c376bea\transformed\room-runtime-2.3.0\AndroidManifest.xml:28:13-37
-83
-84        <provider
-84-->[androidx.lifecycle:lifecycle-process:2.2.0] C:\Users\albip\.gradle\caches\transforms-3\f59fa4ef15ef11701948bed03304a157\transformed\jetified-lifecycle-process-2.2.0\AndroidManifest.xml:25:9-29:43
-85            android:name="androidx.lifecycle.ProcessLifecycleOwnerInitializer"
-85-->[androidx.lifecycle:lifecycle-process:2.2.0] C:\Users\albip\.gradle\caches\transforms-3\f59fa4ef15ef11701948bed03304a157\transformed\jetified-lifecycle-process-2.2.0\AndroidManifest.xml:26:13-79
-86            android:authorities="com.lab.lab5_kt.lifecycle-process"
-86-->[androidx.lifecycle:lifecycle-process:2.2.0] C:\Users\albip\.gradle\caches\transforms-3\f59fa4ef15ef11701948bed03304a157\transformed\jetified-lifecycle-process-2.2.0\AndroidManifest.xml:27:13-69
-87            android:exported="false"
-87-->[androidx.lifecycle:lifecycle-process:2.2.0] C:\Users\albip\.gradle\caches\transforms-3\f59fa4ef15ef11701948bed03304a157\transformed\jetified-lifecycle-process-2.2.0\AndroidManifest.xml:28:13-37
-88            android:multiprocess="true" />
-88-->[androidx.lifecycle:lifecycle-process:2.2.0] C:\Users\albip\.gradle\caches\transforms-3\f59fa4ef15ef11701948bed03304a157\transformed\jetified-lifecycle-process-2.2.0\AndroidManifest.xml:29:13-40
-89    </application>
-90
-91</manifest>
+15    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+15-->C:\Users\albip\Documents\University\Year4\COM4510Mobile\assignment\com4510androiddev\app\src\main\AndroidManifest.xml:9:5-81
+15-->C:\Users\albip\Documents\University\Year4\COM4510Mobile\assignment\com4510androiddev\app\src\main\AndroidManifest.xml:9:22-78
+16    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+16-->C:\Users\albip\Documents\University\Year4\COM4510Mobile\assignment\com4510androiddev\app\src\main\AndroidManifest.xml:10:5-11:67
+16-->C:\Users\albip\Documents\University\Year4\COM4510Mobile\assignment\com4510androiddev\app\src\main\AndroidManifest.xml:11:9-64
+17    <uses-permission
+17-->C:\Users\albip\Documents\University\Year4\COM4510Mobile\assignment\com4510androiddev\app\src\main\AndroidManifest.xml:12:5-14:38
+18        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+18-->C:\Users\albip\Documents\University\Year4\COM4510Mobile\assignment\com4510androiddev\app\src\main\AndroidManifest.xml:13:9-65
+19        android:maxSdkVersion="28" />
+19-->C:\Users\albip\Documents\University\Year4\COM4510Mobile\assignment\com4510androiddev\app\src\main\AndroidManifest.xml:14:9-35
+20
+21    <queries>
+21-->C:\Users\albip\Documents\University\Year4\COM4510Mobile\assignment\com4510androiddev\app\src\main\AndroidManifest.xml:16:5-20:15
+22        <intent>
+22-->C:\Users\albip\Documents\University\Year4\COM4510Mobile\assignment\com4510androiddev\app\src\main\AndroidManifest.xml:17:9-19:18
+23            <action android:name="android.media.action.IMAGE_CAPTURE" />
+23-->C:\Users\albip\Documents\University\Year4\COM4510Mobile\assignment\com4510androiddev\app\src\main\AndroidManifest.xml:18:13-73
+23-->C:\Users\albip\Documents\University\Year4\COM4510Mobile\assignment\com4510androiddev\app\src\main\AndroidManifest.xml:18:21-70
+24        </intent>
+25    </queries>
+26
+27    <!-- Include required permissions for Google Maps API to run. -->
+28    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+28-->[com.google.android.gms:play-services-maps:17.0.0] C:\Users\albip\.gradle\caches\transforms-3\491fb1afa0a78aa9049cbae01defe465\transformed\jetified-play-services-maps-17.0.0\AndroidManifest.xml:23:5-79
+28-->[com.google.android.gms:play-services-maps:17.0.0] C:\Users\albip\.gradle\caches\transforms-3\491fb1afa0a78aa9049cbae01defe465\transformed\jetified-play-services-maps-17.0.0\AndroidManifest.xml:23:22-76
+29    <uses-permission android:name="android.permission.INTERNET" />
+29-->[com.google.android.gms:play-services-maps:17.0.0] C:\Users\albip\.gradle\caches\transforms-3\491fb1afa0a78aa9049cbae01defe465\transformed\jetified-play-services-maps-17.0.0\AndroidManifest.xml:24:5-67
+29-->[com.google.android.gms:play-services-maps:17.0.0] C:\Users\albip\.gradle\caches\transforms-3\491fb1afa0a78aa9049cbae01defe465\transformed\jetified-play-services-maps-17.0.0\AndroidManifest.xml:24:22-64
+30
+31    <uses-feature
+31-->[com.google.android.gms:play-services-maps:17.0.0] C:\Users\albip\.gradle\caches\transforms-3\491fb1afa0a78aa9049cbae01defe465\transformed\jetified-play-services-maps-17.0.0\AndroidManifest.xml:26:5-28:35
+32        android:glEsVersion="0x00020000"
+32-->[com.google.android.gms:play-services-maps:17.0.0] C:\Users\albip\.gradle\caches\transforms-3\491fb1afa0a78aa9049cbae01defe465\transformed\jetified-play-services-maps-17.0.0\AndroidManifest.xml:27:9-41
+33        android:required="true" />
+33-->[com.google.android.gms:play-services-maps:17.0.0] C:\Users\albip\.gradle\caches\transforms-3\491fb1afa0a78aa9049cbae01defe465\transformed\jetified-play-services-maps-17.0.0\AndroidManifest.xml:28:9-32
+34
+35    <application
+35-->C:\Users\albip\Documents\University\Year4\COM4510Mobile\assignment\com4510androiddev\app\src\main\AndroidManifest.xml:22:5-41:19
+36        android:name="uk.ac.shef.oak.com4510.viewModel.ImageApplication"
+36-->C:\Users\albip\Documents\University\Year4\COM4510Mobile\assignment\com4510androiddev\app\src\main\AndroidManifest.xml:23:9-73
+37        android:allowBackup="true"
+37-->C:\Users\albip\Documents\University\Year4\COM4510Mobile\assignment\com4510androiddev\app\src\main\AndroidManifest.xml:24:9-35
+38        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+38-->[androidx.core:core:1.7.0-rc01] C:\Users\albip\.gradle\caches\transforms-3\0778f3b24c55a7c796be2775a4850540\transformed\core-1.7.0-rc01\AndroidManifest.xml:24:18-86
+39        android:debuggable="true"
+40        android:icon="@mipmap/ic_launcher"
+40-->C:\Users\albip\Documents\University\Year4\COM4510Mobile\assignment\com4510androiddev\app\src\main\AndroidManifest.xml:25:9-43
+41        android:label="@string/app_name"
+41-->C:\Users\albip\Documents\University\Year4\COM4510Mobile\assignment\com4510androiddev\app\src\main\AndroidManifest.xml:26:9-41
+42        android:roundIcon="@mipmap/ic_launcher_round"
+42-->C:\Users\albip\Documents\University\Year4\COM4510Mobile\assignment\com4510androiddev\app\src\main\AndroidManifest.xml:27:9-54
+43        android:supportsRtl="true"
+43-->C:\Users\albip\Documents\University\Year4\COM4510Mobile\assignment\com4510androiddev\app\src\main\AndroidManifest.xml:28:9-35
+44        android:testOnly="true"
+45        android:theme="@style/Theme.Lab5_kt" >
+45-->C:\Users\albip\Documents\University\Year4\COM4510Mobile\assignment\com4510androiddev\app\src\main\AndroidManifest.xml:29:9-45
+46        <activity
+46-->C:\Users\albip\Documents\University\Year4\COM4510Mobile\assignment\com4510androiddev\app\src\main\AndroidManifest.xml:31:9-39:20
+47            android:name="uk.ac.shef.oak.com4510.view.MainActivity"
+47-->C:\Users\albip\Documents\University\Year4\COM4510Mobile\assignment\com4510androiddev\app\src\main\AndroidManifest.xml:32:13-68
+48            android:exported="true" >
+48-->C:\Users\albip\Documents\University\Year4\COM4510Mobile\assignment\com4510androiddev\app\src\main\AndroidManifest.xml:33:13-36
+49            <intent-filter>
+49-->C:\Users\albip\Documents\University\Year4\COM4510Mobile\assignment\com4510androiddev\app\src\main\AndroidManifest.xml:34:13-38:29
+50                <action android:name="android.intent.action.MAIN" />
+50-->C:\Users\albip\Documents\University\Year4\COM4510Mobile\assignment\com4510androiddev\app\src\main\AndroidManifest.xml:35:17-69
+50-->C:\Users\albip\Documents\University\Year4\COM4510Mobile\assignment\com4510androiddev\app\src\main\AndroidManifest.xml:35:25-66
+51
+52                <category android:name="android.intent.category.LAUNCHER" />
+52-->C:\Users\albip\Documents\University\Year4\COM4510Mobile\assignment\com4510androiddev\app\src\main\AndroidManifest.xml:37:17-77
+52-->C:\Users\albip\Documents\University\Year4\COM4510Mobile\assignment\com4510androiddev\app\src\main\AndroidManifest.xml:37:27-74
+53            </intent-filter>
+54        </activity>
+55
+56        <!-- Needs to be explicitly declared on P+ -->
+57        <uses-library
+57-->[com.google.android.gms:play-services-maps:17.0.0] C:\Users\albip\.gradle\caches\transforms-3\491fb1afa0a78aa9049cbae01defe465\transformed\jetified-play-services-maps-17.0.0\AndroidManifest.xml:33:9-35:40
+58            android:name="org.apache.http.legacy"
+58-->[com.google.android.gms:play-services-maps:17.0.0] C:\Users\albip\.gradle\caches\transforms-3\491fb1afa0a78aa9049cbae01defe465\transformed\jetified-play-services-maps-17.0.0\AndroidManifest.xml:34:13-50
+59            android:required="false" />
+59-->[com.google.android.gms:play-services-maps:17.0.0] C:\Users\albip\.gradle\caches\transforms-3\491fb1afa0a78aa9049cbae01defe465\transformed\jetified-play-services-maps-17.0.0\AndroidManifest.xml:35:13-37
+60
+61        <activity
+61-->[com.google.android.gms:play-services-base:18.0.0] C:\Users\albip\.gradle\caches\transforms-3\b09f216b990dc32ec3348f085aa50cf1\transformed\jetified-play-services-base-18.0.0\AndroidManifest.xml:20:9-22:45
+62            android:name="com.google.android.gms.common.api.GoogleApiActivity"
+62-->[com.google.android.gms:play-services-base:18.0.0] C:\Users\albip\.gradle\caches\transforms-3\b09f216b990dc32ec3348f085aa50cf1\transformed\jetified-play-services-base-18.0.0\AndroidManifest.xml:20:19-85
+63            android:exported="false"
+63-->[com.google.android.gms:play-services-base:18.0.0] C:\Users\albip\.gradle\caches\transforms-3\b09f216b990dc32ec3348f085aa50cf1\transformed\jetified-play-services-base-18.0.0\AndroidManifest.xml:22:19-43
+64            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+64-->[com.google.android.gms:play-services-base:18.0.0] C:\Users\albip\.gradle\caches\transforms-3\b09f216b990dc32ec3348f085aa50cf1\transformed\jetified-play-services-base-18.0.0\AndroidManifest.xml:21:19-78
+65
+66        <meta-data
+66-->[com.google.android.gms:play-services-basement:18.0.0] C:\Users\albip\.gradle\caches\transforms-3\6230cb7a0a3ea9ef946b27d1d0483f57\transformed\jetified-play-services-basement-18.0.0\AndroidManifest.xml:21:9-23:69
+67            android:name="com.google.android.gms.version"
+67-->[com.google.android.gms:play-services-basement:18.0.0] C:\Users\albip\.gradle\caches\transforms-3\6230cb7a0a3ea9ef946b27d1d0483f57\transformed\jetified-play-services-basement-18.0.0\AndroidManifest.xml:22:13-58
+68            android:value="@integer/google_play_services_version" />
+68-->[com.google.android.gms:play-services-basement:18.0.0] C:\Users\albip\.gradle\caches\transforms-3\6230cb7a0a3ea9ef946b27d1d0483f57\transformed\jetified-play-services-basement-18.0.0\AndroidManifest.xml:23:13-66
+69
+70        <provider
+70-->[com.github.jkwiecien:EasyImage:3.2.0] C:\Users\albip\.gradle\caches\transforms-3\00ae3239123118bfe824ff0d5dbc3784\transformed\jetified-EasyImage-3.2.0\AndroidManifest.xml:12:9-20:20
+71            android:name="pl.aprilapps.easyphotopicker.EasyImageFileProvider"
+71-->[com.github.jkwiecien:EasyImage:3.2.0] C:\Users\albip\.gradle\caches\transforms-3\00ae3239123118bfe824ff0d5dbc3784\transformed\jetified-EasyImage-3.2.0\AndroidManifest.xml:13:13-78
+72            android:authorities="com.lab.lab5_kt.easyphotopicker.fileprovider"
+72-->[com.github.jkwiecien:EasyImage:3.2.0] C:\Users\albip\.gradle\caches\transforms-3\00ae3239123118bfe824ff0d5dbc3784\transformed\jetified-EasyImage-3.2.0\AndroidManifest.xml:14:13-80
+73            android:exported="false"
+73-->[com.github.jkwiecien:EasyImage:3.2.0] C:\Users\albip\.gradle\caches\transforms-3\00ae3239123118bfe824ff0d5dbc3784\transformed\jetified-EasyImage-3.2.0\AndroidManifest.xml:15:13-37
+74            android:grantUriPermissions="true" >
+74-->[com.github.jkwiecien:EasyImage:3.2.0] C:\Users\albip\.gradle\caches\transforms-3\00ae3239123118bfe824ff0d5dbc3784\transformed\jetified-EasyImage-3.2.0\AndroidManifest.xml:16:13-47
+75            <meta-data
+75-->[com.github.jkwiecien:EasyImage:3.2.0] C:\Users\albip\.gradle\caches\transforms-3\00ae3239123118bfe824ff0d5dbc3784\transformed\jetified-EasyImage-3.2.0\AndroidManifest.xml:17:13-19:63
+76                android:name="android.support.FILE_PROVIDER_PATHS"
+76-->[com.github.jkwiecien:EasyImage:3.2.0] C:\Users\albip\.gradle\caches\transforms-3\00ae3239123118bfe824ff0d5dbc3784\transformed\jetified-EasyImage-3.2.0\AndroidManifest.xml:18:17-67
+77                android:resource="@xml/easyimage_filepaths" />
+77-->[com.github.jkwiecien:EasyImage:3.2.0] C:\Users\albip\.gradle\caches\transforms-3\00ae3239123118bfe824ff0d5dbc3784\transformed\jetified-EasyImage-3.2.0\AndroidManifest.xml:19:17-60
+78        </provider>
+79
+80        <service
+80-->[androidx.room:room-runtime:2.3.0] C:\Users\albip\.gradle\caches\transforms-3\a7d387da0017a702ac679ccf8c376bea\transformed\room-runtime-2.3.0\AndroidManifest.xml:25:9-28:40
+81            android:name="androidx.room.MultiInstanceInvalidationService"
+81-->[androidx.room:room-runtime:2.3.0] C:\Users\albip\.gradle\caches\transforms-3\a7d387da0017a702ac679ccf8c376bea\transformed\room-runtime-2.3.0\AndroidManifest.xml:26:13-74
+82            android:directBootAware="true"
+82-->[androidx.room:room-runtime:2.3.0] C:\Users\albip\.gradle\caches\transforms-3\a7d387da0017a702ac679ccf8c376bea\transformed\room-runtime-2.3.0\AndroidManifest.xml:27:13-43
+83            android:exported="false" />
+83-->[androidx.room:room-runtime:2.3.0] C:\Users\albip\.gradle\caches\transforms-3\a7d387da0017a702ac679ccf8c376bea\transformed\room-runtime-2.3.0\AndroidManifest.xml:28:13-37
+84
+85        <provider
+85-->[androidx.lifecycle:lifecycle-process:2.2.0] C:\Users\albip\.gradle\caches\transforms-3\f59fa4ef15ef11701948bed03304a157\transformed\jetified-lifecycle-process-2.2.0\AndroidManifest.xml:25:9-29:43
+86            android:name="androidx.lifecycle.ProcessLifecycleOwnerInitializer"
+86-->[androidx.lifecycle:lifecycle-process:2.2.0] C:\Users\albip\.gradle\caches\transforms-3\f59fa4ef15ef11701948bed03304a157\transformed\jetified-lifecycle-process-2.2.0\AndroidManifest.xml:26:13-79
+87            android:authorities="com.lab.lab5_kt.lifecycle-process"
+87-->[androidx.lifecycle:lifecycle-process:2.2.0] C:\Users\albip\.gradle\caches\transforms-3\f59fa4ef15ef11701948bed03304a157\transformed\jetified-lifecycle-process-2.2.0\AndroidManifest.xml:27:13-69
+88            android:exported="false"
+88-->[androidx.lifecycle:lifecycle-process:2.2.0] C:\Users\albip\.gradle\caches\transforms-3\f59fa4ef15ef11701948bed03304a157\transformed\jetified-lifecycle-process-2.2.0\AndroidManifest.xml:28:13-37
+89            android:multiprocess="true" />
+89-->[androidx.lifecycle:lifecycle-process:2.2.0] C:\Users\albip\.gradle\caches\transforms-3\f59fa4ef15ef11701948bed03304a157\transformed\jetified-lifecycle-process-2.2.0\AndroidManifest.xml:29:13-40
+90    </application>
+91
+92</manifest>

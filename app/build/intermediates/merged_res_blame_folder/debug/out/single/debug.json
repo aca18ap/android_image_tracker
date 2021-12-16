@@ -88,6 +88,10 @@
         "source": "C:\\Users\\albip\\Documents\\University\\Year4\\COM4510Mobile\\assignment\\com4510androiddev\\app\\src\\main\\res\\layout\\fragment_new_trip.xml"
     },
     {
+        "merged": "C:\\Users\\albip\\Documents\\University\\Year4\\COM4510Mobile\\assignment\\com4510androiddev\\app\\build\\intermediates\\merged_res\\debug\\layout_fragment_travelling.xml.flat",
+        "source": "C:\\Users\\albip\\Documents\\University\\Year4\\COM4510Mobile\\assignment\\com4510androiddev\\app\\src\\main\\res\\layout\\fragment_travelling.xml"
+    },
+    {
         "merged": "C:\\Users\\albip\\Documents\\University\\Year4\\COM4510Mobile\\assignment\\com4510androiddev\\app\\build\\intermediates\\merged_res\\debug\\mipmap-xxhdpi_ic_launcher.webp.flat",
         "source": "C:\\Users\\albip\\Documents\\University\\Year4\\COM4510Mobile\\assignment\\com4510androiddev\\app\\src\\main\\res\\mipmap-xxhdpi\\ic_launcher.webp"
     },

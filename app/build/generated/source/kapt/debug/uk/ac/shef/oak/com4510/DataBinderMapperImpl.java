@@ -21,6 +21,7 @@ import uk.ac.shef.oak.com4510.databinding.FragmentGalleryBindingImpl;
 import uk.ac.shef.oak.com4510.databinding.FragmentHomeBindingImpl;
 import uk.ac.shef.oak.com4510.databinding.FragmentNewTripBindingImpl;
 import uk.ac.shef.oak.com4510.databinding.FragmentShowImageBindingImpl;
+import uk.ac.shef.oak.com4510.databinding.FragmentTravellingBindingImpl;
 
 public class DataBinderMapperImpl extends DataBinderMapper {
   private static final int LAYOUT_ACTIVITYMAIN = 1;
@@ -35,7 +36,9 @@ public class DataBinderMapperImpl extends DataBinderMapper {
 
   private static final int LAYOUT_FRAGMENTSHOWIMAGE = 6;
 
-  private static final SparseIntArray INTERNAL_LAYOUT_ID_LOOKUP = new SparseIntArray(6);
+  private static final int LAYOUT_FRAGMENTTRAVELLING = 7;
+
+  private static final SparseIntArray INTERNAL_LAYOUT_ID_LOOKUP = new SparseIntArray(7);
 
   static {
     INTERNAL_LAYOUT_ID_LOOKUP.put(uk.ac.shef.oak.com4510.R.layout.activity_main, LAYOUT_ACTIVITYMAIN);
@@ -44,6 +47,7 @@ public class DataBinderMapperImpl extends DataBinderMapper {
     INTERNAL_LAYOUT_ID_LOOKUP.put(uk.ac.shef.oak.com4510.R.layout.fragment_home, LAYOUT_FRAGMENTHOME);
     INTERNAL_LAYOUT_ID_LOOKUP.put(uk.ac.shef.oak.com4510.R.layout.fragment_new_trip, LAYOUT_FRAGMENTNEWTRIP);
     INTERNAL_LAYOUT_ID_LOOKUP.put(uk.ac.shef.oak.com4510.R.layout.fragment_show_image, LAYOUT_FRAGMENTSHOWIMAGE);
+    INTERNAL_LAYOUT_ID_LOOKUP.put(uk.ac.shef.oak.com4510.R.layout.fragment_travelling, LAYOUT_FRAGMENTTRAVELLING);
   }
 
   @Override
@@ -90,6 +94,12 @@ public class DataBinderMapperImpl extends DataBinderMapper {
             return new FragmentShowImageBindingImpl(component, view);
           }
           throw new IllegalArgumentException("The tag for fragment_show_image is invalid. Received: " + tag);
+        }
+        case  LAYOUT_FRAGMENTTRAVELLING: {
+          if ("layout/fragment_travelling_0".equals(tag)) {
+            return new FragmentTravellingBindingImpl(component, view);
+          }
+          throw new IllegalArgumentException("The tag for fragment_travelling is invalid. Received: " + tag);
         }
       }
     }
@@ -144,7 +154,7 @@ public class DataBinderMapperImpl extends DataBinderMapper {
   }
 
   private static class InnerLayoutIdLookup {
-    static final HashMap<String, Integer> sKeys = new HashMap<String, Integer>(6);
+    static final HashMap<String, Integer> sKeys = new HashMap<String, Integer>(7);
 
     static {
       sKeys.put("layout/activity_main_0", uk.ac.shef.oak.com4510.R.layout.activity_main);
@@ -153,6 +163,7 @@ public class DataBinderMapperImpl extends DataBinderMapper {
       sKeys.put("layout/fragment_home_0", uk.ac.shef.oak.com4510.R.layout.fragment_home);
       sKeys.put("layout/fragment_new_trip_0", uk.ac.shef.oak.com4510.R.layout.fragment_new_trip);
       sKeys.put("layout/fragment_show_image_0", uk.ac.shef.oak.com4510.R.layout.fragment_show_image);
+      sKeys.put("layout/fragment_travelling_0", uk.ac.shef.oak.com4510.R.layout.fragment_travelling);
     }
   }
 }
