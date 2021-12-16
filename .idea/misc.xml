@@ -3,19 +3,33 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/Daniel/AndroidStudioProjects/COM4510/app/src/main/res/layout/activity_edit.xml" value="0.1" />
-        <entry key="..\:/Users/Daniel/AndroidStudioProjects/COM4510/app/src/main/res/layout/activity_gallery.xml" value="0.1721014492753623" />
-        <entry key="..\:/Users/Daniel/AndroidStudioProjects/COM4510/app/src/main/res/layout/activity_map.xml" value="0.1" />
-        <entry key="..\:/Users/Daniel/AndroidStudioProjects/COM4510/app/src/main/res/layout/activity_show_image.xml" value="0.1" />
-        <entry key="..\:/Users/Daniel/AndroidStudioProjects/COM4510/app/src/main/res/layout/content_camera.xml" value="0.1" />
-        <entry key="..\:/Users/Daniel/AndroidStudioProjects/COM4510/app/src/main/res/layout/list_item_image.xml" value="0.1" />
-        <entry key="..\:/dev/uni/androidModule/assignment/com4510androiddev/app/src/main/res/layout/activity_edit.xml" value="0.46875" />
-        <entry key="..\:/dev/uni/androidModule/assignment/com4510androiddev/app/src/main/res/layout/activity_gallery.xml" value="0.33" />
-        <entry key="..\:/dev/uni/androidModule/assignment/com4510androiddev/app/src/main/res/layout/activity_map.xml" value="0.3079710144927536" />
-        <entry key="..\:/dev/uni/androidModule/assignment/com4510androiddev/app/src/main/res/layout/activity_show_image.xml" value="0.46875" />
-        <entry key="..\:/dev/uni/androidModule/assignment/com4510androiddev/app/src/main/res/layout/content_camera.xml" value="0.23252279635258358" />
-        <entry key="..\:/dev/uni/androidModule/assignment/com4510androiddev/app/src/main/res/layout/search_view_debug.xml" value="0.44635416666666666" />
-        <entry key="..\:/dev/uni/androidModule/assignment/com4510androiddev/app/src/main/res/menu/menu_test.xml" value="0.478125" />
+        <entry key="..\:/Users/albip/Documents/University/Year4/COM4510Mobile/assignment/com4510androiddev/app/src/main/res/drawable/empty_tall_divider.xml" value="0.14635416666666667" />
+        <entry key="..\:/Users/albip/Documents/University/Year4/COM4510Mobile/assignment/com4510androiddev/app/src/main/res/layout/activity_main.xml" value="0.13020833333333334" />
+        <entry key="..\:/Users/albip/Documents/University/Year4/COM4510Mobile/assignment/com4510androiddev/app/src/main/res/layout/activity_map.xml" value="0.1" />
+        <entry key="..\:/Users/albip/Documents/University/Year4/COM4510Mobile/assignment/com4510androiddev/app/src/main/res/layout/content_camera.xml" value="0.13020833333333334" />
+        <entry key="..\:/Users/albip/Documents/University/Year4/COM4510Mobile/assignment/com4510androiddev/app/src/main/res/layout/fragment_gallery.xml" value="0.13020833333333334" />
+        <entry key="..\:/Users/albip/Documents/University/Year4/COM4510Mobile/assignment/com4510androiddev/app/src/main/res/layout/fragment_home.xml" value="0.13020833333333334" />
+        <entry key="..\:/Users/albip/Documents/University/Year4/COM4510Mobile/assignment/com4510androiddev/app/src/main/res/layout/fragment_new_trip.xml" value="0.13020833333333334" />
+        <entry key="..\:/Users/albip/Documents/University/Year4/COM4510Mobile/assignment/com4510androiddev/app/src/main/res/layout/fragment_show_image.xml" value="0.13020833333333334" />
+        <entry key="..\:/Users/albip/Documents/University/Year4/COM4510Mobile/assignment/com4510androiddev/app/src/main/res/layout/fragment_travelling.xml" value="0.1" />
+        <entry key="..\:/Users/albip/Documents/University/Year4/COM4510Mobile/assignment/com4510androiddev/app/src/main/res/layout/list_item_image.xml" value="0.13020833333333334" />
+        <entry key="..\:/Users/albip/Documents/University/Year4/COM4510Mobile/com4510androiddev/app/src/main/res/layout/activity_edit.xml" value="0.2546875" />
+        <entry key="..\:/Users/albip/Documents/University/Year4/COM4510Mobile/com4510androiddev/app/src/main/res/layout/activity_gallery.xml" value="0.18125" />
+        <entry key="..\:/Users/albip/Documents/University/Year4/COM4510Mobile/com4510androiddev/app/src/main/res/layout/activity_main.xml" value="0.22916666666666666" />
+        <entry key="..\:/Users/albip/Documents/University/Year4/COM4510Mobile/com4510androiddev/app/src/main/res/layout/activity_show_image.xml" value="0.22" />
+        <entry key="..\:/Users/albip/Documents/University/Year4/COM4510Mobile/com4510androiddev/app/src/main/res/layout/content_camera.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/albip/Documents/University/Year4/COM4510Mobile/com4510androiddev/app/src/main/res/layout/edit.xml" value="0.27447916666666666" />
+        <entry key="..\:/Users/albip/Documents/University/Year4/COM4510Mobile/com4510androiddev/app/src/main/res/layout/fragment_edit_image.xml" value="0.19166666666666668" />
+        <entry key="..\:/Users/albip/Documents/University/Year4/COM4510Mobile/com4510androiddev/app/src/main/res/layout/fragment_edit_old.xml" value="0.20520833333333333" />
+        <entry key="..\:/Users/albip/Documents/University/Year4/COM4510Mobile/com4510androiddev/app/src/main/res/layout/fragment_gallery.xml" value="0.2604166666666667" />
+        <entry key="..\:/Users/albip/Documents/University/Year4/COM4510Mobile/com4510androiddev/app/src/main/res/layout/fragment_home.xml" value="0.27447916666666666" />
+        <entry key="..\:/Users/albip/Documents/University/Year4/COM4510Mobile/com4510androiddev/app/src/main/res/layout/fragment_show_image.xml" value="0.19114583333333332" />
+        <entry key="..\:/Users/albip/Documents/University/Year4/COM4510Mobile/com4510androiddev/app/src/main/res/layout/gallery.xml" value="0.16197916666666667" />
+        <entry key="..\:/Users/albip/Documents/University/Year4/COM4510Mobile/com4510androiddev/app/src/main/res/layout/gallery_host.xml" value="0.20572916666666666" />
+        <entry key="..\:/Users/albip/Documents/University/Year4/COM4510Mobile/com4510androiddev/app/src/main/res/layout/list_item_image.xml" value="0.20520833333333333" />
+        <entry key="..\:/Users/albip/Documents/University/Year4/COM4510Mobile/com4510androiddev/app/src/main/res/layout/main_activit_host.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/albip/Documents/University/Year4/COM4510Mobile/com4510androiddev/app/src/main/res/layout/show_image.xml" value="0.16197916666666667" />
+        <entry key="..\:/Users/albip/Documents/University/Year4/COM4510Mobile/com4510androiddev/app/src/main/res/layout/show_image_fragment.xml" value="0.2604166666666667" />
       </map>
     </option>
   </component>

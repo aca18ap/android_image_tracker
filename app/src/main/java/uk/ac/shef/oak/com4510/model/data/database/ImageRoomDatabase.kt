@@ -25,7 +25,7 @@ abstract class ImageRoomDatabase: RoomDatabase() {
                     context.applicationContext,
                     ImageRoomDatabase::class.java,
                     "travelApp_database"
-                    )
+                )
                     // Rebuilds the FTS index. This is only necessary while debugging
                     .addCallback(object : RoomDatabase.Callback(){
                         override fun onCreate(db: SupportSQLiteDatabase) {

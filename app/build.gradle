@@ -2,22 +2,14 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'kotlin-kapt'
-    id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
+    id 'androidx.navigation.safeargs.kotlin'
 }
 
 android {
-    signingConfigs {
-        debug {
-            storeFile file('keyStore.jks')
-            storePassword 'com4510iscool'
-            keyAlias 'com4510'
-            keyPassword 'com4510iscool'
-        }
-    }
     compileSdk 31
 
     defaultConfig {
-        applicationId "uk.ac.shef.oak.com4510"
+        applicationId "com.lab.lab5_kt"
         minSdk 21
         targetSdk 31
         versionCode 1
@@ -42,6 +34,9 @@ android {
     buildFeatures {
         viewBinding true
     }
+    dataBinding {
+        enabled = true
+    }
 }
 
 dependencies {
@@ -53,8 +48,10 @@ dependencies {
     implementation "androidx.appcompat:appcompat:$appcompat_version"
     // Constraint layout lib
     implementation "androidx.constraintlayout:constraintlayout:$constraintlayout_version"
-    implementation 'com.google.android.gms:play-services-maps:18.0.0'
-    implementation 'com.google.android.gms:play-services-location:18.0.0'
+    implementation 'com.google.android.gms:play-services-maps:17.0.0'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.databinding:databinding-runtime:4.1.3'
+    implementation 'com.google.android.gms:play-services-location:19.0.0'
 
     // Testing libs
     testImplementation "junit:junit:$junit_version"
@@ -101,4 +98,8 @@ dependencies {
     implementation 'androidx.activity:activity-ktx:1.4.0-rc01'
     // Fragment API for Activity Result API
     implementation 'androidx.fragment:fragment-ktx:1.4.0-alpha10'
+
+
+    implementation "androidx.navigation:navigation-ui-ktx:$navigationVersion"
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.3.5'
 }
