@@ -3,10 +3,9 @@ package uk.ac.shef.oak.com4510.view
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.view.*
+import android.widget.SearchView
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.databinding.DataBindingUtil
@@ -17,9 +16,10 @@ import androidx.recyclerview.widget.RecyclerView
 import uk.ac.shef.oak.com4510.R
 import uk.ac.shef.oak.com4510.databinding.FragmentGalleryBinding
 import uk.ac.shef.oak.com4510.model.data.database.ImageData
-import uk.ac.shef.oak.com4510.viewModel.MyAdapter
+import uk.ac.shef.oak.com4510.viewModel.ImagesAdapter
 import uk.ac.shef.oak.com4510.viewModel.TravelViewModel
 import pl.aprilapps.easyphotopicker.*
+
 
 
 class GalleryFragment : Fragment() {
@@ -67,7 +67,7 @@ class GalleryFragment : Fragment() {
         mRecyclerView = binding.contentCamera.gridRecyclerView
         val numberOfColumns = 4
         mRecyclerView.layoutManager = GridLayoutManager(activity, numberOfColumns)
-        mAdapter = MyAdapter(ArrayList<ImageData>()) as RecyclerView.Adapter<RecyclerView.ViewHolder>
+        mAdapter = ImagesAdapter(ArrayList<ImageData>()) as RecyclerView.Adapter<RecyclerView.ViewHolder>
         mRecyclerView.adapter = mAdapter
 
         // required by Android 6.0 +
@@ -77,13 +77,34 @@ class GalleryFragment : Fragment() {
             easyImage.openChooser(this)
         }
 
-        viewModel!!.imageList.observe(this, Observer<MutableList<ImageData>>{ images ->
-            MyAdapter.items = images
+        binding.searchBarGallery.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(filter: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(filter: String?): Boolean {
+                viewModel!!.search(filter)
+                return false
+            }
+        })
+
+        viewModel!!.searchResults.observe(this, Observer<MutableList<ImageData>>{ images ->
+            ImagesAdapter.items = images as MutableList<ImageData>
             mAdapter.notifyDataSetChanged()
         })
         viewModel!!.initObservable() // Populate the imageList observable with all the images in the database
 
+
+        //SearchView functionalities
+
+
+
+
         return binding.root
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?){
