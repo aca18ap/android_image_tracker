@@ -6,28 +6,27 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.*
+import pl.aprilapps.easyphotopicker.MediaFile
 import uk.ac.shef.oak.com4510.model.data.Repository
 import uk.ac.shef.oak.com4510.model.data.database.ImageData
 import uk.ac.shef.oak.com4510.util.append
 import uk.ac.shef.oak.com4510.util.convertToImageDataWithoutId
 import uk.ac.shef.oak.com4510.util.sanitizeSearchQuery
-import kotlinx.coroutines.*
-import pl.aprilapps.easyphotopicker.MediaFile
 
 class TravelViewModel (application: Application) : AndroidViewModel(application) {
     private var mRepository: Repository = Repository(application)
 
-    //Separate constructor to allow passing a different repository. For testing code
+    //Separate constructor to allow passing a different repository. For testing
     constructor(repository: Repository, app : Application) : this(app) {
         mRepository = repository
     }
 
     /**
-     * Observable list of images. Contains all images in the database
+     * Observable list of images. Contains all images a user has taken or added to the Travel app represented as ImageData.
      */
     private val _imageList: MutableLiveData<MutableList<ImageData>> = MutableLiveData<MutableList<ImageData>>()
-    val imageList : LiveData<MutableList<ImageData>>
-        get() = _imageList
+    val imageList : LiveData<MutableList<ImageData>> get() = _imageList
 
     /**
      * Observable list of images to be used with searching. The search function given a string updates this livedata with
@@ -40,7 +39,7 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
     // To do: Find a way not to block the ui thread here. Worst case scenario provide a function that inserts multiple ImageData's at a time each on its own coroutine
     /**
      * Inserts an imageData into the database and returns the id it was associated with. Warning: This does block the UI thread.
-     * This does not update any liveData object
+     * This does not update the imageList livedata object
      */
     fun insertDataReturnId(imageData: ImageData): Int = runBlocking{
         var deferredId = async { mRepository.insertDataReturnId(imageData) }
@@ -56,8 +55,8 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
         _imageList.append(imageDataList)
     }
 
-    /**
-     * Updates an imageData in the database. Does not update the observable LiveData TO ADD: Functionality for updating position
+    /**NOT TESTED BUT PROBABLY WORKS
+     * Updates an imageData in the database. TO ADD: Functionality for updating position
      */
     fun updateImageInDatabase(imageData : ImageData, title : String? = null, description : String? = null)
     {
@@ -73,47 +72,26 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
         }
     }
 
-    /**
-     * Given an imageData, it deletes it from the database and updates the observable liveadata
-     */
-    fun deleteImageInDatabase(imageData : ImageData)
+    fun initAll()
     {
-        viewModelScope.launch {
-            mRepository.deleteImage(imageData)
-            //Update the livedata
-            updateImageList()
-        }
-
-    }
-
-
-    /**
-     * Initialize all observable LiveData
-     */
-    fun initObservable()
-    {
-        updateImageList()
-        initSearchResults()
+        initImageListFromDatabase()
+        initSearchResultsFromDatabase()
     }
     /**
-     * Updates the imageList LiveData to reflect what is in the database
+     * Initializes the imageList to hold every image from the database
      */
-    fun updateImageList()
+    fun initImageListFromDatabase()
     {
         viewModelScope.launch{
             _imageList.value = mRepository.getAllImages() as MutableList<ImageData>
         }
     }
 
-    /**
-     * Initializes the searchResults LiveData to hold every image from the database
-     */
-    fun initSearchResults()
+    fun initSearchResultsFromDatabase()
     {
         viewModelScope.launch{
             _searchResults.value = mRepository.getAllImages() as MutableList<ImageData>
         }
-
     }
 
     /**
@@ -148,6 +126,28 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
         }
     }
 
-}
+    /**
+     * Given an imageData, it deletes it from the database and updates the observable liveadata
+     */
+    fun deleteImageInDatabase(imageData : ImageData)
+    {
+        viewModelScope.launch {
+            mRepository.deleteImage(imageData)
+        }
+        //Update the livedata
+        updateImageList()
+    }
 
+
+    /**
+     * Updates the imageList LiveData to reflect what is in the database
+     */
+    private fun updateImageList()
+    {
+        viewModelScope.launch{
+            _imageList.value = mRepository.getAllImages() as MutableList<ImageData>
+        }
+    }
+
+}
 
