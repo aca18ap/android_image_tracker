@@ -1,40 +1,39 @@
 package uk.ac.shef.oak.com4510.view
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.*
 import android.widget.SearchView
 import androidx.fragment.app.Fragment
-import androidx.activity.result.ActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import uk.ac.shef.oak.com4510.viewModel.TravelViewModel
 import uk.ac.shef.oak.com4510.R
 import uk.ac.shef.oak.com4510.databinding.FragmentGalleryBinding
 import uk.ac.shef.oak.com4510.model.data.database.ImageData
 import uk.ac.shef.oak.com4510.viewModel.ImagesAdapter
-import uk.ac.shef.oak.com4510.viewModel.TravelViewModel
 import pl.aprilapps.easyphotopicker.*
 
 
 class GalleryFragment : Fragment() {
-    private val viewModel: TravelViewModel by activityViewModels()
     private lateinit var easyImage: EasyImage
     private lateinit var binding : FragmentGalleryBinding
+    private var viewModel: TravelViewModel? = null
 
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(inflater,
             R.layout.fragment_gallery, container, false)
+
+        viewModel = ViewModelProvider(this)[TravelViewModel::class.java]
 
         val mRecyclerView = binding.contentCamera.gridRecyclerView
         val numberOfColumns = 4
@@ -60,11 +59,11 @@ class GalleryFragment : Fragment() {
             }
         })
 
-        viewModel!!.searchResults.observe(this, Observer<MutableList<ImageData>>{ images ->
+        viewModel!!.searchResults.observe(this, Observer<List<ImageData>>{ images ->
             ImagesAdapter.items = images as MutableList<ImageData>
             mAdapter.notifyDataSetChanged()
         })
-        viewModel!!.initObservable() // Populate the imageList observable with all the images in the database
+        viewModel!!.initAll() // Populate the imageList observable with all the images in the database
 
         return binding.root
     }
@@ -73,7 +72,7 @@ class GalleryFragment : Fragment() {
         easyImage.handleActivityResult(requestCode, resultCode, data, requireActivity(),
             object : DefaultCallback(){
             override fun onMediaFilesPicked(imageFiles: Array<MediaFile>, source: MediaSource) {
-                viewModel.insertArrayMediaFiles(imageFiles)
+                viewModel!!.insertArrayMediaFiles(imageFiles)
             }
         })
     }

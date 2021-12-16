@@ -17,12 +17,10 @@ import kotlinx.coroutines.*
 class ImagesAdapter : RecyclerView.Adapter<ImagesAdapter.ViewHolder> {
     private lateinit var context: Context
 
-    var itemsFiltered: ArrayList<ImageData> = ArrayList()
 
 
     constructor(items: List<ImageData>) : super() {
         Companion.items = items as MutableList<ImageData>
-        Companion.itemsFiltered = items as ArrayList<ImageData>
     }
 
     constructor(cont: Context, items: List<ImageData>) : super() {
@@ -97,7 +95,7 @@ class ImagesAdapter : RecyclerView.Adapter<ImagesAdapter.ViewHolder> {
     */
 
     override fun getItemCount(): Int {
-        return itemsFiltered.size
+        return items.size
     }
 
     class ViewHolder constructor(itemView: View) : RecyclerView.ViewHolder(itemView){
@@ -108,7 +106,6 @@ class ImagesAdapter : RecyclerView.Adapter<ImagesAdapter.ViewHolder> {
     }
 
     companion object {
-        lateinit var itemsFiltered: ArrayList<ImageData>
         lateinit var items: MutableList<ImageData>
         private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 
