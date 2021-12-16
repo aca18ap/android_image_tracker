@@ -12,12 +12,9 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
-import com.google.android.material.textfield.TextInputEditText
 import uk.ac.shef.oak.com4510.R
 import uk.ac.shef.oak.com4510.databinding.FragmentEditImageBinding
-import uk.ac.shef.oak.com4510.model.data.database.ImageDataDao
-import uk.ac.shef.oak.com4510.viewModel.ImageApplication
-import uk.ac.shef.oak.com4510.viewModel.MyAdapter
+import uk.ac.shef.oak.com4510.viewModel.ImagesAdapter
 import kotlinx.coroutines.*
 import uk.ac.shef.oak.com4510.viewModel.TravelViewModel
 
@@ -41,7 +38,7 @@ class EditImageFragment : Fragment() {
         binding = DataBindingUtil.inflate<FragmentEditImageBinding>(inflater,
             R.layout.fragment_edit_image, container, false )
         if (args.position != -1){
-            MyAdapter.items[args.position].let{
+            ImagesAdapter.items[args.position].let{
                 binding.editImage.setImageBitmap(it.thumbnail)
                 binding.editorToolbar.title = it.imageTitle
                 binding.editImageTitle.setText(it.imageTitle)
@@ -62,7 +59,7 @@ class EditImageFragment : Fragment() {
         // Delete button listener
         val deleteButton: Button = binding.deleteButton
         deleteButton.setOnClickListener {
-            model.deleteImageInDatabase(MyAdapter.items[position])
+            model.deleteImageInDatabase(ImagesAdapter.items[position])
             // Pop back stack twice to get back to the gallery
             it.findNavController().popBackStack()
             it.findNavController().popBackStack()
@@ -75,7 +72,7 @@ class EditImageFragment : Fragment() {
             val titleTextInput = binding.editImageTitle
 
             model.updateImageInDatabase(
-                MyAdapter.items[position],titleTextInput.text.toString(),
+                ImagesAdapter.items[position],titleTextInput.text.toString(),
                 descriptionTextInput.text.toString())
             it.findNavController().popBackStack()
         }

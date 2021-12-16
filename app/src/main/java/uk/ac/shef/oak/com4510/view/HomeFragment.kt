@@ -34,6 +34,10 @@ class HomeFragment : Fragment() {
             view.findNavController().navigate(R.id.action_homeFragment_to_newTripFragment)
         }
 
+        binding.viewTripsButton.setOnClickListener{view : View ->
+            view.findNavController().navigate(R.id.action_homeFragment_to_viewPastTripsFragment)
+        }
+
         return binding.root
     }
 
