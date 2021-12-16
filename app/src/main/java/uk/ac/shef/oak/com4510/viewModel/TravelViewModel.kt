@@ -80,9 +80,10 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
     {
         viewModelScope.launch {
             mRepository.delete(imageData)
+            //Update the livedata
+            updateImageList()
         }
-        //Update the livedata
-        updateImageList()
+
     }
 
 
