@@ -1,5 +1,7 @@
 package uk.ac.shef.oak.com4510.view
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -23,7 +25,6 @@ import uk.ac.shef.oak.com4510.viewModel.TravelViewModel
  */
 class EditImageFragment : Fragment() {
     private val args: EditImageFragmentArgs by navArgs()
-    val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
     lateinit var binding : FragmentEditImageBinding
     private val model: TravelViewModel by activityViewModels()
 
@@ -59,6 +60,8 @@ class EditImageFragment : Fragment() {
         val deleteButton: Button = binding.deleteButton
         deleteButton.setOnClickListener {
             model.deleteImageInDatabase(ImagesAdapter.items[position])
+            // Pop back stack twice to get back to the gallery
+            it.findNavController().popBackStack()
             it.findNavController().popBackStack()
         }
 
