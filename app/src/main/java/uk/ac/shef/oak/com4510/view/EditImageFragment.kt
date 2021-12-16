@@ -9,14 +9,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
+import com.google.android.material.textfield.TextInputEditText
 import uk.ac.shef.oak.com4510.R
 import uk.ac.shef.oak.com4510.databinding.FragmentEditImageBinding
 import uk.ac.shef.oak.com4510.model.data.database.ImageDataDao
 import uk.ac.shef.oak.com4510.viewModel.ImageApplication
 import uk.ac.shef.oak.com4510.viewModel.MyAdapter
 import kotlinx.coroutines.*
+import uk.ac.shef.oak.com4510.viewModel.TravelViewModel
 
 /**
  * A simple [Fragment] subclass.
@@ -25,8 +28,8 @@ import kotlinx.coroutines.*
  */
 class EditImageFragment : Fragment() {
     private val args: EditImageFragmentArgs by navArgs()
-    val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
-    lateinit var daoObj: ImageDataDao
+    lateinit var binding : FragmentEditImageBinding
+    private val model: TravelViewModel by activityViewModels()
 
 
 
@@ -35,7 +38,7 @@ class EditImageFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val binding= DataBindingUtil.inflate<FragmentEditImageBinding>(inflater,
+        binding = DataBindingUtil.inflate<FragmentEditImageBinding>(inflater,
             R.layout.fragment_edit_image, container, false )
         if (args.position != -1){
             MyAdapter.items[args.position].let{
@@ -45,15 +48,12 @@ class EditImageFragment : Fragment() {
                 binding.editImageDescription.setText(it.imageDescription)
             }
         }
-        daoObj = (activity?.application as ImageApplication)
-            .databaseObj.imageDataDao()
-
+        makeButtonListeners(args.position)
 
         return binding.root
     }
 
-    private fun makeButtonListeners(position: Int, binding: FragmentEditImageBinding) {
-        var id = MyAdapter.items[position].id
+    private fun makeButtonListeners(position: Int) {
         val cancelButton: Button = binding.cancelButton
         cancelButton.setOnClickListener {
             it.findNavController().popBackStack()
@@ -62,40 +62,22 @@ class EditImageFragment : Fragment() {
         // Delete button listener
         val deleteButton: Button = binding.deleteButton
         deleteButton.setOnClickListener {
-            scope.launch(Dispatchers.IO) {
-                async { daoObj.delete(MyAdapter.items[position]) }
-                    .invokeOnCompletion {
-                        MyAdapter.items.removeAt(position)
-                        val intent = Intent()
-                            .putExtra("position", position)
-                            .putExtra("id", id)
-                            .putExtra("deletion_flag", 1)
-                        activity?.setResult(Activity.RESULT_OK, intent)
-                        activity?.finish()
-                    }
-            }
+            model.deleteImageInDatabase(MyAdapter.items[position])
+            // Pop back stack twice to get back to the gallery
+            it.findNavController().popBackStack()
+            it.findNavController().popBackStack()
         }
 
         // Save button listener
         val saveButton: Button = binding.saveButton
         saveButton.setOnClickListener {
-            val descriptionTextInput =
-                binding.editImageDescription
-            MyAdapter.items[position].imageDescription = descriptionTextInput.text.toString()
+            val descriptionTextInput = binding.editImageDescription
             val titleTextInput = binding.editImageTitle
-            MyAdapter.items[position].imageTitle = titleTextInput.text.toString()
 
-            scope.launch(Dispatchers.IO) {
-                async { daoObj.update(MyAdapter.items[position]) }
-                    .invokeOnCompletion {
-                        val intent = Intent()
-                            .putExtra("position", position)
-                            .putExtra("id", id)
-                            .putExtra("deletion_flag", 0)
-                        activity?.setResult(Activity.RESULT_OK, intent)
-                        activity?.finish()
-                    }
-            }
+            model.updateImageInDatabase(
+                MyAdapter.items[position],titleTextInput.text.toString(),
+                descriptionTextInput.text.toString())
+            it.findNavController().popBackStack()
         }
     }
 
