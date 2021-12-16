@@ -10,7 +10,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import uk.ac.shef.oak.com4510.R
 import uk.ac.shef.oak.com4510.databinding.FragmentShowImageBinding
-import uk.ac.shef.oak.com4510.viewModel.MyAdapter
+import uk.ac.shef.oak.com4510.viewModel.ImagesAdapter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -52,7 +52,7 @@ class ShowImageFragment : Fragment() {
         val viewsList = listOf(mapView, descriptionTextView, sensorsTextView)
         if (position != -1) {
 
-            val imageData = MyAdapter.items[position]
+            val imageData = ImagesAdapter.items[position]
 
             imageView.setImageBitmap(imageData.thumbnail!!)
             titleToolbar.title = imageData.imageTitle

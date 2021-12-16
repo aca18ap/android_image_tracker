@@ -20,6 +20,9 @@
         <action
             android:id="@+id/action_homeFragment_to_newTripFragment"
             app:destination="@id/newTripFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_viewPastTripsFragment"
+            app:destination="@id/viewPastTripsFragment" />
     </fragment>
     <fragment
         android:id="@+id/galleryFragment"
@@ -77,4 +80,22 @@
         android:name="uk.ac.shef.oak.com4510.view.TravellingFragment"
         android:label="TravellingFragment"
         tools:layout="@layout/fragment_travelling"/>
+    <fragment
+        android:id="@+id/viewPastTripsFragment"
+        android:name="uk.ac.shef.oak.com4510.view.ViewPastTripsFragment"
+        android:label="ViewPastTripsFragment"
+        tools:layout="@layout/fragment_view_past_trips">
+        <action
+            android:id="@+id/action_viewPastTripsFragment_to_viewTripDetailsFragment"
+            app:destination="@id/viewTripDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/viewTripDetailsFragment"
+        android:name="uk.ac.shef.oak.com4510.view.ViewTripDetailsFragment"
+        android:label="ViewTripDetailsFragment"
+        tools:layout="@layout/fragment_view_trip_details">
+        <action
+            android:id="@+id/action_viewTripDetailsFragment_to_showImageFragment"
+            app:destination="@id/showImageFragment" />
+    </fragment>
 </navigation>
