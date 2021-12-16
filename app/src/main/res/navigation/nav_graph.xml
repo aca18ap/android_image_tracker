@@ -23,6 +23,9 @@
         <action
             android:id="@+id/action_homeFragment_to_viewPastTripsFragment"
             app:destination="@id/viewPastTripsFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_debugFragment"
+            app:destination="@id/debugFragment" />
     </fragment>
     <fragment
         android:id="@+id/galleryFragment"
@@ -98,4 +101,9 @@
             android:id="@+id/action_viewTripDetailsFragment_to_showImageFragment"
             app:destination="@id/showImageFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/debugFragment"
+        android:name="uk.ac.shef.oak.com4510.view.DebugFragment"
+        android:label="fragment_debug"
+        tools:layout="@layout/fragment_debug" />
 </navigation>
