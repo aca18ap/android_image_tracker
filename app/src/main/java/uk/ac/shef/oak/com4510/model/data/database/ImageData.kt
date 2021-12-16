@@ -25,4 +25,4 @@ data class ImageData(
 data class ImageDataFTS(
     @ColumnInfo(name="title") var imageTitle: String,
     @ColumnInfo(name="description") var imageDescription: String? = null,
-    )
+)

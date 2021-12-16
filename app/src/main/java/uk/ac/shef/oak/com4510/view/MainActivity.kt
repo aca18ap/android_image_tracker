@@ -5,34 +5,21 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
-import androidx.activity.result.ActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.Adapter
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import uk.ac.shef.oak.com4510.model.data.database.ImageData
-import uk.ac.shef.oak.com4510.viewModel.TravelViewModel
+import androidx.databinding.DataBindingUtil
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.tasks.CancellationTokenSource
 import uk.ac.shef.oak.com4510.R
-import kotlinx.coroutines.*
-import pl.aprilapps.easyphotopicker.*
-
+import uk.ac.shef.oak.com4510.databinding.ActivityMainBinding
+import pl.aprilapps.easyphotopicker.EasyImage
 
 class MainActivity : AppCompatActivity() {
-
-    private var viewModel: TravelViewModel? = null
-    private lateinit var mAdapter: Adapter<RecyclerView.ViewHolder>
-    private lateinit var mRecyclerView: RecyclerView
     private lateinit var easyImage: EasyImage
 
     companion object {
@@ -43,97 +30,16 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    val startForResult =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                val pos = result.data?.getIntExtra("position", -1)!!
-                val id = result.data?.getIntExtra("id", -1)!!
-                val del_flag = result.data?.getIntExtra("deletion_flag", -1)!!
-                if (pos != -1 && id != -1) {
-                    if (result.resultCode == Activity.RESULT_OK) {
-                        when(del_flag){
-                            // POTENTIAL BUG: Possible source of bug: I deleted the -1 and I don't know what I'm doing
-                            0,1 ->
-                            { // If anything was updated or deleted, update the imageList liveData to reflect the database
-                                //Comment to alberto doing the merge: This is the sort of things we could delete since we're gonna use the same
-                                //viewModel on different fragments. There would be no need to wait for the return of anything, the fragment itself
-                                //can change the livedata since it has the same viewModel
-                                viewModel?.updateImageList()
-                            }
-                        }
-                    }
-                }
-            }
-        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_gallery)
-
-        viewModel = ViewModelProvider(this)[TravelViewModel::class.java]
-
-        mRecyclerView = findViewById(R.id.grid_recycler_view)
-        // set up the RecyclerView
-        val numberOfColumns = 4
-        mRecyclerView.layoutManager = GridLayoutManager(this, numberOfColumns)
-        mAdapter = MyAdapter(ArrayList<ImageData>()) as Adapter<RecyclerView.ViewHolder>
-        mRecyclerView.adapter = mAdapter
-
-        // required by Android 6.0 +
+        @Suppress("UNUSED_VARIABLE")
+        val binding =
+            DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main)
         checkPermissions(applicationContext)
-        initEasyImage()
 
-        // the floating button that will allow us to get the images from the Gallery
-        val fabGallery: FloatingActionButton = findViewById(R.id.fab_gallery)
-        fabGallery.setOnClickListener(View.OnClickListener {
-            easyImage.openChooser(this@MainActivity)
-        })
-        //TO REFACTOR: Move this to xml. Add an observer to the imageList LiveData. This binds the adapter to the imageList.
-        viewModel!!.imageList.observe(this, Observer<MutableList<ImageData>>{ images ->
-            MyAdapter.items = images
-            mAdapter.notifyDataSetChanged()
-        })
-        viewModel!!.initObservable() // Populate the imageList observable with all the images in the database
     }
 
-    /**
-     * it initialises EasyImage
-     */
-    private fun initEasyImage() {
-        easyImage = EasyImage.Builder(this)
-//        .setChooserTitle("Pick media")
-//        .setFolderName(GALLERY_DIR)
-            .setChooserType(ChooserType.CAMERA_AND_GALLERY)
-            .allowMultiple(true)
-//        .setCopyImagesToPublicGalleryFolder(true)
-            .build()
-    }
-
-
-    /**
-     * insert a ImageData into the database
-     * Called for each image the user adds by clicking the fab button
-     * Then retrieves the same image so we can have the automatically assigned id field
-     */
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        easyImage.handleActivityResult(requestCode, resultCode, data, this,
-            object : DefaultCallback() {
-                override fun onMediaFilesPicked(imageFiles: Array<MediaFile>, source: MediaSource) {
-                    viewModel?.insertArrayMediaFiles(imageFiles)
-                }
-
-                override fun onImagePickerError(error: Throwable, source: MediaSource) {
-                    super.onImagePickerError(error, source)
-                }
-
-                override fun onCanceled(source: MediaSource) {
-                    super.onCanceled(source)
-                }
-            })
-    }
 
     /**
      * check permissions are necessary starting from Android 6
@@ -220,6 +126,7 @@ class MainActivity : AppCompatActivity() {
                     REQUEST_CAMERA_CODE
                 );
             }
+
         }
     }
 }

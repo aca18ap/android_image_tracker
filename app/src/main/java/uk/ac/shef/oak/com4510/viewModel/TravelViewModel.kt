@@ -27,7 +27,7 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
      */
     private val _imageList: MutableLiveData<MutableList<ImageData>> = MutableLiveData<MutableList<ImageData>>()
     val imageList : LiveData<MutableList<ImageData>>
-    get() = _imageList
+        get() = _imageList
 
     /**
      * Observable list of images to be used with searching. The search function given a string updates this livedata with
@@ -35,7 +35,7 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
      * */
     private val _searchResults  = MutableLiveData<MutableList<ImageData>>()
     val searchResults : LiveData<MutableList<ImageData>>
-    get() = _searchResults
+        get() = _searchResults
 
     // To do: Find a way not to block the ui thread here. Worst case scenario provide a function that inserts multiple ImageData's at a time each on its own coroutine
     /**
@@ -64,12 +64,12 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
         var updatedImage = ImageData(imageData.id,
             imageData.imageUri,
             title ?: imageData.imageTitle,
-        description ?: imageData.imageDescription,
-        imageData.thumbnailUri,
-        imageData.position)
+            description ?: imageData.imageDescription,
+            imageData.thumbnailUri,
+            imageData.position)
         updatedImage.thumbnail = imageData.thumbnail
         viewModelScope.launch {
-             mRepository.updateImage(updatedImage)
+            mRepository.updateImage(updatedImage)
         }
     }
 
