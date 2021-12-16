@@ -1,13 +1,13 @@
 package uk.ac.shef.oak.com4510.model.data
 
 import android.app.Application
-import uk.ac.shef.oak.com4510.model.data.database.ImageData
-import uk.ac.shef.oak.com4510.model.data.database.ImageDataDao
-import uk.ac.shef.oak.com4510.model.data.database.ImageRoomDatabase
 import kotlinx.coroutines.*
+import uk.ac.shef.oak.com4510.model.data.database.*
 
 class Repository(application: Application) {
     private var imageDataDao: ImageDataDao? = null
+    private var entryDataDao : EntryDataDao? = null
+    private var tripDataDao : TripDataDao? = null
 
     init {
         val db: ImageRoomDatabase? = ImageRoomDatabase.getDatabase(application)
@@ -20,6 +20,7 @@ class Repository(application: Application) {
         imageDataDao = dataSource
     }
 
+    // ---------ImageData related -------------------------------------
     /**
      * Returns every image in the databases
      */
@@ -32,7 +33,7 @@ class Repository(application: Application) {
     {
         imageDataDao?.search(query)
     }
-    suspend fun delete(imageData: ImageData) = withContext(Dispatchers.IO)
+    suspend fun deleteImage(imageData: ImageData) = withContext(Dispatchers.IO)
     {
         imageDataDao?.delete(imageData)
     }
@@ -52,7 +53,21 @@ class Repository(application: Application) {
     {
         imageDataDao?.update(imageData)
     }
+    // ---------EntryData related -------------------------------------
+    /**
+     * Get all entries for a given trip
+     */
+    suspend fun getEntriesOfTrip(tripData : TripData) : List<EntryData>? = withContext(Dispatchers.IO)
+    {
+        entryDataDao?.getEntriesForTrip(tripData.id)
+    }
 
 
+
+    // ---------TripData related --------------------------------------
+    suspend fun getAllTrips() : List<TripData>? = withContext(Dispatchers.IO)
+    {
+        tripDataDao?.getItems()
+    }
 
 }

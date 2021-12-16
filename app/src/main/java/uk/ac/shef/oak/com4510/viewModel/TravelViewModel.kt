@@ -79,7 +79,7 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
     fun deleteImageInDatabase(imageData : ImageData)
     {
         viewModelScope.launch {
-            mRepository.delete(imageData)
+            mRepository.deleteImage(imageData)
             //Update the livedata
             updateImageList()
         }
