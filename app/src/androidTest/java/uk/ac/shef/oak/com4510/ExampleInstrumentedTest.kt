@@ -1,4 +1,8 @@
+<<<<<<< HEAD:app/src/androidTest/java/uk/ac/shef/oak/com4510/ExampleInstrumentedTest.kt
 package uk.ac.shef.oak.com4510
+=======
+package uk.ac.shef
+>>>>>>> Member1PrivateWork:app/src/androidTest/java/uk/ac/shef/ExampleInstrumentedTest.kt
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

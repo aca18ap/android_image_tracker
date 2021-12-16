@@ -15,7 +15,7 @@ class Repository(application: Application) {
     }
 
     //Separate constructor that allows passing a custom dao. For testing
-    constructor(dataSource : ImageDataDao,app : Application) : this(app)
+    constructor(dataSource : ImageDataDao, app : Application) : this(app)
     {
         imageDataDao = dataSource
     }
@@ -31,6 +31,10 @@ class Repository(application: Application) {
     suspend fun search(query : String) : List<ImageData>? = withContext(Dispatchers.IO)
     {
         imageDataDao?.search(query)
+    }
+    suspend fun delete(imageData: ImageData) = withContext(Dispatchers.IO)
+    {
+        imageDataDao?.delete(imageData)
     }
 
     /**

@@ -1,4 +1,8 @@
+<<<<<<< HEAD:app/src/test/java/uk/ac/shef/oak/com4510/ExampleUnitTest.kt
 package uk.ac.shef.oak.com4510
+=======
+package uk.ac.shef
+>>>>>>> Member1PrivateWork:app/src/test/java/uk/ac/shef/ExampleUnitTest.kt
 
 import org.junit.Test
 
