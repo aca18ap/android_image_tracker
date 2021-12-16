@@ -6,10 +6,18 @@ plugins {
 }
 
 android {
+    signingConfigs {
+        debug {
+            storeFile file('C:\\Users\\Daniel\\AndroidStudioProjects\\COM4510\\app\\keyStore.jks')
+            storePassword 'com4510iscool'
+            keyAlias 'com4510'
+            keyPassword 'com4510iscool'
+        }
+    }
     compileSdk 31
 
     defaultConfig {
-        applicationId "com.lab.lab5_kt"
+        applicationId "uk.ac.shef.oak.com4510"
         minSdk 21
         targetSdk 31
         versionCode 1
