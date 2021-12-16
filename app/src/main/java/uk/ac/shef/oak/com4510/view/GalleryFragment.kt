@@ -20,7 +20,6 @@ import uk.ac.shef.oak.com4510.model.data.database.ImageData
 import uk.ac.shef.oak.com4510.viewModel.ImagesAdapter
 import uk.ac.shef.oak.com4510.viewModel.TravelViewModel
 import pl.aprilapps.easyphotopicker.*
-import uk.ac.shef.oak.com4510.viewModel.ImagesAdapter
 
 
 class GalleryFragment : Fragment() {
