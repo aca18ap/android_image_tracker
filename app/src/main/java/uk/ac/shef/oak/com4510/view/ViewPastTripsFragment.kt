@@ -66,7 +66,7 @@ class ViewPastTripsFragment : Fragment() {
         viewModel = ViewModelProvider(this)[TravelViewModel::class.java]
 
         mRecyclerView = binding.contentTrips.tripGridRecyclerView
-        val numberOfColumns = 4
+        val numberOfColumns = 2
         mRecyclerView.layoutManager = GridLayoutManager(activity, numberOfColumns)
         mAdapter = TripsAdapter(ArrayList<TripData>()) as RecyclerView.Adapter<RecyclerView.ViewHolder>
         mRecyclerView.adapter = mAdapter

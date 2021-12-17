@@ -246,6 +246,11 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
 
 
     /**
+     *
+     */
+
+
+    /**
      * Updates the imageList LiveData to reflect what is in the database
      */
     private fun updateImageList()

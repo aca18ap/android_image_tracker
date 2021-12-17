@@ -26,7 +26,7 @@ class TripsAdapter : RecyclerView.Adapter<TripsAdapter.ViewHolder> {
     private lateinit var context: Context
 
     constructor(items: List<TripData>) : super() {
-        Companion.items = items as MutableList<Pair<TripData,ImageData?>>
+        Companion.items = items as MutableList<Pair<TripData, ImageData?>>
     }
 
 
@@ -48,13 +48,16 @@ class TripsAdapter : RecyclerView.Adapter<TripsAdapter.ViewHolder> {
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val (tripdata, first_image) = items[position]
         if (items[position].first.thumbnail == null) {
             items[position].let {
                 scope.launch {
-                    val bitmap = decodeSampledBitmapFromResource("drawable://"+ R.drawable.missing, 150,150)
-                    bitmap.let {
-                        items[position].first.thumbnail = it
-                        holder.thumbnail.setImageBitmap((items[position].first.thumbnail))
+                    if (first_image != null) {
+                        val bitmap = decodeSampledBitmapFromResource(first_image.imageUri, 150, 150)
+                        bitmap.let {
+                            items[position].first.thumbnail = it
+                            holder.thumbnail.setImageBitmap(tripdata.thumbnail)
+                        }
                     }
                 }
             }
@@ -64,7 +67,7 @@ class TripsAdapter : RecyclerView.Adapter<TripsAdapter.ViewHolder> {
 
         items[position].let {
             scope.launch {
-                holder.title.text = items[position].first.title
+                holder.title.text = tripdata.title
             }
         }
 
