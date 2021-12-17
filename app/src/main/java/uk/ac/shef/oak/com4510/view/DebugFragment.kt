@@ -6,10 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.activityViewModels
-import androidx.room.ColumnInfo
-import androidx.room.PrimaryKey
 import com.google.android.material.snackbar.Snackbar
 import uk.ac.shef.oak.com4510.R
 import uk.ac.shef.oak.com4510.databinding.FragmentDebugBinding
@@ -78,6 +75,15 @@ class DebugFragment : Fragment() {
                     , Snackbar.LENGTH_LONG).show()
             }
 
+        }
+
+        binding.DebugButton1.setOnClickListener {
+
+            model.create_insert_entry(model.debug_returnTripDataOfId(1)!!,12f,13f,100f,1234f,1639698825f)
+        }
+
+        binding.DebugButton2.setOnClickListener {
+            model.create_insert_trip("Created by DebugButton2","DebugButton2World",1639698825f)
         }
 
 

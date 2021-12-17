@@ -66,9 +66,14 @@ class Repository(application: Application) {
         entryDataDao?.getEntriesForTrip(tripData.id)
     }
 
-    suspend fun insertEntryReturnId(entryData: EntryData): Int? = coroutineScope {
+    suspend fun insertEntryReturnId(entryData: EntryData): Int? = withContext(Dispatchers.IO) {
         var defferedID = async { entryDataDao?.insert(entryData) }
         defferedID.await()?.toInt()
+    }
+
+    suspend fun insertEntry(entryData: EntryData) = withContext(Dispatchers.IO)
+    {
+        entryDataDao?.insert(entryData)
     }
 
 
@@ -80,9 +85,17 @@ class Repository(application: Application) {
         tripDataDao?.getItems()
     }
 
-    suspend fun insertTripReturnId(tripData: TripData): Int? = coroutineScope {
+    suspend fun getTrip(tripId: Int) = coroutineScope {
+        tripDataDao?.getItem(tripId)
+    }
+
+    suspend fun insertTripReturnId(tripData: TripData): Int? = withContext(Dispatchers.IO) {
         var defferedID = async { tripDataDao?.insert(tripData) }
         defferedID.await()?.toInt()
+    }
+    suspend fun insertTrip(tripData: TripData) = withContext(Dispatchers.IO)
+    {
+        tripDataDao?.insert(tripData)
     }
 
 }

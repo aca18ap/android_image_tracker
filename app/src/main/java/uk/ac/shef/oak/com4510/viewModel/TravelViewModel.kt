@@ -197,16 +197,84 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
             _imageList.value = mRepository.getAllImages() as MutableList<ImageData>
         }
     }
-    // Trip related functionality
+    //----------------------- Trip related functionality------------
 
+    /**
+     * Insert a trip and return it's generated id
+     */
     fun insertTripReturnId(tripData: TripData): Int? = runBlocking{
         var deferredId = async { mRepository.insertTripReturnId(tripData) }
         deferredId.await()
     }
 
+    /**
+     * Insert a trip into the database
+     */
+    //UNTESTED
+    fun insert_trip(tripData: TripData)
+    {
+         viewModelScope.launch()
+         {
+             mRepository.insertTrip(tripData)
+         }
+    }
 
-    // Entry related functionality
+    /**
+     * Create a new trip based on trip description and inserts it into the database.
+     * This returns the tripData object. Because this returns the object, it blocks the main thread.
+     */
+    fun create_insert_return_trip(title :String,country :String, timestamp: Float) : TripData
+    {
+       val createdTrip = TripData(title = title, country = country, trip_timestamp = timestamp)
+       //Block the main thread in order to wait for the id to return
+       val id : Int? = insertTripReturnId(createdTrip)
 
+       createdTrip.id = id!!
+       return createdTrip
+    }
+
+    /**
+     * Create a new trip based on trip description and inserts it into the database.
+     */
+    //UNTESTED
+    fun create_insert_trip(title :String,country :String, timestamp: Float)
+    {
+        val createdTrip = TripData(title = title, country = country, trip_timestamp = timestamp)
+        viewModelScope.launch()
+        {
+            mRepository.insertTrip(createdTrip)
+        }
+    }
+
+    //-----------------------Entry related functionality------------
+
+    /**
+     * Given a tripData object and measurements, create and insert an Entry into the database
+     */
+    fun create_insert_entry(tripData: TripData, temperature:Float, pressure:Float, lat:Float, lon:Float, timestamp:Float)
+    {
+        val createdEntry = EntryData(lat = lat,lon = lon,
+            entry_timestamp = timestamp, entry_temperature = temperature,
+            entry_pressure = pressure, trip_id = tripData.id)
+
+            insertEntry(createdEntry)
+    }
+
+    /**
+     * Inserts an entry into the database. Does not return anything. Does not block the main UI thread
+     */
+    fun insertEntry(entryData: EntryData)
+    {
+        viewModelScope.launch()
+        {
+            mRepository.insertEntry(entryData)
+        }
+    }
+
+    /**
+     * Inserts an entry into the database. Returns the id of the entry. Since it returns the id, it blocks the main thread. This could perhaps
+     * be avoided with some sort of callback magic?
+     */
     fun insertEntryReturnId(entryData: EntryData): Int? = runBlocking{
         var deferredId = async { mRepository.insertEntryReturnId(entryData) }
         deferredId.await()
@@ -221,6 +289,15 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
             imageList = mRepository.getAllImages()
         }
         return imageList
+    }
+    //Given an tripId return a tripData
+    fun debug_returnTripDataOfId(tripId: Int) : TripData?
+    {
+        val returnTripData : TripData?
+        runBlocking(Dispatchers.IO){
+            returnTripData =  mRepository.getTrip(tripId)
+        }
+        return returnTripData
     }
 
 }
