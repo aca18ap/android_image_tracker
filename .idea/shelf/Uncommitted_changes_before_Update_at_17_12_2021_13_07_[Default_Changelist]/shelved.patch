@@ -1,0 +1,83 @@
+Index: app/src/main/java/uk/ac/shef/oak/com4510/viewModel/TripsAdapter.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package uk.ac.shef.oak.com4510.viewModel\r\n\r\nimport android.content.Context\r\nimport android.content.res.Resources\r\nimport android.graphics.Bitmap\r\nimport android.graphics.BitmapFactory\r\nimport android.view.LayoutInflater\r\nimport android.view.View\r\nimport android.view.ViewGroup\r\nimport android.widget.ImageView\r\nimport android.widget.TextView\r\nimport androidx.navigation.findNavController\r\nimport androidx.recyclerview.widget.RecyclerView\r\nimport kotlinx.coroutines.CoroutineScope\r\nimport kotlinx.coroutines.Dispatchers\r\nimport kotlinx.coroutines.SupervisorJob\r\nimport kotlinx.coroutines.launch\r\nimport uk.ac.shef.oak.com4510.R\r\nimport uk.ac.shef.oak.com4510.model.data.database.TripData\r\nimport uk.ac.shef.oak.com4510.view.ViewPastTripsFragmentDirections\r\nimport uk.ac.shef.oak.com4510.viewModel.ImagesAdapter.Companion.decodeSampledBitmapFromResource\r\n\r\n\r\nclass TripsAdapter : RecyclerView.Adapter<TripsAdapter.ViewHolder> {\r\n    private lateinit var context: Context\r\n\r\n    constructor(items: List<TripData>) : super() {\r\n        Companion.items = items as MutableList<TripData>\r\n    }\r\n\r\n\r\n    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {\r\n        //Inflating layout\r\n        val v: View = LayoutInflater.from(parent.context).inflate(\r\n            R.layout.list_trip_item,\r\n            parent, false\r\n        )\r\n\r\n        var holder: ViewHolder = ViewHolder(v)\r\n        context = parent.context\r\n        holder.itemView.setOnClickListener(View.OnClickListener {\r\n            it.findNavController().navigate(R.id.action_viewPastTripsFragment_to_viewTripDetailsFragment)\r\n        })\r\n\r\n        return holder\r\n\r\n    }\r\n\r\n    override fun onBindViewHolder(holder: ViewHolder, position: Int) {\r\n        if (items[position].thumbnail == null) {\r\n            items[position].let {\r\n                scope.launch {\r\n                    val bitmap = decodeSampledBitmapFromResource(\"drawable://\"+ R.drawable.missing, 150,150)\r\n                    bitmap.let {\r\n                        items[position].thumbnail = it\r\n                        holder.thumbnail.setImageBitmap((items[position].thumbnail))\r\n                    }\r\n                }\r\n            }\r\n        }else { holder.thumbnail.setImageBitmap(items[position].thumbnail) }\r\n\r\n\r\n\r\n        items[position].let {\r\n            scope.launch {\r\n                holder.title.text = items[position].title\r\n            }\r\n        }\r\n\r\n\r\n\r\n        holder.itemView.setOnClickListener{view: View ->\r\n            val action = ViewPastTripsFragmentDirections.actionViewPastTripsFragmentToViewTripDetailsFragment(position)\r\n            view.findNavController().navigate(action)\r\n        }\r\n    }\r\n\r\n\r\n    class ViewHolder constructor(itemView: View) : RecyclerView.ViewHolder(itemView){\r\n        var thumbnail: ImageView = itemView.findViewById<View>(R.id.trip_item_thumbnail) as ImageView\r\n        var title: TextView = itemView.findViewById<View>(R.id.trip_item_title) as TextView\r\n    }\r\n\r\n\r\n    companion object {\r\n        lateinit var items: MutableList<TripData>\r\n        private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())\r\n\r\n    }\r\n\r\n    override fun getItemCount(): Int {\r\n        return items.size\r\n    }\r\n\r\n\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/uk/ac/shef/oak/com4510/viewModel/TripsAdapter.kt b/app/src/main/java/uk/ac/shef/oak/com4510/viewModel/TripsAdapter.kt
+--- a/app/src/main/java/uk/ac/shef/oak/com4510/viewModel/TripsAdapter.kt	(revision 49ba3b8f36565f35846abfa8047957ad71e3e077)
++++ b/app/src/main/java/uk/ac/shef/oak/com4510/viewModel/TripsAdapter.kt	(date 1639719109016)
+@@ -50,10 +50,11 @@
+         if (items[position].thumbnail == null) {
+             items[position].let {
+                 scope.launch {
+-                    val bitmap = decodeSampledBitmapFromResource("drawable://"+ R.drawable.missing, 150,150)
++                    val bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.missing)
++                    val bitmap = decodeSampledBitmapFromResource("drawable://" + R.drawable.missing, 150,150)
+                     bitmap.let {
+                         items[position].thumbnail = it
+-                        holder.thumbnail.setImageBitmap((items[position].thumbnail))
++                        holder.thumbnail.setImageBitmap( items[position].thumbnail )
+                     }
+                 }
+             }
+Index: app/src/main/java/uk/ac/shef/oak/com4510/viewModel/TravelViewModel.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package uk.ac.shef.oak.com4510.viewModel\r\n\r\n\r\nimport android.app.Application\r\nimport androidx.lifecycle.AndroidViewModel\r\nimport androidx.lifecycle.LiveData\r\nimport androidx.lifecycle.MutableLiveData\r\nimport androidx.lifecycle.viewModelScope\r\nimport kotlinx.coroutines.*\r\nimport pl.aprilapps.easyphotopicker.MediaFile\r\nimport uk.ac.shef.oak.com4510.model.data.Repository\r\nimport uk.ac.shef.oak.com4510.model.data.database.EntryData\r\nimport uk.ac.shef.oak.com4510.model.data.database.ImageData\r\nimport uk.ac.shef.oak.com4510.model.data.database.TripData\r\nimport uk.ac.shef.oak.com4510.util.append\r\nimport uk.ac.shef.oak.com4510.util.convertToImageDataWithoutId\r\nimport uk.ac.shef.oak.com4510.util.sanitizeSearchQuery\r\n\r\nclass TravelViewModel (application: Application) : AndroidViewModel(application) {\r\n    private var mRepository: Repository = Repository(application)\r\n\r\n    //Separate constructor to allow passing a different repository. For testing\r\n    constructor(repository: Repository, app : Application) : this(app) {\r\n        mRepository = repository\r\n    }\r\n\r\n    /**\r\n     * Observable list of images. Contains all images a user has taken or added to the Travel app represented as ImageData.\r\n     */\r\n    private val _imageList: MutableLiveData<MutableList<ImageData>> = MutableLiveData<MutableList<ImageData>>()\r\n    val imageList : LiveData<MutableList<ImageData>> get() = _imageList\r\n\r\n    /**\r\n     * Observable list of images to be used with searching. The search function given a string updates this livedata with\r\n     * a list of all ImageData that contains one of the keywords of the string in either the Title or its Description\r\n     * */\r\n    private val _searchResults  = MutableLiveData<MutableList<ImageData>>()\r\n    val searchResults : LiveData<MutableList<ImageData>>\r\n        get() = _searchResults\r\n\r\n\r\n    /**\r\n     * Observable list of trips that can be used with searching\r\n     */\r\n    private val _tripsSearchResults = MutableLiveData<MutableList<TripData>>()\r\n    val tripsSearchResults : LiveData<MutableList<TripData>>\r\n        get() = _tripsSearchResults\r\n\r\n\r\n\r\n\r\n    // To do: Find a way not to block the ui thread here. Worst case scenario provide a function that inserts multiple ImageData's at a time each on its own coroutine\r\n    /**\r\n     * Inserts an imageData into the database and returns the id it was associated with. Warning: This does block the UI thread.\r\n     * This does not update the imageList livedata object\r\n     */\r\n    fun insertImageReturnId(imageData: ImageData): Int = runBlocking{\r\n        var deferredId = async { mRepository.insertImageReturnId(imageData) }\r\n        deferredId.await()\r\n    }\r\n\r\n    /**\r\n     * Handles the photos returned by EasyImage. Inserts an array of MediaFiles into the database and also changes the imageList livedata\r\n     */\r\n    fun insertArrayMediaFiles(mediaFileArray: Array<MediaFile>) {\r\n        var imageDataList = mediaFileArray.convertToImageDataWithoutId()\r\n        insertAndUpdateImageDataList(imageDataList)\r\n        _imageList.append(imageDataList)\r\n    }\r\n\r\n    /**NOT TESTED BUT PROBABLY WORKS\r\n     * Updates an imageData in the database. TO ADD: Functionality for updating position\r\n     */\r\n    fun updateImageInDatabase(imageData : ImageData, title : String? = null, description : String? = null,entry_id : Int? = null)\r\n    {\r\n        var updatedImage = ImageData(imageData.id,\r\n            imageData.imageUri,\r\n            title ?: imageData.imageTitle,\r\n            description ?: imageData.imageDescription,\r\n            imageData.thumbnailUri,\r\n            imageData.position,\r\n            entry_id ?: imageData.entry_id)\r\n        updatedImage.thumbnail = imageData.thumbnail\r\n        viewModelScope.launch {\r\n            mRepository.updateImage(updatedImage)\r\n        }\r\n    }\r\n\r\n    fun initTripsList()\r\n    {\r\n        initTripSearchResultsFromDatabase()\r\n    }\r\n\r\n\r\n    fun initImagesList()\r\n    {\r\n        initImageListFromDatabase()\r\n        initSearchResultsFromDatabase()\r\n    }\r\n    /**\r\n     * Initializes the imageList to hold every image from the database\r\n     */\r\n    fun initImageListFromDatabase()\r\n    {\r\n        viewModelScope.launch{\r\n            _imageList.value = mRepository.getAllImages() as MutableList<ImageData>\r\n        }\r\n    }\r\n\r\n    fun initSearchResultsFromDatabase()\r\n    {\r\n        viewModelScope.launch{\r\n            _searchResults.value = mRepository.getAllImages() as MutableList<ImageData>\r\n        }\r\n    }\r\n\r\n\r\n\r\n    fun initTripSearchResultsFromDatabase()\r\n    {\r\n        viewModelScope.launch{\r\n            _tripsSearchResults.value = mRepository.getAllTrips() as MutableList<TripData>\r\n        }\r\n    }\r\n\r\n    /*\r\n    fun tripSearch(query: String?){\r\n        viewModelScope.launch{\r\n            if(query.isNullOrBlank())\r\n            {\r\n                _tripsSearchResults.value = mRepository.getAllTrips() as MutableList<TripData>\r\n            }else{\r\n                val sanitizedQuery = sanitizeSearchQuery(query)\r\n                mRepository.search(sanitizedQuery).let {\r\n                    _tripsSearchResults.value = it as MutableList<TripData>\r\n                }\r\n            }\r\n        }\r\n    }\r\n    */\r\n\r\n\r\n\r\n    /**\r\n     * Given a query, it updates the _searchResults livedata\r\n     */\r\n    fun search(query: String?) {\r\n        viewModelScope.launch {\r\n            if (query.isNullOrBlank())\r\n            {\r\n                _searchResults.value = mRepository.getAllImages() as MutableList<ImageData>\r\n            } else\r\n            {\r\n                val sanitizedQuery = sanitizeSearchQuery(query)\r\n                mRepository.search(sanitizedQuery).let {\r\n                    _searchResults.value = it as MutableList<ImageData>\r\n                }\r\n            }\r\n        }\r\n    }\r\n\r\n    //REFACTOR this to spawn a coroutine at each iteration, then wait at the end for the results to improve runtime\r\n    //Maybe add this as a function of the Repository?\r\n    /**\r\n     * Internal function that inserts a list of ImageData objects into the database. Updates the list with their generated id's\r\n     */\r\n    private fun insertAndUpdateImageDataList(imageDataList : List<ImageData>)\r\n    {\r\n        for (imageData in imageDataList)\r\n        {\r\n            var id = insertImageReturnId(imageData)\r\n            imageData.id = id\r\n        }\r\n        //Update the observable live data\r\n        initImagesList()\r\n    }\r\n\r\n    /**\r\n     * Given an imageData, it deletes it from the database and updates the observable liveadata\r\n     */\r\n    fun deleteImageInDatabase(imageData : ImageData)\r\n    {\r\n        viewModelScope.launch {\r\n            mRepository.deleteImage(imageData)\r\n        }\r\n        //Update the livedata\r\n        updateImageList()\r\n    }\r\n\r\n\r\n    /**\r\n     * Updates the imageList LiveData to reflect what is in the database\r\n     */\r\n    private fun updateImageList()\r\n    {\r\n        viewModelScope.launch{\r\n            _imageList.value = mRepository.getAllImages() as MutableList<ImageData>\r\n        }\r\n    }\r\n    // Trip related functionality\r\n\r\n    fun insertTripReturnId(tripData: TripData): Int? = runBlocking{\r\n        var deferredId = async { mRepository.insertTripReturnId(tripData) }\r\n        deferredId.await()\r\n    }\r\n\r\n\r\n    // Entry related functionality\r\n\r\n    fun insertEntryReturnId(entryData: EntryData): Int? = runBlocking{\r\n        var deferredId = async { mRepository.insertEntryReturnId(entryData) }\r\n        deferredId.await()\r\n    }\r\n\r\n    //Temporary debug functions\r\n\r\n    fun debug_getImages() : List<ImageData>?\r\n    {\r\n        var imageList : List<ImageData>?\r\n        runBlocking {\r\n            imageList = mRepository.getAllImages()\r\n        }\r\n        return imageList\r\n    }\r\n\r\n}\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/uk/ac/shef/oak/com4510/viewModel/TravelViewModel.kt b/app/src/main/java/uk/ac/shef/oak/com4510/viewModel/TravelViewModel.kt
+--- a/app/src/main/java/uk/ac/shef/oak/com4510/viewModel/TravelViewModel.kt	(revision 49ba3b8f36565f35846abfa8047957ad71e3e077)
++++ b/app/src/main/java/uk/ac/shef/oak/com4510/viewModel/TravelViewModel.kt	(date 1639718485298)
+@@ -123,7 +123,7 @@
+         }
+     }
+ 
+-    /*
++
+     fun tripSearch(query: String?){
+         viewModelScope.launch{
+             if(query.isNullOrBlank())
+@@ -137,7 +137,6 @@
+             }
+         }
+     }
+-    */
+ 
+ 
+ 
+@@ -188,6 +187,11 @@
+     }
+ 
+ 
++    /**
++     *
++     */
++
++
+     /**
+      * Updates the imageList LiveData to reflect what is in the database
+      */
+Index: app/src/main/res/layout/list_trip_item.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<LinearLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    android:layout_width=\"match_parent\"\r\n    android:layout_height=\"wrap_content\">\r\n\r\n    <ImageView\r\n        android:id=\"@+id/trip_item_thumbnail\"\r\n        android:layout_width=\"wrap_content\"\r\n        android:layout_height=\"150dp\"\r\n        android:padding=\"10dp\" />\r\n\r\n    <TextView\r\n        android:layout_width=\"wrap_content\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:id=\"@+id/trip_item_title\">\r\n\r\n    </TextView>\r\n\r\n</LinearLayout>\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/layout/list_trip_item.xml b/app/src/main/res/layout/list_trip_item.xml
+--- a/app/src/main/res/layout/list_trip_item.xml	(revision 49ba3b8f36565f35846abfa8047957ad71e3e077)
++++ b/app/src/main/res/layout/list_trip_item.xml	(date 1639719209831)
+@@ -7,7 +7,8 @@
+         android:id="@+id/trip_item_thumbnail"
+         android:layout_width="wrap_content"
+         android:layout_height="150dp"
+-        android:padding="10dp" />
++        android:padding="10dp"
++        android:/>
+ 
+     <TextView
+         android:layout_width="wrap_content"

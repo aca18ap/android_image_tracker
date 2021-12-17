@@ -1,0 +1,494 @@
+Index: app/src/main/java/uk/ac/shef/oak/com4510/viewModel/TripsAdapter.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package uk.ac.shef.oak.com4510.viewModel\r\n\r\nimport android.content.Context\r\nimport android.content.res.Resources\r\nimport android.graphics.Bitmap\r\nimport android.graphics.BitmapFactory\r\nimport android.view.LayoutInflater\r\nimport android.view.View\r\nimport android.view.ViewGroup\r\nimport android.widget.ImageView\r\nimport android.widget.TextView\r\nimport androidx.navigation.findNavController\r\nimport androidx.recyclerview.widget.RecyclerView\r\nimport kotlinx.coroutines.CoroutineScope\r\nimport kotlinx.coroutines.Dispatchers\r\nimport kotlinx.coroutines.SupervisorJob\r\nimport kotlinx.coroutines.launch\r\nimport uk.ac.shef.oak.com4510.R\r\nimport uk.ac.shef.oak.com4510.model.data.database.ImageData\r\nimport uk.ac.shef.oak.com4510.model.data.database.TripData\r\nimport uk.ac.shef.oak.com4510.view.ViewPastTripsFragmentDirections\r\nimport uk.ac.shef.oak.com4510.viewModel.ImagesAdapter.Companion.decodeSampledBitmapFromResource\r\n\r\n\r\nclass TripsAdapter : RecyclerView.Adapter<TripsAdapter.ViewHolder> {\r\n    private lateinit var context: Context\r\n\r\n    constructor(items: List<TripData>) : super() {\r\n        Companion.items = items as MutableList<Pair<TripData, ImageData?>>\r\n    }\r\n\r\n\r\n    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {\r\n        //Inflating layout\r\n        val v: View = LayoutInflater.from(parent.context).inflate(\r\n            R.layout.list_trip_item,\r\n            parent, false\r\n        )\r\n\r\n        var holder: ViewHolder = ViewHolder(v)\r\n        context = parent.context\r\n        holder.itemView.setOnClickListener(View.OnClickListener {\r\n            it.findNavController().navigate(R.id.action_viewPastTripsFragment_to_viewTripDetailsFragment)\r\n        })\r\n\r\n        return holder\r\n\r\n    }\r\n\r\n    override fun onBindViewHolder(holder: ViewHolder, position: Int) {\r\n        val (tripdata, first_image) = items[position]\r\n        if (items[position].first.thumbnail == null) {\r\n            items[position].let {\r\n                scope.launch {\r\n                    if (first_image != null) {\r\n                        val bitmap = decodeSampledBitmapFromResource(first_image.imageUri, 150, 150)\r\n                        bitmap.let {\r\n                            items[position].first.thumbnail = it\r\n                            holder.thumbnail.setImageBitmap(tripdata.thumbnail)\r\n                        }\r\n                    }\r\n                }\r\n            }\r\n        }else { holder.thumbnail.setImageBitmap(items[position].first.thumbnail) }\r\n\r\n\r\n\r\n        items[position].let {\r\n            scope.launch {\r\n                holder.title.text = tripdata.title\r\n            }\r\n        }\r\n\r\n\r\n\r\n        holder.itemView.setOnClickListener{view: View ->\r\n            val action = ViewPastTripsFragmentDirections.actionViewPastTripsFragmentToViewTripDetailsFragment(position)\r\n            view.findNavController().navigate(action)\r\n        }\r\n    }\r\n\r\n\r\n    class ViewHolder constructor(itemView: View) : RecyclerView.ViewHolder(itemView){\r\n        var thumbnail: ImageView = itemView.findViewById<View>(R.id.trip_item_thumbnail) as ImageView\r\n        var title: TextView = itemView.findViewById<View>(R.id.trip_item_title) as TextView\r\n    }\r\n\r\n\r\n    companion object {\r\n        lateinit var items: MutableList<Pair<TripData, ImageData?>>\r\n        private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())\r\n\r\n    }\r\n\r\n    override fun getItemCount(): Int {\r\n        return items.size\r\n    }\r\n\r\n\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/uk/ac/shef/oak/com4510/viewModel/TripsAdapter.kt b/app/src/main/java/uk/ac/shef/oak/com4510/viewModel/TripsAdapter.kt
+--- a/app/src/main/java/uk/ac/shef/oak/com4510/viewModel/TripsAdapter.kt	(revision 3d4752e92a244a1503b972612a55d30f5504bb47)
++++ b/app/src/main/java/uk/ac/shef/oak/com4510/viewModel/TripsAdapter.kt	(date 1639753256032)
+@@ -72,7 +72,6 @@
+         }
+ 
+ 
+-
+         holder.itemView.setOnClickListener{view: View ->
+             val action = ViewPastTripsFragmentDirections.actionViewPastTripsFragmentToViewTripDetailsFragment(position)
+             view.findNavController().navigate(action)
+Index: app/src/main/java/uk/ac/shef/oak/com4510/view/ViewTripDetailsFragment.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package uk.ac.shef.oak.com4510.view\r\n\r\nimport android.os.Bundle\r\nimport androidx.fragment.app.Fragment\r\nimport android.view.LayoutInflater\r\nimport android.view.View\r\nimport android.view.ViewGroup\r\nimport androidx.databinding.DataBindingUtil\r\nimport androidx.databinding.ViewDataBinding\r\nimport androidx.lifecycle.ViewModelProvider\r\nimport uk.ac.shef.oak.com4510.R\r\nimport uk.ac.shef.oak.com4510.databinding.FragmentViewTripDetailsBinding\r\nimport uk.ac.shef.oak.com4510.viewModel.TravelViewModel\r\n\r\nclass ViewTripDetailsFragment : Fragment() {\r\n\r\n    override fun onCreateView(\r\n        inflater: LayoutInflater, container: ViewGroup?,\r\n        savedInstanceState: Bundle?\r\n    ): View? {\r\n        // Inflate the layout for this fragment\r\n        val binding = DataBindingUtil.inflate<FragmentViewTripDetailsBinding>(inflater,\r\n            R.layout.fragment_view_trip_details, container, false)\r\n\r\n        val viewModel = ViewModelProvider(this)[TravelViewModel::class.java]\r\n\r\n\r\n        return binding.root\r\n\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/uk/ac/shef/oak/com4510/view/ViewTripDetailsFragment.kt b/app/src/main/java/uk/ac/shef/oak/com4510/view/ViewTripDetailsFragment.kt
+--- a/app/src/main/java/uk/ac/shef/oak/com4510/view/ViewTripDetailsFragment.kt	(revision 3d4752e92a244a1503b972612a55d30f5504bb47)
++++ b/app/src/main/java/uk/ac/shef/oak/com4510/view/ViewTripDetailsFragment.kt	(date 1639761964625)
+@@ -7,25 +7,78 @@
+ import android.view.ViewGroup
+ import androidx.databinding.DataBindingUtil
+ import androidx.databinding.ViewDataBinding
++import androidx.fragment.app.FragmentManager
++import androidx.fragment.app.FragmentStatePagerAdapter
+ import androidx.lifecycle.ViewModelProvider
++import androidx.navigation.fragment.navArgs
++import androidx.viewpager.widget.ViewPager
++import com.google.android.material.tabs.TabLayoutMediator
+ import uk.ac.shef.oak.com4510.R
+ import uk.ac.shef.oak.com4510.databinding.FragmentViewTripDetailsBinding
+ import uk.ac.shef.oak.com4510.viewModel.TravelViewModel
++import uk.ac.shef.oak.com4510.viewModel.TripsAdapter
++import uk.ac.shef.oak.com4510.viewModel.ViewPagerAdapter
++
++private const val NUM_PAGES = 2
+ 
+ class ViewTripDetailsFragment : Fragment() {
+ 
++    private lateinit var mPager: ViewPager
++    private lateinit var binding: FragmentViewTripDetailsBinding
++    private val args: ViewTripDetailsFragmentArgs by navArgs()
++
+     override fun onCreateView(
+         inflater: LayoutInflater, container: ViewGroup?,
+         savedInstanceState: Bundle?
+     ): View? {
+         // Inflate the layout for this fragment
+-        val binding = DataBindingUtil.inflate<FragmentViewTripDetailsBinding>(inflater,
++        binding = DataBindingUtil.inflate<FragmentViewTripDetailsBinding>(inflater,
+             R.layout.fragment_view_trip_details, container, false)
++        if (args.position != -1){
++            displayData(args.position)
++        }
++
++        val tabLayout = binding.tablayout
++        val viewpager = binding.viewpager
++        val mAdapter = ViewPagerAdapter(childFragmentManager, lifecycle, position)
++
++        viewpager.adapter = mAdapter
++        TabLayoutMediator(tabLayout, viewpager){tab, position->
++            when(position){
++                0->{
++                    tab.text=="Images"
++                }
++                1->{
++                    tab.text="Entries"
++                }
++            }
++        }.attach()
+ 
+         val viewModel = ViewModelProvider(this)[TravelViewModel::class.java]
+ 
+-
+         return binding.root
+ 
+     }
++
++
++    private fun displayData(position: Int){
++        val title = binding.tripTitle
++        val location = binding.tripLocation
++        val date = binding.tripDate
++        val thumbnail = binding.tripThumbnail
++        if (position != -1){
++            val tripData = TripsAdapter.items[position].first
++            val imageData = TripsAdapter.items[position].second
++            title.text = tripData.title
++            location.text = tripData.country
++            date.text = tripData.trip_timestamp.toString()
++            if (imageData != null){
++                thumbnail.setImageBitmap((TripsAdapter.items[position].second?.thumbnail))
++            }
++
++
++
++        }
++    }
++
+ }
+\ No newline at end of file
+Index: app/src/main/res/layout/fragment_view_trip_details.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<layout xmlns:tools=\"http://schemas.android.com/tools\"\r\n    xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    xmlns:app=\"http://schemas.android.com/apk/res-auto\">\r\n\r\n\r\n\r\n    <androidx.constraintlayout.widget.ConstraintLayout\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"match_parent\"\r\n        android:id=\"@+id/viewTripDetailsConstraint\">\r\n\r\n        <com.google.android.material.appbar.AppBarLayout\r\n            android:id=\"@+id/trip_appBarLayout\"\r\n            android:layout_width=\"match_parent\"\r\n            android:layout_height=\"wrap_content\"\r\n            android:theme=\"@style/AppTheme.AppBarOverlay\"\r\n            app:layout_constraintEnd_toEndOf=\"parent\"\r\n            app:layout_constraintStart_toStartOf=\"parent\"\r\n            app:layout_constraintTop_toTopOf=\"parent\"\r\n            app:layout_constraintBottom_toTopOf=\"@id/trip_info\">\r\n\r\n            <androidx.appcompat.widget.Toolbar\r\n                android:id=\"@+id/trip_toolbar\"\r\n                android:layout_width=\"match_parent\"\r\n                android:layout_height=\"?attr/actionBarSize\"\r\n                android:background=\"?attr/colorPrimary\"\r\n                app:popupTheme=\"@style/AppTheme.PopupOverlay\"\r\n                app:title=\"Title\"\r\n                app:titleTextColor=\"@color/white\" />\r\n        </com.google.android.material.appbar.AppBarLayout>\r\n\r\n        <LinearLayout\r\n            android:layout_width=\"match_parent\"\r\n            android:layout_height=\"wrap_content\"\r\n            app:layout_constraintTop_toBottomOf=\"@id/trip_appBarLayout\"\r\n            app:layout_constraintBottom_toTopOf=\"@id/content_camera_trip\"\r\n            android:id=\"@+id/trip_info\">\r\n\r\n            <TextView\r\n                android:layout_width=\"wrap_content\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:text=\"Longitude\">\r\n\r\n            </TextView>\r\n        </LinearLayout>\r\n\r\n        <include\r\n            android:id=\"@+id/content_camera_trip\"\r\n            layout=\"@layout/content_camera\"\r\n            app:layout_constraintBottom_toBottomOf=\"parent\"\r\n            app:layout_constraintTop_toBottomOf=\"@id/trip_info\"\r\n            tools:layout_editor_absoluteX=\"0dp\" />\r\n\r\n\r\n    </androidx.constraintlayout.widget.ConstraintLayout>\r\n\r\n</layout>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/layout/fragment_view_trip_details.xml b/app/src/main/res/layout/fragment_view_trip_details.xml
+--- a/app/src/main/res/layout/fragment_view_trip_details.xml	(revision 3d4752e92a244a1503b972612a55d30f5504bb47)
++++ b/app/src/main/res/layout/fragment_view_trip_details.xml	(date 1639761964614)
+@@ -4,11 +4,11 @@
+     xmlns:app="http://schemas.android.com/apk/res-auto">
+ 
+ 
+-
+-    <androidx.constraintlayout.widget.ConstraintLayout
++    <LinearLayout
+         android:layout_width="match_parent"
+         android:layout_height="match_parent"
+-        android:id="@+id/viewTripDetailsConstraint">
++        android:fitsSystemWindows="true"
++        android:orientation="vertical">
+ 
+         <com.google.android.material.appbar.AppBarLayout
+             android:id="@+id/trip_appBarLayout"
+@@ -33,26 +33,77 @@
+         <LinearLayout
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+-            app:layout_constraintTop_toBottomOf="@id/trip_appBarLayout"
+-            app:layout_constraintBottom_toTopOf="@id/content_camera_trip"
+-            android:id="@+id/trip_info">
++            android:orientation="horizontal">
++
++            <LinearLayout
++                android:layout_width="0dp"
++                android:layout_height="match_parent"
++                android:layout_weight="1"
++                android:id="@+id/trip_info"
++                android:gravity="center"
++                android:orientation="vertical">
++
++                <TextView
++                    android:layout_width="wrap_content"
++                    android:layout_height="wrap_content"
++                    android:id="@+id/trip_title"
++                    android:text="Trip Title">
+ 
+-            <TextView
+-                android:layout_width="wrap_content"
+-                android:layout_height="wrap_content"
+-                android:text="Longitude">
+-
+-            </TextView>
++                </TextView>
++                <TextView
++                    android:layout_width="wrap_content"
++                    android:layout_height="wrap_content"
++                    android:id="@+id/trip_location"
++                    android:text="Location">
++
++                </TextView>
++                <TextView
++                    android:layout_width="wrap_content"
++                    android:id="@+id/trip_date"
++                    android:layout_height="wrap_content"
++                    android:text="Date and Time">
++                </TextView>
++            </LinearLayout>
++
++            <ImageView
++                android:layout_width="0dp"
++                android:layout_weight="1"
++                android:layout_height="wrap_content"
++                android:id="@+id/trip_thumbnail"
++                android:src="@drawable/missing">
++
++            </ImageView>
+         </LinearLayout>
+ 
+-        <include
+-            android:id="@+id/content_camera_trip"
+-            layout="@layout/content_camera"
+-            app:layout_constraintBottom_toBottomOf="parent"
+-            app:layout_constraintTop_toBottomOf="@id/trip_info"
+-            tools:layout_editor_absoluteX="0dp" />
++        <com.google.android.material.tabs.TabLayout
++            android:layout_width="match_parent"
++            android:layout_height="match_parent"
++            android:id="@+id/tablayout">
++
++            <com.google.android.material.tabs.TabItem
++                android:id="@+id/images_tab"
++                android:layout_width="wrap_content"
++                android:layout_height="wrap_content"
++                android:text="Images">
++
++
++            </com.google.android.material.tabs.TabItem>
++
++            <com.google.android.material.tabs.TabItem
++                android:id="@+id/entries_tab"
++                android:layout_width="wrap_content"
++                android:layout_height="wrap_content"
++                android:text="Entries" />
+ 
++        </com.google.android.material.tabs.TabLayout>
+ 
+-    </androidx.constraintlayout.widget.ConstraintLayout>
++        <androidx.viewpager2.widget.ViewPager2
++            android:layout_width="match_parent"
++            android:layout_height="match_parent"
++            android:id="@+id/viewpager">
++
++        </androidx.viewpager2.widget.ViewPager2>
++
++    </LinearLayout>
+ 
+ </layout>
+\ No newline at end of file
+Index: app/src/main/java/uk/ac/shef/oak/com4510/viewModel/ViewPagerAdapter.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/uk/ac/shef/oak/com4510/viewModel/ViewPagerAdapter.kt b/app/src/main/java/uk/ac/shef/oak/com4510/viewModel/ViewPagerAdapter.kt
+new file mode 100644
+--- /dev/null	(date 1639759855531)
++++ b/app/src/main/java/uk/ac/shef/oak/com4510/viewModel/ViewPagerAdapter.kt	(date 1639759855531)
+@@ -0,0 +1,32 @@
++package uk.ac.shef.oak.com4510.viewModel
++
++import androidx.fragment.app.Fragment
++import androidx.fragment.app.FragmentManager
++import androidx.fragment.app.FragmentPagerAdapter
++import androidx.lifecycle.Lifecycle
++import androidx.viewpager2.adapter.FragmentStateAdapter
++import uk.ac.shef.oak.com4510.view.TripEntriesTabFragment
++import uk.ac.shef.oak.com4510.view.TripImagesTabFragment
++
++class ViewPagerAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle) : FragmentStateAdapter(fragmentManager, lifecycle){
++
++    override fun getItemCount(): Int {
++        return 2
++    }
++
++    override fun createFragment(position: Int): Fragment {
++        return when(position){
++            0->{
++                TripImagesTabFragment()
++            }
++            1->{
++                TripEntriesTabFragment()
++            }
++            else->{
++                Fragment()
++            }
++        }
++    }
++
++
++}
+\ No newline at end of file
+Index: app/src/main/res/layout/content_entries.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/layout/content_entries.xml b/app/src/main/res/layout/content_entries.xml
+new file mode 100644
+--- /dev/null	(date 1639758254171)
++++ b/app/src/main/res/layout/content_entries.xml	(date 1639758254171)
+@@ -0,0 +1,24 @@
++<?xml version="1.0" encoding="utf-8"?>
++
++<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
++    xmlns:app="http://schemas.android.com/apk/res-auto"
++    xmlns:tools="http://schemas.android.com/tools"
++    android:layout_width="match_parent"
++    android:layout_height="match_parent"
++    app:layout_behavior="@string/appbar_scrolling_view_behavior"
++    tools:context="uk.ac.shef.oak.com4510.view.MainActivity"
++    tools:showIn="@layout/content_entries">
++
++    <androidx.recyclerview.widget.RecyclerView
++        android:id="@+id/entry_grid_recycler_view"
++        android:layout_width="0dp"
++        android:layout_height="0dp"
++        app:layout_constraintBottom_toBottomOf="parent"
++        app:layout_constraintRight_toRightOf="parent"
++        android:gravity="center"
++        app:layout_constraintLeft_toLeftOf="parent"
++        app:layout_constraintTop_toTopOf="parent"
++        android:layout_marginTop="8dp"
++        android:layout_marginStart="8dp" />
++
++</androidx.constraintlayout.widget.ConstraintLayout>
+\ No newline at end of file
+Index: app/src/main/res/layout/fragment_trip_entries_tab.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/layout/fragment_trip_entries_tab.xml b/app/src/main/res/layout/fragment_trip_entries_tab.xml
+new file mode 100644
+--- /dev/null	(date 1639759256058)
++++ b/app/src/main/res/layout/fragment_trip_entries_tab.xml	(date 1639759256058)
+@@ -0,0 +1,24 @@
++<?xml version="1.0" encoding="utf-8"?>
++
++<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
++    xmlns:app="http://schemas.android.com/apk/res-auto"
++    xmlns:tools="http://schemas.android.com/tools"
++    android:layout_width="match_parent"
++    android:layout_height="match_parent"
++    app:layout_behavior="@string/appbar_scrolling_view_behavior"
++    tools:context="uk.ac.shef.oak.com4510.view.MainActivity"
++    tools:showIn="@layout/content_entries">
++
++    <androidx.recyclerview.widget.RecyclerView
++        android:id="@+id/entry_grid_recycler_view"
++        android:layout_width="0dp"
++        android:layout_height="0dp"
++        app:layout_constraintBottom_toBottomOf="parent"
++        app:layout_constraintRight_toRightOf="parent"
++        android:gravity="center"
++        app:layout_constraintLeft_toLeftOf="parent"
++        app:layout_constraintTop_toTopOf="parent"
++        android:layout_marginTop="8dp"
++        android:layout_marginStart="8dp" />
++
++</androidx.constraintlayout.widget.ConstraintLayout>
+\ No newline at end of file
+Index: app/src/main/java/uk/ac/shef/oak/com4510/view/TripEntriesTabFragment.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/uk/ac/shef/oak/com4510/view/TripEntriesTabFragment.kt b/app/src/main/java/uk/ac/shef/oak/com4510/view/TripEntriesTabFragment.kt
+new file mode 100644
+--- /dev/null	(date 1639759703000)
++++ b/app/src/main/java/uk/ac/shef/oak/com4510/view/TripEntriesTabFragment.kt	(date 1639759703000)
+@@ -0,0 +1,21 @@
++package uk.ac.shef.oak.com4510.view
++
++import android.os.Bundle
++import androidx.fragment.app.Fragment
++import android.view.LayoutInflater
++import android.view.View
++import android.view.ViewGroup
++import uk.ac.shef.oak.com4510.R
++
++
++class TripEntriesTabFragment : Fragment() {
++
++    override fun onCreateView(
++        inflater: LayoutInflater, container: ViewGroup?,
++        savedInstanceState: Bundle?
++    ): View? {
++        // Inflate the layout for this fragment
++        return inflater.inflate(R.layout.fragment_trip_entries_tab, container, false)
++    }
++
++}
+\ No newline at end of file
+Index: app/src/main/res/layout/fragment_trip_images_tab.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/layout/fragment_trip_images_tab.xml b/app/src/main/res/layout/fragment_trip_images_tab.xml
+new file mode 100644
+--- /dev/null	(date 1639759203325)
++++ b/app/src/main/res/layout/fragment_trip_images_tab.xml	(date 1639759203325)
+@@ -0,0 +1,24 @@
++<?xml version="1.0" encoding="utf-8"?>
++
++<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
++    xmlns:app="http://schemas.android.com/apk/res-auto"
++    xmlns:tools="http://schemas.android.com/tools"
++    android:layout_width="match_parent"
++    android:layout_height="match_parent"
++    app:layout_behavior="@string/appbar_scrolling_view_behavior"
++    tools:context="uk.ac.shef.oak.com4510.view.MainActivity"
++    tools:showIn="@layout/content_camera">
++
++    <androidx.recyclerview.widget.RecyclerView
++        android:id="@+id/grid_recycler_view"
++        android:layout_width="0dp"
++        android:layout_height="0dp"
++        app:layout_constraintBottom_toBottomOf="parent"
++        app:layout_constraintRight_toRightOf="parent"
++        android:gravity="center"
++        app:layout_constraintLeft_toLeftOf="parent"
++        app:layout_constraintTop_toTopOf="parent"
++        android:layout_marginTop="8dp"
++        android:layout_marginStart="8dp" />
++
++</androidx.constraintlayout.widget.ConstraintLayout>
+Index: app/src/main/java/uk/ac/shef/oak/com4510/view/TripImagesTabFragment.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/uk/ac/shef/oak/com4510/view/TripImagesTabFragment.kt b/app/src/main/java/uk/ac/shef/oak/com4510/view/TripImagesTabFragment.kt
+new file mode 100644
+--- /dev/null	(date 1639761134882)
++++ b/app/src/main/java/uk/ac/shef/oak/com4510/view/TripImagesTabFragment.kt	(date 1639761134882)
+@@ -0,0 +1,49 @@
++package uk.ac.shef.oak.com4510.view
++
++import android.os.Bundle
++import androidx.fragment.app.Fragment
++import android.view.LayoutInflater
++import android.view.View
++import android.view.ViewGroup
++import androidx.databinding.DataBindingUtil
++import androidx.lifecycle.Observer
++import androidx.lifecycle.ViewModelProvider
++import androidx.recyclerview.widget.GridLayoutManager
++import androidx.recyclerview.widget.RecyclerView
++import uk.ac.shef.oak.com4510.R
++import uk.ac.shef.oak.com4510.databinding.FragmentGalleryBinding
++import uk.ac.shef.oak.com4510.model.data.database.ImageData
++import uk.ac.shef.oak.com4510.viewModel.ImagesAdapter
++import uk.ac.shef.oak.com4510.viewModel.TravelViewModel
++
++class TripImagesTabFragment : Fragment() {
++    private lateinit var binding : FragmentGalleryBinding
++    private var viewModel: TravelViewModel? = null
++
++    override fun onCreateView(
++        inflater: LayoutInflater, container: ViewGroup?,
++        savedInstanceState: Bundle?
++    ): View? {
++        // Inflate the layout for this fragment
++
++        binding = DataBindingUtil.inflate(inflater,
++            R.layout.fragment_trip_images_tab, container, false)
++
++        viewModel = ViewModelProvider(this)[TravelViewModel::class.java]
++        val numberOfColumns = 4
++        val mRecyclerView = binding.contentCamera.gridRecyclerView
++        mRecyclerView.layoutManager = GridLayoutManager(activity, numberOfColumns)
++        val mAdapter = ImagesAdapter(ArrayList<ImageData>()) as RecyclerView.Adapter<RecyclerView.ViewHolder>
++        mRecyclerView.adapter = mAdapter
++
++        viewModel!!.searchResults.observe(this, Observer<List<ImageData>>{ images ->
++            ImagesAdapter.items = images as MutableList<ImageData>
++            mAdapter.notifyDataSetChanged()
++        })
++        viewModel!!.initImagesList() // Populate the imageList observable with all the images in the database
++
++
++        return binding.root
++    }
++
++}
+\ No newline at end of file
+Index: app/src/main/res/layout/list_entry_item.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/layout/list_entry_item.xml b/app/src/main/res/layout/list_entry_item.xml
+new file mode 100644
+--- /dev/null	(date 1639758304193)
++++ b/app/src/main/res/layout/list_entry_item.xml	(date 1639758304193)
+@@ -0,0 +1,14 @@
++<?xml version="1.0" encoding="utf-8"?>
++<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
++    android:layout_width="match_parent"
++    android:layout_height="match_parent">
++
++    <TextView
++        android:layout_width="match_parent"
++        android:layout_height="wrap_content"
++        android:id="@+id/entry_id"
++        android:text="example entry">
++
++    </TextView>
++
++</LinearLayout>
+\ No newline at end of file
