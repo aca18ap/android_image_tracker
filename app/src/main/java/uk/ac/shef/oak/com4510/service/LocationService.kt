@@ -8,7 +8,6 @@ import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.location.Location
-import android.location.LocationListener
 import android.os.Binder
 import android.os.IBinder
 import android.util.Log
@@ -25,13 +24,19 @@ import java.util.*
 /**
  * A service to periodically gather location and sensor information, and pass it back to the current visit
  */
-class LocationService : Service {
+class LocationService : Service() {
+    private lateinit var sensorManager: SensorManager
+
     private var mCurrentLocation: Location? = null
     private var mCurrentPressure: Float? = null
     private var mCurrentTemperature: Float? = null
     private var mLastUpdateTime: String? = null
     private var mLine: Polyline? = null
     private var currentEntryID: Int = -1
+    private var barometer: Sensor? = null
+    private var thermometer: Sensor? = null
+    private var doneFirstReading: Boolean = false // First reading often has inaccurate location
+    private val mBinder: IBinder = LocalBinder()
 
     private var barometerEventListener  = object : SensorEventListener {
         override fun onSensorChanged(event: SensorEvent) {
@@ -47,20 +52,15 @@ class LocationService : Service {
         override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
     }
 
-    private var startMode: Int = 0
-    private var binder: IBinder? = null
-    private var allowRebind: Boolean = false
-
-    private lateinit var sensorManager: SensorManager
-    private var barometer: Sensor? = null
-    private var thermometer: Sensor? = null
-
-    private var doneFirstReading: Boolean = false // First reading often has inaccurate location
-
-    constructor(name: String?) : super() {}
-    constructor() : super() {}
-
+    /**
+     * A binder class to expose this service to TravellingFragment
+     */
     class LocalBinder : Binder() {
+        /**
+         * Service getter
+         *
+         * @return LocationService an instance of the service
+         */
         fun getService() : LocationService {
             return LocationService()
         }
@@ -135,14 +135,14 @@ class LocationService : Service {
                                 mLine!!.points = points
                             }
                         } catch (e: Exception) {
-                            Log.e("LocationService", "Error cannot write on map " + e.message)
+                            Log.e("LocationService", "Could not write on map " + e.message)
                         }
                     })
                 }
             }
             if (!doneFirstReading) doneFirstReading = true
         }
-        return Service.START_STICKY
+        return Service.START_REDELIVER_INTENT
     }
 
     /**
@@ -157,18 +157,16 @@ class LocationService : Service {
         return mBinder
     }
 
-    private val mBinder: IBinder = LocalBinder()
-
     /**
      * Called on unbind
      *
      * Given an intent, return whether it is allowed to rebind
      *
      * @param intent the intent
-     * @return allowRebind whether it is allowed to rebind
+     * @return false whether it is allowed to rebind
      */
     override fun onUnbind(intent: Intent): Boolean {
-        return allowRebind
+        return false
     }
 
     /**
