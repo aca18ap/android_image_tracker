@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.NavDirections
 import androidx.navigation.findNavController
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.LatLng
@@ -32,8 +33,11 @@ class NewTripFragment : Fragment() {
 
         //Get back to this in a little bit
         //val tripID = viewModel.create_insert_return_tripID(title = binding.titleInput,country = binding.countryInput, System.currentTimeMillis())
+        val tripID = viewModel.create_insert_return_tripID(binding.titleInput.text.toString(), "placeholderCountry", System.currentTimeMillis().toFloat())
 
         binding.startTripButton.setOnClickListener{view : View ->
+            val action : NavDirections = NewTripDirections.actionNewTripFragmentToTravellingFragment(tripID)
+            view.findNavController().navigate(action)
             view.findNavController().navigate(R.id.action_newTripFragment_to_travellingFragment)
         }
 

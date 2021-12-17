@@ -1,7 +1,6 @@
 package uk.ac.shef.oak.com4510.model.data.database
 
 
-import android.graphics.Bitmap
 import androidx.room.*
 
 /**
@@ -14,7 +13,7 @@ import androidx.room.*
     childColumns = arrayOf("trip_id"),
     onDelete = ForeignKey.CASCADE)))
 data class EntryData(
-    @PrimaryKey(autoGenerate = true)var id: Int = 0,
+    @PrimaryKey(autoGenerate = true) var id: Int = 0,
     @ColumnInfo(name="lat") var lat: Double,
     @ColumnInfo(name="lon") var lon: Double,
     @ColumnInfo(name="timestamp") var entry_timestamp: Long,
