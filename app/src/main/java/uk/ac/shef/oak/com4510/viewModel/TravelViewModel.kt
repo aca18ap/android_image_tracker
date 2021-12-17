@@ -58,6 +58,26 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
         get() = _entriesOfTrip
 
     /**
+     * Observable list of images for a particular entry. Holds images for a given entry
+     */
+    private val _imagesOfEntry = MutableLiveData<MutableList<ImageData>>()
+    val imagesOfEntry : LiveData<MutableList<ImageData>>
+        get() = _imagesOfEntry
+    /**
+     * Given an entry, it updates the _imagesOfEntry observable LiveData to contain all images of a given entry
+     */
+    fun updateImagesOfEntry(entryData: EntryData)
+    {
+        viewModelScope.launch(Dispatchers.IO)
+        {
+            //Get all images for a given entry
+            val allImages = mRepository.getImagesOfEntry(entryData)
+            _imagesOfEntry.postValue(allImages as MutableList<ImageData>?)
+        }
+    }
+
+
+    /**
      * Updates the entriesOfTrip observable with all (DataEntry,List<ImageData>) for a given a tripData input.
      */
     fun updateLiveDataEntriesOfTrip(tripDataID : Int)
@@ -168,7 +188,6 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
         }
     }
 
-
     /**
      * Given an ImageData and an Entry, associates them in the database
      */
@@ -205,6 +224,7 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
         initImageListFromDatabase()
         initSearchResultsFromDatabase()
     }
+
     /**
      * Initializes the imageList to hold every image from the database
      */

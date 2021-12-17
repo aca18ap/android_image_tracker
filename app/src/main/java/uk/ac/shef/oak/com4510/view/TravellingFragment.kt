@@ -1,110 +1,56 @@
 package uk.ac.shef.oak.com4510.view
 
-import android.content.pm.PackageManager
-import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.core.app.ActivityCompat
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.SupportMapFragment
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.PendingIntent
-import android.app.PendingIntent.getActivity
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
+import android.content.pm.PackageManager
 import android.location.Location
+import android.os.Bundle
 import android.os.IBinder
-import android.os.Looper
 import android.util.Log
-import androidx.appcompat.app.AppCompatActivity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
-import androidx.databinding.DataBindingUtil.setContentView
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.location.*
-import com.google.android.gms.maps.CameraUpdateFactory
-import uk.ac.shef.oak.com4510.R
-
+import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
-import com.google.android.gms.tasks.CancellationTokenSource
+import com.google.android.gms.maps.SupportMapFragment
 import pl.aprilapps.easyphotopicker.*
+import uk.ac.shef.oak.com4510.R
 import uk.ac.shef.oak.com4510.databinding.FragmentTravellingBinding
 import uk.ac.shef.oak.com4510.service.LocationService
 import uk.ac.shef.oak.com4510.viewModel.TravelViewModel
-import java.text.DateFormat
-import java.util.*
 
-
+/**
+ * A fragment containing the current visit
+ */
 class TravellingFragment : Fragment(), OnMapReadyCallback {
+    private val args: TravellingFragmentArgs by navArgs()
     private lateinit var easyImage: EasyImage
     private lateinit var locationRequest: LocationRequest
     private lateinit var locationClient: FusedLocationProviderClient
     private lateinit var ctx: Context
     private var service : LocationService? = null
-    private val args: TravellingFragmentArgs by navArgs()
+    private var mLastUpdateTime: String? = null
+    private var mLocationPendingIntent: PendingIntent? = null
 
-//    private var viewModel: TravelViewModel? = null
     private var locationCallback: LocationCallback = object : LocationCallback() {
         override fun onLocationResult(locationResult: LocationResult) {
             super.onLocationResult(locationResult)
-//            mCurrentLocation = locationResult.lastLocation
-//            mLastUpdateTime = DateFormat.getTimeInstance().format(Date())
-//            Log.i("MAP", "new location " + mCurrentLocation.toString())
-//            mMap.addMarker(
-//                MarkerOptions().position(
-//                    LatLng(
-//                        mCurrentLocation!!.latitude,
-//                        mCurrentLocation!!.longitude
-//                    )
-//                )
-//                    .title(mLastUpdateTime)
-//            )
-//            mMap.moveCamera(
-//                CameraUpdateFactory.newLatLngZoom(
-//                    LatLng(
-//                        mCurrentLocation!!.latitude,
-//                        mCurrentLocation!!.longitude
-//                    ), 15f
-//                )
-//            )
         }
     }
-
-//    private ServiceConnection mConnection = new ServiceConnection() {
-//        public void onServiceConnected(ComponentName className, IBinder service) {
-//            // This is called when the connection with the service has been
-//            // established, giving us the service object we can use to
-//            // interact with the service.  Because we have bound to a explicit
-//            // service that we know is running in our own process, we can
-//            // cast its IBinder to a concrete class and directly access it.
-//            mBoundService = ((LocalService.LocalBinder)service).getService();
-//
-//            // Tell the user about this for our demo.
-//            Toast.makeText(Binding.this, R.string.local_service_connected,
-//                Toast.LENGTH_SHORT).show();
-//        }
-//
-//        public void onServiceDisconnected(ComponentName className) {
-//            // This is called when the connection with the service has been
-//            // unexpectedly disconnected -- that is, its process crashed.
-//            // Because it is running in our same process, we should never
-//            // see this happen.
-//            mBoundService = null;
-//            Toast.makeText(Binding.this, R.string.local_service_disconnected,
-//                Toast.LENGTH_SHORT).show();
-//        }
-//    }
 
     private var mConnection: ServiceConnection = object: ServiceConnection {
         override fun onServiceConnected(className: ComponentName, binder: IBinder) {
@@ -118,10 +64,6 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
             service = null
         }
     }
-
-
-    private var mLastUpdateTime: String? = null
-    private var mLocationPendingIntent: PendingIntent? = null
 
     companion object {
         private const val REQUEST_ACCESS_COARSE_LOCATION = 1121 // Used in section 1.1.2 of brief
@@ -140,23 +82,54 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
         private var entryID: Int = -1
         private lateinit var binding : FragmentTravellingBinding
 
-
+        /**
+         * Activity getter
+         *
+         * @return activity the parent activity
+         */
         fun getActivity(): FragmentActivity? {
             return activity
         }
 
+        /**
+         * Activity setter
+         *
+         * @param newActivity an activity
+         */
         fun setActivity(newActivity: FragmentActivity) {
             activity = newActivity
         }
 
+        /**
+         * GoogleMap getter
+         *
+         * @return mMap the GoogleMap instance
+         */
         fun getMap(): GoogleMap {
             return mMap
         }
 
+        /**
+         * ViewModel getter
+         *
+         * @return viewModel the associated TravelViewModel
+         */
         fun getViewModel(): TravelViewModel {
             return viewModel
         }
 
+        /**
+         * LocationService callback
+         *
+         * Sets location and sensor values
+         * Updates text boxes
+         *
+         * @param location the location object containing latitude and longitude values
+         * @param pressure the air pressure in millibars
+         * @param temperature the ambient temperature in degrees C
+         * @param time a timestamp in milliseconds
+         * @return activity the parent activity
+         */
         fun setData(location: Location?, pressure: Float?, temperature: Float?, time: Long) {
             mCurrentLocation = location
             binding.latitudeText.text = "Latitude: ${location!!.latitude}"
@@ -168,15 +141,32 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
             mLastTimestamp = time
         }
 
+        /**
+         * Trip ID getter
+         *
+         * @return tripID the ID of the active trip
+         */
         fun getTripId(): Int {
             return tripID
         }
 
+        /**
+         * Entry ID getter
+         *
+         * @return entryID the ID of the most recent entry
+         */
         fun setEntryID(id: Int) {
             entryID = id
         }
     }
 
+    /**
+     * Called when the view is instantiated
+     *
+     * Sets up bindings and context
+     *
+     * @return binding.root
+     */
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -210,8 +200,14 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
         return binding.root
     }
 
+    /**
+     * Called when the map is ready
+     *
+     * Checks for location permissions
+     * Without permissions, returns to the welcome page
+     */
     override fun onMapReady(googleMap: GoogleMap) {
-        println("Created Map in fragment")
+        Log.i("TravellingFragment", "Created map")
         mMap = googleMap
 
         if (ActivityCompat.checkSelfPermission(
@@ -222,14 +218,14 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
                 Manifest.permission.ACCESS_COARSE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED
         ) {
-            println("Asking for location permissions...")
+            Log.i("TravellingFragment", "Asking for location permissions...")
             ActivityCompat.requestPermissions(
                 requireActivity(),
                 arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION),
                 REQUEST_ACCESS_FINE_LOCATION
             )
         } else {
-            println("Already have permissions!")
+            Log.i("TravellingFragment", "Already have location permissions!")
         }
         if (ActivityCompat.checkSelfPermission(
                 requireActivity(),
@@ -240,17 +236,39 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
             ) != PackageManager.PERMISSION_GRANTED
         ) {
             this.findNavController().popBackStack()
+            this.findNavController().popBackStack()
         }
     }
 
+    /**
+     * Context setter
+     * @param context the current context
+     */
+    private fun setContext(context: Context) {
+        ctx = context
+    }
+
+    /**
+     * Create a location request
+     *
+     * Generates a location request with an interval of 20s
+     * Requests maximum accuracy
+     */
     private fun createLocationRequest() {
         locationRequest = LocationRequest.create()?.apply {
             interval = 20000
-            fastestInterval = 10000
+            fastestInterval = 20000
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         }
     }
 
+    /**
+     * Called on resume
+     *
+     * Creates a location request
+     * Creates a location provider client
+     * Starts location updates
+     */
     override fun onResume() {
         Log.i("TravellingFragment", "onResume")
         super.onResume()
@@ -259,6 +277,12 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
         startLocationUpdates()
     }
 
+    /**
+     * Starts location updates
+     *
+     * Starts the location service
+     * Requests location updates for the location service
+     */
     @SuppressLint("MissingPermission")
     private fun startLocationUpdates() {
         Log.e("Location update", "Starting...")
@@ -288,39 +312,51 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
+    /**
+     * Called on pause
+     *
+     * Stops location updates
+     */
     override fun onPause() {
         super.onPause()
         stopLocationUpdates()
     }
 
+    /**
+     * Stops location updates
+     *
+     * Removes the callback from the location client
+     */
     private fun stopLocationUpdates() {
         locationClient.removeLocationUpdates(locationCallback)
     }
 
-    private fun setContext(context: Context) {
-        ctx = context
-    }
-
     //Handle easyImage
+    /**
+     * Handler for image selector
+     *
+     * Adds the selected image to the database
+     * Associates the image with the most recent location
+     */
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?){
         easyImage.handleActivityResult(requestCode, resultCode, data, requireActivity(),
             object : DefaultCallback(){
                 override fun onMediaFilesPicked(imageFiles: Array<MediaFile>, source: MediaSource) {
-                    //This is where you get control after choosing a bunch of images
                     Log.d("InsideDanFragment","TripID: $tripID, EntryID: $entryID, Loc: $mCurrentLocation")
-                    //Get hold of an entry
                     viewModel.insertArrayMediaFilesWithLastEntryById(imageFiles)
                 }
             })
     }
 
+    /**
+     * EasyImage builder
+     *
+     * Initialises an image selector
+     */
     private fun initEasyImage() {
         easyImage = EasyImage.Builder(requireActivity())
-//        .setChooserTitle("Pick media")
-//        .setFolderName(GALLERY_DIR)
             .setChooserType(ChooserType.CAMERA_AND_GALLERY)
             .allowMultiple(true)
-//        .setCopyImagesToPublicGalleryFolder(true)
             .build()
     }
 
