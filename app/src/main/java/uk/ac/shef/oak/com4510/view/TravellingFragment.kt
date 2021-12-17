@@ -235,7 +235,7 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
 
                     //val entryData = viewModel.create_insert_entry_returnEntry(TripData, temperature:Float?, pressure:Float?, lat:Double, lon:Double, timestamp:Long)
 
-                    viewModel!!.insertArrayMediaFilesWithEntry(imageFiles,entryData)
+                    //viewModel!!.insertArrayMediaFilesWithEntry(imageFiles,entryData)
                 }
             })
     }
