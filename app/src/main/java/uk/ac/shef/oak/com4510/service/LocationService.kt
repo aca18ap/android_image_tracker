@@ -5,6 +5,8 @@ import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
 import android.content.Context
+import android.hardware.Sensor
+import android.hardware.SensorManager
 import android.location.Location
 import android.os.IBinder
 import android.util.Log
@@ -26,6 +28,10 @@ class LocationService : Service {
     private var binder: IBinder? = null
     private var allowRebind: Boolean = false
 
+    private lateinit var sensorManager: SensorManager?
+    private lateinit var barometer: Sensor
+    private lateinit var thermometer: Sensor
+
     constructor(name: String?) : super() {}
     constructor() : super() {}
 
@@ -35,6 +41,9 @@ class LocationService : Service {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        sensorManager = applicationContext.getSystemService(Context.SENSOR_SERVICE) as SensorManager
+        barometer = sensorManager?.getDefaultSensor(Sensor.TYPE_PRESSURE)!!
+        thermometer = sensorManager?.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE)!!
         Log.i("LocationService", "onStartCommand")
         if (LocationResult.hasResult(intent!!)) {
             Log.i("LocationResult", "Has result")
