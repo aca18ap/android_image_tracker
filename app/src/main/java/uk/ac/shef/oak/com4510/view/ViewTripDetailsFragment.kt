@@ -1,6 +1,7 @@
 package uk.ac.shef.oak.com4510.view
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -34,27 +35,38 @@ class ViewTripDetailsFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate<FragmentViewTripDetailsBinding>(inflater,
             R.layout.fragment_view_trip_details, container, false)
-        if (args.position != -1){
+        Log.d("debugging", args.tripID.toString())
+        if (args.tripID != -1){
             displayData(args.position)
         }
 
+
+        /**
+         * Tabs binding
+         */
         val tabLayout = binding.tablayout
         val viewpager = binding.viewpager
-        val mAdapter = ViewPagerAdapter(childFragmentManager, lifecycle, position)
+        val pagerAdapter = ViewPagerAdapter(activity!!)
 
-        viewpager.adapter = mAdapter
-        TabLayoutMediator(tabLayout, viewpager){tab, position->
-            when(position){
+        val viewModel = ViewModelProvider(this)[TravelViewModel::class.java]
+
+        pagerAdapter.addFragment(TripImagesTabFragment(args.tripID))
+        pagerAdapter.addFragment(TripEntriesTabFragment(args.tripID))
+        viewpager.adapter = pagerAdapter
+        TabLayoutMediator(tabLayout, viewpager) { tab, pos ->
+            when(pos){
                 0->{
-                    tab.text=="Images"
+                    tab.text = "Images"
                 }
                 1->{
-                    tab.text="Entries"
+                    tab.text = "Entries"
                 }
             }
         }.attach()
 
-        val viewModel = ViewModelProvider(this)[TravelViewModel::class.java]
+        Log.d("debugging", args.tripID.toString())
+        viewModel.updateLiveDataEntriesOfTrip(args.tripID)
+        viewModel.updateImagesOfTrip(args.tripID)
 
         return binding.root
 

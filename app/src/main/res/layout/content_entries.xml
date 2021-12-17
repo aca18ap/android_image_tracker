@@ -7,7 +7,8 @@
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="uk.ac.shef.oak.com4510.view.MainActivity"
-    tools:showIn="@layout/content_entries">
+    tools:showIn="@layout/content_entries"
+    android:padding="10dp">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/entry_grid_recycler_view"
@@ -20,5 +21,10 @@
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="8dp"
         android:layout_marginStart="8dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="444444444444444"></TextView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

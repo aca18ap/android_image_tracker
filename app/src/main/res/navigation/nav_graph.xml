@@ -107,6 +107,10 @@
             android:name="position"
             app:argType="integer"
             android:defaultValue="-1"/>
+        <argument
+            android:name="tripID"
+            app:argType="integer"
+            android:defaultValue="-1"/>
         <action
             android:id="@+id/action_viewTripDetailsFragment_to_showImageFragment"
             app:destination="@id/showImageFragment" />

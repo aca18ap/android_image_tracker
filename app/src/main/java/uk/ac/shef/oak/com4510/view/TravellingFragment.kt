@@ -47,12 +47,13 @@ import java.util.*
 
 
 class TravellingFragment : Fragment(), OnMapReadyCallback {
-    private val args: TravellingFragmentArgs by navArgs()
     private lateinit var easyImage: EasyImage
     private lateinit var locationRequest: LocationRequest
     private lateinit var locationClient: FusedLocationProviderClient
     private lateinit var ctx: Context
     private var service : LocationService? = null
+    private val args: TravellingFragmentArgs by navArgs()
+
 //    private var viewModel: TravelViewModel? = null
     private var locationCallback: LocationCallback = object : LocationCallback() {
         override fun onLocationResult(locationResult: LocationResult) {

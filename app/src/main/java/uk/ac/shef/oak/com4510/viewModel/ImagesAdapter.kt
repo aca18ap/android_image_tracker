@@ -7,12 +7,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import uk.ac.shef.oak.com4510.*
 import uk.ac.shef.oak.com4510.model.data.database.ImageData
 import uk.ac.shef.oak.com4510.view.GalleryFragmentDirections
 import kotlinx.coroutines.*
+import uk.ac.shef.oak.com4510.view.TripImagesTabFragment
+import uk.ac.shef.oak.com4510.view.ViewTripDetailsFragment
+import uk.ac.shef.oak.com4510.view.ViewTripDetailsFragmentDirections
+import java.lang.IllegalArgumentException
 
 class ImagesAdapter : RecyclerView.Adapter<ImagesAdapter.ViewHolder> {
     private lateinit var context: Context
@@ -63,8 +68,15 @@ class ImagesAdapter : RecyclerView.Adapter<ImagesAdapter.ViewHolder> {
         }
         else {holder.imageView.setImageBitmap(items[position].thumbnail)}
         holder.itemView.setOnClickListener{view: View ->
-            val action = GalleryFragmentDirections.actionGalleryFragmentToShowImageFragment(position)
-            view.findNavController().navigate(action)
+            try{
+                val action = GalleryFragmentDirections.actionGalleryFragmentToShowImageFragment(position)
+                view.findNavController().navigate(action)
+
+            }catch(e: IllegalArgumentException){
+                val action = ViewTripDetailsFragmentDirections.actionViewTripDetailsFragmentToShowImageFragment(position)
+                view.findNavController().navigate(action)
+
+            }
         }
 
     }
