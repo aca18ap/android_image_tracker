@@ -22,6 +22,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.DataBindingUtil.setContentView
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.common.api.ApiException
@@ -81,6 +82,7 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
 
         private var activity: FragmentActivity? = null
         private lateinit var mMap: GoogleMap
+        private lateinit var viewModel: TravelViewModel
         //private const val ACCESS_FINE_LOCATION = 123
 
 
@@ -95,6 +97,10 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
         fun getMap(): GoogleMap {
             return mMap
         }
+
+        fun getViewModel(): TravelViewModel {
+            return viewModel
+        }
     }
 
     override fun onCreateView(
@@ -107,7 +113,7 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
 
         val binding : FragmentTravellingBinding = DataBindingUtil.inflate(inflater,
             R.layout.fragment_travelling, container, false)
-        var viewModel = ViewModelProvider(this)[TravelViewModel::class.java]
+        viewModel = ViewModelProvider(this)[TravelViewModel::class.java]
         locationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
 
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
@@ -115,7 +121,6 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
 
         return binding.root
     }
-
 
     override fun onMapReady(googleMap: GoogleMap) {
         println("Created Map in fragment")
