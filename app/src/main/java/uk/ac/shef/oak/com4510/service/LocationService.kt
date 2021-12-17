@@ -93,14 +93,14 @@ class LocationService : Service {
                             )
                             TravellingFragment.getMap().animateCamera(zoom)
                             if (doneFirstReading) {
-//                                TravellingFragment.getViewModel().create_insert_entry(
-//                                    null, // how to get?
-//                                    getLastTemperature(), // Nullable if phone has no ambient temperature sensor
-//                                    getLastPressure(), // Nullable if phone has no barometer
-//                                    getLastLocation()!!.latitude,
-//                                    getLastLocation()!!.longitude,
-//                                    System.currentTimeMillis()
-//                                )
+                                TravellingFragment.getViewModel().create_insert_entry(
+                                    null, // how to get?
+                                    getLastTemperature(), // Nullable if phone has no ambient temperature sensor
+                                    getLastPressure(), // Nullable if phone has no barometer
+                                    getLastLocation()!!.latitude,
+                                    getLastLocation()!!.longitude,
+                                    System.currentTimeMillis()
+                                )
                                 TravellingFragment.getMap().addMarker(
                                     MarkerOptions().position(newPoint)
                                         .title("$mLastUpdateTime")
