@@ -13,3 +13,8 @@ data class TripData(
     @ColumnInfo(name="title") var title: String,
     @ColumnInfo(name="country") var country: String,
     @ColumnInfo(name="timestamp") var trip_timestamp: Float)
+
+{
+    @Ignore
+    var thumbnail: Bitmap? = null
+}
