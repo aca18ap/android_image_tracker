@@ -33,6 +33,9 @@ import uk.ac.shef.oak.com4510.databinding.FragmentTravellingBinding
 import uk.ac.shef.oak.com4510.service.LocationService
 import uk.ac.shef.oak.com4510.viewModel.TravelViewModel
 
+/**
+ * A fragment containing the current visit
+ */
 class TravellingFragment : Fragment(), OnMapReadyCallback {
     private val args: TravellingFragmentArgs by navArgs()
     private lateinit var easyImage: EasyImage
@@ -79,22 +82,54 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
         private var entryID: Int = -1
         private lateinit var binding : FragmentTravellingBinding
 
+        /**
+         * Activity getter
+         *
+         * @return activity the parent activity
+         */
         fun getActivity(): FragmentActivity? {
             return activity
         }
 
+        /**
+         * Activity setter
+         *
+         * @param newActivity an activity
+         */
         fun setActivity(newActivity: FragmentActivity) {
             activity = newActivity
         }
 
+        /**
+         * GoogleMap getter
+         *
+         * @return mMap the GoogleMap instance
+         */
         fun getMap(): GoogleMap {
             return mMap
         }
 
+        /**
+         * ViewModel getter
+         *
+         * @return viewModel the associated TravelViewModel
+         */
         fun getViewModel(): TravelViewModel {
             return viewModel
         }
 
+        /**
+         * LocationService callback
+         *
+         * Sets location and sensor values
+         * Updates text boxes
+         *
+         * @param location the location object containing latitude and longitude values
+         * @param pressure the air pressure in millibars
+         * @param temperature the ambient temperature in degrees C
+         * @param time a timestamp in milliseconds
+         * @return activity the parent activity
+         */
         fun setData(location: Location?, pressure: Float?, temperature: Float?, time: Long) {
             mCurrentLocation = location
             binding.latitudeText.text = "Latitude: ${location!!.latitude}"
@@ -106,15 +141,32 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
             mLastTimestamp = time
         }
 
+        /**
+         * Trip ID getter
+         *
+         * @return tripID the ID of the active trip
+         */
         fun getTripId(): Int {
             return tripID
         }
 
+        /**
+         * Entry ID getter
+         *
+         * @return entryID the ID of the most recent entry
+         */
         fun setEntryID(id: Int) {
             entryID = id
         }
     }
 
+    /**
+     * Called when the view is instantiated
+     *
+     * Sets up bindings and context
+     *
+     * @return binding.root
+     */
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -148,6 +200,12 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
         return binding.root
     }
 
+    /**
+     * Called when the map is ready
+     *
+     * Checks for location permissions
+     * Without permissions, returns to the welcome page
+     */
     override fun onMapReady(googleMap: GoogleMap) {
         Log.i("TravellingFragment", "Created map")
         mMap = googleMap
@@ -178,21 +236,39 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
             ) != PackageManager.PERMISSION_GRANTED
         ) {
             this.findNavController().popBackStack()
+            this.findNavController().popBackStack()
         }
     }
 
+    /**
+     * Context setter
+     * @param context the current context
+     */
     private fun setContext(context: Context) {
         ctx = context
     }
 
+    /**
+     * Create a location request
+     *
+     * Generates a location request with an interval of 20s
+     * Requests maximum accuracy
+     */
     private fun createLocationRequest() {
         locationRequest = LocationRequest.create()?.apply {
             interval = 20000
-            fastestInterval = 10000
+            fastestInterval = 20000
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         }
     }
 
+    /**
+     * Called on resume
+     *
+     * Creates a location request
+     * Creates a location provider client
+     * Starts location updates
+     */
     override fun onResume() {
         Log.i("TravellingFragment", "onResume")
         super.onResume()
@@ -201,6 +277,12 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
         startLocationUpdates()
     }
 
+    /**
+     * Starts location updates
+     *
+     * Starts the location service
+     * Requests location updates for the location service
+     */
     @SuppressLint("MissingPermission")
     private fun startLocationUpdates() {
         Log.e("Location update", "Starting...")
@@ -230,28 +312,47 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
+    /**
+     * Called on pause
+     *
+     * Stops location updates
+     */
     override fun onPause() {
         super.onPause()
         stopLocationUpdates()
     }
 
+    /**
+     * Stops location updates
+     *
+     * Removes the callback from the location client
+     */
     private fun stopLocationUpdates() {
         locationClient.removeLocationUpdates(locationCallback)
     }
 
     //Handle easyImage
+    /**
+     * Handler for image selector
+     *
+     * Adds the selected image to the database
+     * Associates the image with the most recent location
+     */
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?){
         easyImage.handleActivityResult(requestCode, resultCode, data, requireActivity(),
             object : DefaultCallback(){
                 override fun onMediaFilesPicked(imageFiles: Array<MediaFile>, source: MediaSource) {
-                    //This is where you get control after choosing a bunch of images
                     Log.d("InsideDanFragment","TripID: $tripID, EntryID: $entryID, Loc: $mCurrentLocation")
-                    //Get hold of an entry
                     viewModel.insertArrayMediaFilesWithLastEntryById(imageFiles)
                 }
             })
     }
 
+    /**
+     * EasyImage builder
+     *
+     * Initialises an image selector
+     */
     private fun initEasyImage() {
         easyImage = EasyImage.Builder(requireActivity())
             .setChooserType(ChooserType.CAMERA_AND_GALLERY)

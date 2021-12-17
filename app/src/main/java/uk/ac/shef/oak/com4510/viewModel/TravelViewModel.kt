@@ -168,7 +168,6 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
         }
     }
 
-
     /**
      * Given an ImageData and an Entry, associates them in the database
      */
@@ -205,6 +204,7 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
         initImageListFromDatabase()
         initSearchResultsFromDatabase()
     }
+
     /**
      * Initializes the imageList to hold every image from the database
      */

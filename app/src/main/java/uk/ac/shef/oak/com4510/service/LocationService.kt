@@ -22,7 +22,9 @@ import uk.ac.shef.oak.com4510.view.TravellingFragment
 import java.text.DateFormat
 import java.util.*
 
-
+/**
+ * A service to periodically gather location and sensor information, and pass it back to the current visit
+ */
 class LocationService : Service {
     private var mCurrentLocation: Location? = null
     private var mCurrentPressure: Float? = null
@@ -62,15 +64,22 @@ class LocationService : Service {
         fun getService() : LocationService {
             return LocationService()
         }
-//        val service: LocationService
-//            get() = LocationService()
     }
 
+    /**
+     * Called when the service is instantiated
+     */
     override fun onCreate() {
         Log.i("LocationService", "onCreate")
         super.onCreate()
     }
 
+    /**
+     * Called to begin location tracking
+     *
+     * Sets up location and sensors
+     * Passes data to the current visit every 20s
+     */
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         sensorManager = applicationContext.getSystemService(Context.SENSOR_SERVICE) as SensorManager
         barometer = sensorManager?.getDefaultSensor(Sensor.TYPE_PRESSURE)!!
@@ -136,32 +145,79 @@ class LocationService : Service {
         return Service.START_STICKY
     }
 
+    /**
+     * Called on bind
+     *
+     * Given an intent, return the binder
+     *
+     * @param intent the intent
+     * @return mBinder the LocalBinder object
+     */
     override fun onBind(intent: Intent): IBinder? {
         return mBinder
     }
 
     private val mBinder: IBinder = LocalBinder()
 
+    /**
+     * Called on unbind
+     *
+     * Given an intent, return whether it is allowed to rebind
+     *
+     * @param intent the intent
+     * @return allowRebind whether it is allowed to rebind
+     */
     override fun onUnbind(intent: Intent): Boolean {
         return allowRebind
     }
 
+    /**
+     * Called on rebind
+     *
+     * Does nothing
+     */
     override fun onRebind(intent: Intent) {
 
     }
 
+    /**
+     * Called on destroy
+     *
+     * Does nothing
+     */
     override fun onDestroy() {
         Log.e("Service", "end")
     }
 
+    /**
+     * Location getter
+     *
+     * Returns the most recent location
+     *
+     * @return mCurrentLocation the most recent location
+     */
     fun getLastLocation(): Location? {
         return mCurrentLocation
     }
 
+    /**
+     * Pressure getter
+     *
+     * Returns the most recent pressure
+     *
+     * @return mCurrentPressure the most recent pressure
+     */
     fun getLastPressure(): Float? {
         return mCurrentPressure
     }
 
+    /**
+     * Temperature getter
+     *
+     * Returns the most recent Temperature
+     *
+     * @return mCurrentTemperature the most recent temperature
+     */
     fun getLastTemperature(): Float? {
         return mCurrentTemperature
     }
