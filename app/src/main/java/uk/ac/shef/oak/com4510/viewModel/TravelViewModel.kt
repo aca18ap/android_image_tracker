@@ -298,16 +298,14 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
 
     /**
      * Create a new trip based on trip description and inserts it into the database.
-     * This returns the tripData object. Because this returns the object, it blocks the main thread.
+     * This returns the triData's id. Because this returns something it blocks the main thread.
      */
-    fun create_insert_return_trip(title :String,country :String, timestamp: Float) : TripData
+    fun create_insert_return_tripID(title :String,country :String, timestamp: Float) : Int
     {
        val createdTrip = TripData(title = title, country = country, trip_timestamp = timestamp)
        //Block the main thread in order to wait for the id to return
        val id : Int? = insertTripReturnId(createdTrip)
-
-       createdTrip.id = id!!
-       return createdTrip
+       return id!!
     }
 
     /**
