@@ -2,6 +2,9 @@ package uk.ac.shef.oak.com4510.viewModel
 
 
 import android.app.Application
+import android.media.Image
+import android.util.Log
+import android.util.Log.WARN
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -48,13 +51,72 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
 
     /**
      * Observable list of (EntryData,List<ImageData>) corresponding to a particular trip. The List<ImageData> represents the list of images associated with each entry,
-     * if. If there are none, it is empty
+     * if. If there are none, it is empty. The
      */
     private val _entriesOfTrip = MutableLiveData<MutableList<Pair<EntryData,List<ImageData>>>>()
     val entriesOfTrip : LiveData<MutableList<Pair<EntryData,List<ImageData>>>>
         get() = _entriesOfTrip
 
+    /**
+     * Updates the entriesOfTrip observable with all (DataEntry,List<ImageData>) for a given a tripData input.
+     */
+    fun updateLiveDataEntriesOfTrip(tripData : TripData)
+    {
+        viewModelScope.launch(Dispatchers.IO)
+        {
+            val updatedList = ArrayList<Pair<EntryData,List<ImageData>>>()
+            //1. get all the entries in one place
+            val allEntries = mRepository.getEntriesOfTrip(tripData)
+            //2. Iterate through allEntries, and make a pair whenever you find a list, make it null when you don't, you know the drill
+            //Think of what happens when there's no entry in the list
+            for (entry in allEntries!!)
+            {
+                val allImages = mRepository.getImagesOfEntry(entry)
+                //Now I have all the images for an entry. It could be an empty list
+                //I think I just add that?
+                updatedList.add(Pair(entry,allImages!!))
+            }
 
+            //Update this based on the tripData
+            _entriesOfTrip.postValue(updatedList)
+        }
+    }
+
+    /**
+     * Observable liveData containing all images of a given trip
+     */
+    private val _imagesOfTrip = MutableLiveData<MutableList<ImageData>>()
+    val imagesOfTrip : LiveData<MutableList<ImageData>>
+        get() = _imagesOfTrip
+
+    /**
+     * Updates the _imagesOfTrip observable liveData to contain all images of a given trip
+     */
+    fun updateImagesOfTrip(tripData: TripData)
+    {
+        viewModelScope.launch(Dispatchers.IO)
+        {
+
+            val allImages = ArrayList<ImageData>()
+            //We have a trip, we can get to all the entries pointing to that trip
+
+            val allEntries = mRepository.getEntriesOfTrip(tripData)
+
+
+            //We have entries, we can get to all the images pointing to those entries
+            //If the trip has any entries, collect images in allImages
+            if (!allEntries!!.isEmpty()) {
+                for (entry in allEntries) {
+                    //For each entry we can get its individual images
+                    val imagesOfEntry = mRepository.getImagesOfEntry(entry)
+                    allImages.addAll(imagesOfEntry!!)
+                }
+            }
+            //Otherwise update _imageOfTrip with an empty list
+            _imagesOfTrip.postValue(allImages)
+        }
+
+    }
 
 
 
@@ -85,6 +147,27 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
         insertAndUpdateImageDataListWithEntry(imageDataList,entryData)
         _imageList.append(imageDataList)
     }
+    /**
+     * Handles the photos returned by EasyImage. Inserts an array of MediaFiles into the database and also changes the imageList livedata
+     * Also associates each image with the last entry in the database by Id
+     */
+    fun insertArrayMediaFilesWithLastEntryById(mediaFileArray: Array<MediaFile>)
+    {
+        viewModelScope.launch(Dispatchers.IO)
+        {
+            val lastEntry = mRepository.getLastEntryById()
+            if (lastEntry != null) {
+                var imageDataList = mediaFileArray.convertToImageDataWithoutId()
+                insertAndUpdateImageDataListWithEntry(imageDataList,lastEntry)
+                _imageList.append(imageDataList)
+            }
+            else
+            {
+                Log.e("TravelViewModel","You attempted to insert images before any entry has been created")
+            }
+        }
+    }
+
 
     /**
      * Given an ImageData and an Entry, associates them in the database
@@ -207,7 +290,7 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
     //Maybe add this as a function of the Repository?
     /**
      * Internal function that inserts a list of ImageData objects into the database. Updates the list with their generated id's
-     * Also associates the imageData with an entry
+     *
      */
     private fun insertAndUpdateImageDataList(imageDataList : List<ImageData>)
     {
@@ -219,6 +302,11 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
         //Update the observable live data
         initImagesList()
     }
+
+    /**
+     * Internal function that inserts a list of ImageData objects into the database. Updates the list with their generated id's
+     * Also associates the imageData with an entry
+     */
     private fun insertAndUpdateImageDataListWithEntry(imageDataList : List<ImageData>, entryData: EntryData)
     {
         for (imageData in imageDataList)
@@ -242,12 +330,6 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
         //Update the livedata
         updateImageList()
     }
-
-
-    /**
-     *
-     */
-
 
     /**
      * Updates the imageList LiveData to reflect what is in the database
@@ -328,34 +410,6 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
     //-----------------------Entry related functionality------------
 
 
-    /**
-     * Updates the observable containing pairs of entry,image
-     */
-    fun updateLiveDataEntriesOfTrip(tripData : TripData)
-    {
-        viewModelScope.launch(Dispatchers.IO)
-        {
-            val updatedList = ArrayList<Pair<EntryData,List<ImageData>>>()
-            //1. get all the entries in one place
-            val allEntries = mRepository.getEntriesOfTrip(tripData)
-            //2. Iterate through allEntries, and make a pair whenever you find a list, make it null when you don't, you know the drill
-            //Think of what happens when there's no entry in the list
-            for (entry in allEntries!!)
-            {
-                val allImages = mRepository.getImagesOfEntry(entry)
-                //Now I have all the images for an entry. It could be an empty list
-                //I think I just add that?
-                updatedList.add(Pair(entry,allImages!!))
-            }
-
-            //Update this based on the tripData
-            _entriesOfTrip.postValue(updatedList)
-        }
-    }
-
-
-
-
 
     /**
      * Return the images associated with an entry if they exist. Otherwise return an empty list
@@ -420,6 +474,15 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
     }
 
     //Temporary debug functions
+
+    fun debug_getLastEntry() : EntryData
+    {
+        val entryData : EntryData
+        runBlocking(Dispatchers.IO) {
+            entryData = mRepository.getLastEntryById()!!
+        }
+        return entryData
+    }
 
     fun debug_getImages() : List<ImageData>?
     {
