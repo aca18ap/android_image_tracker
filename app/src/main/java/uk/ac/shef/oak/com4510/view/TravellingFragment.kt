@@ -106,15 +106,18 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
 
     private var mConnection: ServiceConnection = object: ServiceConnection {
         override fun onServiceConnected(className: ComponentName, binder: IBinder) {
+            Log.i("ServiceConnection", "onServiceConnected")
             service = (binder as LocationService.LocalBinder).getService()
+            Log.i("ServiceConnection", "Service: $service")
         }
 
         override fun onServiceDisconnected(name: ComponentName?) {
+            Log.i("ServiceConnection", "onServiceDisconnected")
             service = null
         }
     }
 
-    private var mCurrentLocation: Location? = null
+
     private var mLastUpdateTime: String? = null
     private var mLocationPendingIntent: PendingIntent? = null
 
@@ -127,6 +130,10 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
         private lateinit var mMap: GoogleMap
         private lateinit var viewModel: TravelViewModel
         //private const val ACCESS_FINE_LOCATION = 123
+        private var mCurrentLocation: Location? = null
+        private var mCurrentPressure: Float? = null
+        private var mCurrentTemperature: Float? = null
+        private var mLastTimestamp: Long = 0
 
 
         fun getActivity(): FragmentActivity? {
@@ -143,6 +150,13 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
 
         fun getViewModel(): TravelViewModel {
             return viewModel
+        }
+
+        fun setData(location: Location?, pressure: Float?, temperature: Float?, time: Long) {
+            mCurrentLocation = location
+            mCurrentPressure = pressure
+            mCurrentTemperature = temperature
+            mLastTimestamp = time
         }
     }
 
@@ -225,7 +239,6 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
     @SuppressLint("MissingPermission")
     private fun startLocationUpdates() {
         Log.e("Location update", "Starting...")
-
         val intent = Intent(ctx, LocationService::class.java)
         ctx.bindService(intent, mConnection, Context.BIND_AUTO_CREATE)
         mLocationPendingIntent =
@@ -234,6 +247,7 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
                 intent,
                 PendingIntent.FLAG_UPDATE_CURRENT
             )
+        Log.d("StartLocationUpdates", "Svc?: $mLocationPendingIntent.")
         Log.d("StartLocationUpdates", "Loc?: ${service?.getLastLocation()}")
         val locationTask = locationClient.requestLocationUpdates(
             locationRequest,
@@ -270,7 +284,7 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
             object : DefaultCallback(){
                 override fun onMediaFilesPicked(imageFiles: Array<MediaFile>, source: MediaSource) {
                     //This is where you get control after choosing a bunch of images
-                    Log.d("InsideDanFragment","Loc: ${service?.getLastLocation()}")
+                    Log.d("InsideDanFragment","Loc: $mCurrentLocation")
                     //Get hold of an entry
 
                     //val entryData = viewModel.create_insert_entry_returnEntry(TripData, temperature:Float?, pressure:Float?, lat:Double, lon:Double, timestamp:Long)

@@ -8,6 +8,7 @@ import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.location.Location
+import android.location.LocationListener
 import android.os.Binder
 import android.os.IBinder
 import android.util.Log
@@ -98,6 +99,7 @@ class LocationService : Service {
                                 CameraUpdateFactory.newLatLng(newPoint)
                             )
                             TravellingFragment.getMap().animateCamera(zoom)
+                            TravellingFragment.setData(getLastLocation()!!, getLastPressure(), getLastTemperature(), System.currentTimeMillis())
                             if (doneFirstReading) {
                                 /*TravellingFragment.getViewModel().create_insert_entry(
                                     null, // how to get?
