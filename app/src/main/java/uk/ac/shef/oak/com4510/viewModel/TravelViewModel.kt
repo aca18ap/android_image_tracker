@@ -66,7 +66,7 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
         {
             val updatedList = ArrayList<Pair<EntryData,List<ImageData>>>()
             //1. get all the entries in one place
-            val allEntries = mRepository.getEntriesOfTrip(tripData)
+            val allEntries = mRepository.getEntriesOfTrip(tripData.id)
             //2. Iterate through allEntries, and make a pair whenever you find a list, make it null when you don't, you know the drill
             //Think of what happens when there's no entry in the list
             for (entry in allEntries!!)
@@ -92,7 +92,7 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
     /**
      * Updates the _imagesOfTrip observable liveData to contain all images of a given trip
      */
-    fun updateImagesOfTrip(tripData: TripData)
+    fun updateImagesOfTrip(tripDataID: Int)
     {
         viewModelScope.launch(Dispatchers.IO)
         {
@@ -100,7 +100,7 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
             val allImages = ArrayList<ImageData>()
             //We have a trip, we can get to all the entries pointing to that trip
 
-            val allEntries = mRepository.getEntriesOfTrip(tripData)
+            val allEntries = mRepository.getEntriesOfTrip(tripDataID)
 
 
             //We have entries, we can get to all the images pointing to those entries
@@ -236,7 +236,7 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
             //Iterate through trips
             for(trip in allTrips)
             {
-                val allEntries = mRepository.getEntriesOfTrip(trip)
+                val allEntries = mRepository.getEntriesOfTrip(trip.id)
                 //If trip has no entries
                 if (allEntries?.size == 0)
                 {
