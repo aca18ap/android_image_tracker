@@ -13,9 +13,12 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.app.PendingIntent
 import android.app.PendingIntent.getActivity
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.content.ServiceConnection
 import android.location.Location
+import android.os.IBinder
 import android.os.Looper
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -25,6 +28,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -43,12 +47,13 @@ import java.util.*
 
 
 class TravellingFragment : Fragment(), OnMapReadyCallback {
+    private val args: TravellingFragmentArgs by navArgs()
     private lateinit var easyImage: EasyImage
     private lateinit var locationRequest: LocationRequest
     private lateinit var locationClient: FusedLocationProviderClient
     private lateinit var ctx: Context
-    private lateinit var binding : FragmentTravellingBinding
-    private var viewModel: TravelViewModel? = null
+    private var service : LocationService? = null
+//    private var viewModel: TravelViewModel? = null
     private var locationCallback: LocationCallback = object : LocationCallback() {
         override fun onLocationResult(locationResult: LocationResult) {
             super.onLocationResult(locationResult)
@@ -75,7 +80,45 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
-    private var mCurrentLocation: Location? = null
+//    private ServiceConnection mConnection = new ServiceConnection() {
+//        public void onServiceConnected(ComponentName className, IBinder service) {
+//            // This is called when the connection with the service has been
+//            // established, giving us the service object we can use to
+//            // interact with the service.  Because we have bound to a explicit
+//            // service that we know is running in our own process, we can
+//            // cast its IBinder to a concrete class and directly access it.
+//            mBoundService = ((LocalService.LocalBinder)service).getService();
+//
+//            // Tell the user about this for our demo.
+//            Toast.makeText(Binding.this, R.string.local_service_connected,
+//                Toast.LENGTH_SHORT).show();
+//        }
+//
+//        public void onServiceDisconnected(ComponentName className) {
+//            // This is called when the connection with the service has been
+//            // unexpectedly disconnected -- that is, its process crashed.
+//            // Because it is running in our same process, we should never
+//            // see this happen.
+//            mBoundService = null;
+//            Toast.makeText(Binding.this, R.string.local_service_disconnected,
+//                Toast.LENGTH_SHORT).show();
+//        }
+//    }
+
+    private var mConnection: ServiceConnection = object: ServiceConnection {
+        override fun onServiceConnected(className: ComponentName, binder: IBinder) {
+            Log.i("ServiceConnection", "onServiceConnected")
+            service = (binder as LocationService.LocalBinder).getService()
+            Log.i("ServiceConnection", "Service: $service")
+        }
+
+        override fun onServiceDisconnected(name: ComponentName?) {
+            Log.i("ServiceConnection", "onServiceDisconnected")
+            service = null
+        }
+    }
+
+
     private var mLastUpdateTime: String? = null
     private var mLocationPendingIntent: PendingIntent? = null
 
@@ -88,6 +131,13 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
         private lateinit var mMap: GoogleMap
         private lateinit var viewModel: TravelViewModel
         //private const val ACCESS_FINE_LOCATION = 123
+        private var mCurrentLocation: Location? = null
+        private var mCurrentPressure: Float? = null
+        private var mCurrentTemperature: Float? = null
+        private var mLastTimestamp: Long = 0
+        private var tripID: Int = -1
+        private var entryID: Int = -1
+        private lateinit var binding : FragmentTravellingBinding
 
 
         fun getActivity(): FragmentActivity? {
@@ -105,19 +155,40 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
         fun getViewModel(): TravelViewModel {
             return viewModel
         }
+
+        fun setData(location: Location?, pressure: Float?, temperature: Float?, time: Long) {
+            mCurrentLocation = location
+            binding.latitudeText.text = "Latitude: ${location!!.latitude}"
+            binding.longitudeText.text = "Longitude: ${location!!.longitude}"
+            mCurrentPressure = pressure
+            if (pressure != null) binding.pressureText.text = "Pressure: $pressure mbar"
+            mCurrentTemperature = temperature
+            if (temperature != null) binding.temperatureText.text =  "Temperature: $temperature C"
+            mLastTimestamp = time
+        }
+
+        fun getTripId(): Int {
+            return tripID
+        }
+
+        fun setEntryID(id: Int) {
+            entryID = id
+        }
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
         ): View? {
+        tripID = args.tripID
+        Log.i("Current Trip ID", "$tripID")
 
         setActivity(requireActivity())
         setContext(requireActivity())
 
         binding = DataBindingUtil.inflate(inflater,
             R.layout.fragment_travelling, container, false)
-        viewModel = ViewModelProvider(this)[TravelViewModel::class.java]
+        viewModel = ViewModelProvider(requireActivity())[TravelViewModel::class.java]
         locationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
 
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
@@ -126,11 +197,15 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
         // required by Android 6.0 +
         initEasyImage()
 
-        //Doesn't exist yet
         binding.fabGallery.setOnClickListener{
             easyImage.openChooser(this)
         }
 
+        binding.tripEndBtn.setOnClickListener{
+            stopLocationUpdates()
+            this.findNavController().popBackStack() // New Trip page
+            this.findNavController().popBackStack() // Welcome page
+        }
         return binding.root
     }
 
@@ -186,15 +261,16 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
     @SuppressLint("MissingPermission")
     private fun startLocationUpdates() {
         Log.e("Location update", "Starting...")
-
         val intent = Intent(ctx, LocationService::class.java)
+        ctx.bindService(intent, mConnection, Context.BIND_AUTO_CREATE)
         mLocationPendingIntent =
             PendingIntent.getService(ctx,
                 1,
                 intent,
                 PendingIntent.FLAG_UPDATE_CURRENT
             )
-
+        Log.d("StartLocationUpdates", "Svc?: $mLocationPendingIntent.")
+        Log.d("StartLocationUpdates", "Loc?: ${service?.getLastLocation()}")
         val locationTask = locationClient.requestLocationUpdates(
             locationRequest,
             mLocationPendingIntent!!
@@ -230,16 +306,12 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
             object : DefaultCallback(){
                 override fun onMediaFilesPicked(imageFiles: Array<MediaFile>, source: MediaSource) {
                     //This is where you get control after choosing a bunch of images
-                    Log.d("InsideDanFragment","InsideDanFragment")
+                    Log.d("InsideDanFragment","TripID: $tripID, EntryID: $entryID, Loc: $mCurrentLocation")
                     //Get hold of an entry
-
-                    //val entryData = viewModel.create_insert_entry_returnEntry(TripData, temperature:Float?, pressure:Float?, lat:Double, lon:Double, timestamp:Long)
-
-                    //viewModel!!.insertArrayMediaFilesWithEntry(imageFiles,entryData)
+                    viewModel.insertArrayMediaFilesWithLastEntryById(imageFiles)
                 }
             })
     }
-
 
     private fun initEasyImage() {
         easyImage = EasyImage.Builder(requireActivity())

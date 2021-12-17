@@ -12,13 +12,10 @@
           android:layout_width="match_parent">
 
 
-
           <androidx.constraintlayout.widget.ConstraintLayout
+              android:id="@+id/travellingConstraint"
               android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:id="@+id/travellingConstraint">
-
-
+              android:layout_height="wrap_content">
 
               <com.google.android.material.appbar.AppBarLayout
                   android:id="@+id/map_appBarLayout"
@@ -43,12 +40,12 @@
                   android:id="@+id/map"
                   android:name="com.google.android.gms.maps.SupportMapFragment"
                   android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
+                  android:layout_height="550dp"
                   android:padding="12dp"
-                  app:layout_constraintBottom_toTopOf="@id/trip_information"
-                  app:layout_constraintTop_toBottomOf="@id/map_appBarLayout"
-                  tools:layout_editor_absoluteX="32dp"
-                  tools:layout_editor_absoluteY="-319dp" />
+                  app:layout_constraintBottom_toBottomOf="parent"
+                  app:layout_constraintTop_toBottomOf="@+id/map_appBarLayout"
+                  app:layout_constraintVertical_bias="0.0"
+                  tools:layout_editor_absoluteX="0dp" />
 
               <LinearLayout
                   android:id="@+id/trip_information"
@@ -63,6 +60,7 @@
                   tools:layout_editor_absoluteX="191dp">
 
                   <TextView
+                      android:id="@+id/latitudeText"
                       android:layout_width="match_parent"
                       android:layout_height="wrap_content"
                       android:text="@string/latitude"
@@ -70,6 +68,7 @@
                       android:textSize="30sp"></TextView>
 
                   <TextView
+                      android:id="@+id/longitudeText"
                       android:layout_width="match_parent"
                       android:layout_height="wrap_content"
                       android:text="@string/longitude"
@@ -77,40 +76,38 @@
                       android:textSize="30sp"></TextView>
 
                   <TextView
+                      android:id="@+id/pressureText"
                       android:layout_width="match_parent"
                       android:layout_height="wrap_content"
-                      android:text="@string/more_info"
+                      android:text="@string/pressure"
+                      android:textAlignment="center"
+                      android:textSize="30sp"></TextView>
+
+                  <TextView
+                      android:id="@+id/temperatureText"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:text="@string/temperature"
                       android:textAlignment="center"
                       android:textSize="30sp"></TextView>
 
                   <Button
+                      android:id="@+id/trip_end_btn"
                       android:layout_width="wrap_content"
                       android:layout_height="wrap_content"
                       android:text="Stop Trip" />
 
+                  <com.google.android.material.floatingactionbutton.FloatingActionButton
+                      android:id="@+id/fab_gallery"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:layout_gravity="bottom|start"
+                      android:layout_margin="@dimen/fab_margin"
+                      android:src="@drawable/ic_gallery_black_24dp"
+                      app:fabSize="normal" />
+
               </LinearLayout>
-
-
-
-
           </androidx.constraintlayout.widget.ConstraintLayout>
-
       </ScrollView>
-
-      <com.google.android.material.floatingactionbutton.FloatingActionButton
-          android:id="@+id/fab_gallery"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_gravity="bottom|start"
-          android:layout_margin="@dimen/fab_margin"
-          app:fabSize="normal"
-          android:src="@drawable/ic_gallery_black_24dp" />
   </androidx.coordinatorlayout.widget.CoordinatorLayout>
-
-
-
-
-
-
-
 </layout>

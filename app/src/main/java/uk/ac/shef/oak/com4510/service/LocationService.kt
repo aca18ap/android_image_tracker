@@ -1,20 +1,18 @@
 package uk.ac.shef.oak.com4510.service
 
-import android.app.IntentService
-import android.app.PendingIntent
 import android.app.Service
-import android.content.Intent
 import android.content.Context
+import android.content.Intent
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.location.Location
+import android.location.LocationListener
+import android.os.Binder
 import android.os.IBinder
 import android.util.Log
-import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.location.LocationResult
-import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
@@ -24,12 +22,14 @@ import uk.ac.shef.oak.com4510.view.TravellingFragment
 import java.text.DateFormat
 import java.util.*
 
+
 class LocationService : Service {
     private var mCurrentLocation: Location? = null
     private var mCurrentPressure: Float? = null
     private var mCurrentTemperature: Float? = null
     private var mLastUpdateTime: String? = null
     private var mLine: Polyline? = null
+    private var currentEntryID: Int = -1
 
     private var barometerEventListener  = object : SensorEventListener {
         override fun onSensorChanged(event: SensorEvent) {
@@ -57,6 +57,14 @@ class LocationService : Service {
 
     constructor(name: String?) : super() {}
     constructor() : super() {}
+
+    class LocalBinder : Binder() {
+        fun getService() : LocationService {
+            return LocationService()
+        }
+//        val service: LocationService
+//            get() = LocationService()
+    }
 
     override fun onCreate() {
         Log.i("LocationService", "onCreate")
@@ -92,15 +100,18 @@ class LocationService : Service {
                                 CameraUpdateFactory.newLatLng(newPoint)
                             )
                             TravellingFragment.getMap().animateCamera(zoom)
+                            TravellingFragment.setData(getLastLocation()!!, getLastPressure(), getLastTemperature(), System.currentTimeMillis())
                             if (doneFirstReading) {
-                                /*TravellingFragment.getViewModel().create_insert_entry(
-                                    null, // how to get?
+                                currentEntryID = TravellingFragment.getViewModel().create_insert_entry_returnEntry(
+                                    TravellingFragment.getTripId(),
                                     getLastTemperature(), // Nullable if phone has no ambient temperature sensor
                                     getLastPressure(), // Nullable if phone has no barometer
                                     getLastLocation()!!.latitude,
                                     getLastLocation()!!.longitude,
                                     System.currentTimeMillis()
-                                )*/
+                                ).id
+                                Log.i("ServiceEntryID", "ID: $currentEntryID")
+                                TravellingFragment.setEntryID(currentEntryID)
                                 TravellingFragment.getMap().addMarker(
                                     MarkerOptions().position(newPoint)
                                         .title("$mLastUpdateTime")
@@ -126,8 +137,10 @@ class LocationService : Service {
     }
 
     override fun onBind(intent: Intent): IBinder? {
-        return null
+        return mBinder
     }
+
+    private val mBinder: IBinder = LocalBinder()
 
     override fun onUnbind(intent: Intent): Boolean {
         return allowRebind
