@@ -12,8 +12,10 @@ import androidx.recyclerview.widget.RecyclerView
 import uk.ac.shef.oak.com4510.R
 import uk.ac.shef.oak.com4510.databinding.FragmentViewPastTripsBinding
 import uk.ac.shef.oak.com4510.model.data.database.ImageData
+import uk.ac.shef.oak.com4510.model.data.database.TripData
 import uk.ac.shef.oak.com4510.viewModel.ImagesAdapter
 import uk.ac.shef.oak.com4510.viewModel.TravelViewModel
+import uk.ac.shef.oak.com4510.viewModel.TripsAdapter
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -43,8 +45,9 @@ class ViewPastTripsFragment : Fragment() {
         mRecyclerView = binding.contentTrips.tripGridRecyclerView
         val numberOfColumns = 4
         mRecyclerView.layoutManager = GridLayoutManager(activity, numberOfColumns)
-        mAdapter = ImagesAdapter(ArrayList<ImageData>()) as RecyclerView.Adapter<RecyclerView.ViewHolder>
+        mAdapter = TripsAdapter(ArrayList<TripData>()) as RecyclerView.Adapter<RecyclerView.ViewHolder>
         mRecyclerView.adapter = mAdapter
+
 
 
 
