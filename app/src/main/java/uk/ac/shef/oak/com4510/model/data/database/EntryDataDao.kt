@@ -22,6 +22,13 @@ interface EntryDataDao {
     @Query("SELECT * from Entry WHERE id = :id")
     fun getItem(id: Int): EntryData
 
+    @Query("SELECT * \n" +
+            "FROM Entry \n" +
+            "WHERE id=(\n" +
+            "    SELECT max(id) FROM Entry\n" +
+            "    )")
+    suspend fun getLastEntryById() : EntryData
+
     // Specify the conflict strategy as REPLACE,
     // when the trying to add an existing Item
     // into the database.

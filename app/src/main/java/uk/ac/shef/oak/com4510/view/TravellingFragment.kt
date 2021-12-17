@@ -52,9 +52,8 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
     private lateinit var locationRequest: LocationRequest
     private lateinit var locationClient: FusedLocationProviderClient
     private lateinit var ctx: Context
-    private lateinit var binding : FragmentTravellingBinding
     private var service : LocationService? = null
-    private var viewModel: TravelViewModel? = null
+//    private var viewModel: TravelViewModel? = null
     private var locationCallback: LocationCallback = object : LocationCallback() {
         override fun onLocationResult(locationResult: LocationResult) {
             super.onLocationResult(locationResult)
@@ -136,6 +135,9 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
         private var mCurrentPressure: Float? = null
         private var mCurrentTemperature: Float? = null
         private var mLastTimestamp: Long = 0
+        private var tripID: Int = -1
+        private var entryID: Int = -1
+        private lateinit var binding : FragmentTravellingBinding
 
 
         fun getActivity(): FragmentActivity? {
@@ -156,9 +158,21 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
 
         fun setData(location: Location?, pressure: Float?, temperature: Float?, time: Long) {
             mCurrentLocation = location
+            binding.latitudeText.text = "Latitude: ${location!!.latitude}"
+            binding.longitudeText.text = "Longitude: ${location!!.longitude}"
             mCurrentPressure = pressure
+            if (pressure != null) binding.pressureText.text = "Pressure: $pressure mbar"
             mCurrentTemperature = temperature
+            if (temperature != null) binding.temperatureText.text =  "Temperature: $temperature C"
             mLastTimestamp = time
+        }
+
+        fun getTripId(): Int {
+            return tripID
+        }
+
+        fun setEntryID(id: Int) {
+            entryID = id
         }
     }
 
@@ -166,13 +180,15 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
         ): View? {
+        tripID = args.tripID
+        Log.i("Current Trip ID", "$tripID")
 
         setActivity(requireActivity())
         setContext(requireActivity())
 
         binding = DataBindingUtil.inflate(inflater,
             R.layout.fragment_travelling, container, false)
-        viewModel = ViewModelProvider(this)[TravelViewModel::class.java]
+        viewModel = ViewModelProvider(requireActivity())[TravelViewModel::class.java]
         locationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
 
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
@@ -181,11 +197,15 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
         // required by Android 6.0 +
         initEasyImage()
 
-        //Doesn't exist yet
         binding.fabGallery.setOnClickListener{
             easyImage.openChooser(this)
         }
 
+        binding.tripEndBtn.setOnClickListener{
+            stopLocationUpdates()
+            this.findNavController().popBackStack() // New Trip page
+            this.findNavController().popBackStack() // Welcome page
+        }
         return binding.root
     }
 
@@ -286,12 +306,9 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
             object : DefaultCallback(){
                 override fun onMediaFilesPicked(imageFiles: Array<MediaFile>, source: MediaSource) {
                     //This is where you get control after choosing a bunch of images
-                    Log.d("InsideDanFragment","Loc: $mCurrentLocation")
+                    Log.d("InsideDanFragment","TripID: $tripID, EntryID: $entryID, Loc: $mCurrentLocation")
                     //Get hold of an entry
-
-                    //val entryData = viewModel.create_insert_entry_returnEntry(TripData, temperature:Float?, pressure:Float?, lat:Double, lon:Double, timestamp:Long)
-
-                    //viewModel!!.insertArrayMediaFilesWithEntry(imageFiles,entryData)
+                    viewModel.insertArrayMediaFilesWithLastEntryById(imageFiles)
                 }
             })
     }

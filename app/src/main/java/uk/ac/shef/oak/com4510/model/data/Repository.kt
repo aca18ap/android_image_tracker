@@ -81,6 +81,11 @@ class Repository(application: Application) {
         entryDataDao?.insert(entryData)
     }
 
+    suspend fun getLastEntryById() = withContext(Dispatchers.IO)
+    {
+        entryDataDao?.getLastEntryById()
+    }
+
 
 
 

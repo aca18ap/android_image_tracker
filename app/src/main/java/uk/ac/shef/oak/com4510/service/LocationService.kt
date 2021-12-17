@@ -29,6 +29,7 @@ class LocationService : Service {
     private var mCurrentTemperature: Float? = null
     private var mLastUpdateTime: String? = null
     private var mLine: Polyline? = null
+    private var currentEntryID: Int = -1
 
     private var barometerEventListener  = object : SensorEventListener {
         override fun onSensorChanged(event: SensorEvent) {
@@ -101,14 +102,16 @@ class LocationService : Service {
                             TravellingFragment.getMap().animateCamera(zoom)
                             TravellingFragment.setData(getLastLocation()!!, getLastPressure(), getLastTemperature(), System.currentTimeMillis())
                             if (doneFirstReading) {
-                                /*TravellingFragment.getViewModel().create_insert_entry(
-                                    null, // how to get?
+                                currentEntryID = TravellingFragment.getViewModel().create_insert_entry_returnEntry(
+                                    TravellingFragment.getTripId(),
                                     getLastTemperature(), // Nullable if phone has no ambient temperature sensor
                                     getLastPressure(), // Nullable if phone has no barometer
                                     getLastLocation()!!.latitude,
                                     getLastLocation()!!.longitude,
                                     System.currentTimeMillis()
-                                )*/
+                                ).id
+                                Log.i("ServiceEntryID", "ID: $currentEntryID")
+                                TravellingFragment.setEntryID(currentEntryID)
                                 TravellingFragment.getMap().addMarker(
                                     MarkerOptions().position(newPoint)
                                         .title("$mLastUpdateTime")

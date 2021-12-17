@@ -30,7 +30,7 @@ fun Array<MediaFile>.convertToImageDataWithoutId(): List<ImageData> {
 fun MutableLiveData<MutableList<ImageData>>.append(list: List<ImageData>) {
     val value = this.value ?: arrayListOf()
     value.addAll(list)
-    this.value = value
+    this.postValue(value)
 }
 /**
  * Sanitizes a string to pass to search.
