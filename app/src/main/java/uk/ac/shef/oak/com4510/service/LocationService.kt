@@ -6,6 +6,8 @@ import android.app.Service
 import android.content.Intent
 import android.content.Context
 import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.location.Location
 import android.os.IBinder
@@ -22,13 +24,30 @@ import java.util.*
 
 class LocationService : Service {
     private var mCurrentLocation: Location? = null
+    private var mCurrentPressure: Float? = null
+    private var mCurrentTemperature: Float? = null
     private var mLastUpdateTime: String? = null
+
+    //private var barometerEventListener: SensorEventListener? = null
+    private var barometerEventListener  = object : SensorEventListener {
+        override fun onSensorChanged(event: SensorEvent) {
+            mCurrentPressure = event.values[0]
+        }
+        override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
+    }
+    //private var thermometerEventListener: SensorEventListener? = null
+    private var thermometerEventListener  = object : SensorEventListener {
+        override fun onSensorChanged(event: SensorEvent) {
+            mCurrentTemperature = event.values[0]
+        }
+        override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
+    }
 
     private var startMode: Int = 0
     private var binder: IBinder? = null
     private var allowRebind: Boolean = false
 
-    private lateinit var sensorManager: SensorManager?
+    private lateinit var sensorManager: SensorManager
     private lateinit var barometer: Sensor
     private lateinit var thermometer: Sensor
 
@@ -44,6 +63,8 @@ class LocationService : Service {
         sensorManager = applicationContext.getSystemService(Context.SENSOR_SERVICE) as SensorManager
         barometer = sensorManager?.getDefaultSensor(Sensor.TYPE_PRESSURE)!!
         thermometer = sensorManager?.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE)!!
+        sensorManager.registerListener(barometerEventListener, barometer, SensorManager.SENSOR_DELAY_NORMAL)
+        sensorManager.registerListener(thermometerEventListener, thermometer, SensorManager.SENSOR_DELAY_NORMAL)
         Log.i("LocationService", "onStartCommand")
         if (LocationResult.hasResult(intent!!)) {
             Log.i("LocationResult", "Has result")
@@ -51,6 +72,7 @@ class LocationService : Service {
             for (location in locResults.locations) {
                 if (location == null) continue
                 Log.i("In service New Location", "Current location: $location")
+                Log.i("Sensors", "Pressure: $mCurrentPressure, Temperature: $mCurrentTemperature")
                 mCurrentLocation = location
                 mLastUpdateTime = DateFormat.getTimeInstance().format(Date())
                 Log.i("This is in service, MAP", "New location " + mCurrentLocation.toString())
@@ -103,6 +125,14 @@ class LocationService : Service {
 
     fun getLastLocation(): Location? {
         return mCurrentLocation
+    }
+
+    fun getLastPressure(): Float? {
+        return mCurrentPressure
+    }
+
+    fun getLastTemperature(): Float? {
+        return mCurrentTemperature
     }
 
 }
