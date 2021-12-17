@@ -300,10 +300,7 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
                     //This is where you get control after choosing a bunch of images
                     Log.d("InsideDanFragment","TripID: $tripID, EntryID: $entryID, Loc: $mCurrentLocation")
                     //Get hold of an entry
-                    viewModel!!.insertArrayMediaFilesWithLastEntryById(imageFiles)
-                    //val entryData = viewModel.create_insert_entry_returnEntry(TripData, temperature:Float?, pressure:Float?, lat:Double, lon:Double, timestamp:Long)
-
-                    //viewModel!!.insertArrayMediaFilesWithEntry(imageFiles,entryData)
+                    viewModel.insertArrayMediaFilesWithLastEntryById(imageFiles)
                 }
             })
     }
