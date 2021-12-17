@@ -91,7 +91,7 @@ class ViewPastTripsFragment : Fragment() {
         })
 
 
-        viewModel!!.initTripsList()
+        viewModel!!.initTripSearchResultsFromDatabase()
 
         return binding.root
     }

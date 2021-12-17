@@ -68,7 +68,7 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
         _imageList.append(imageDataList)
     }
 
-    /**NOT TESTED BUT PROBABLY WORKS
+    /**
      * Updates an imageData in the database. TO ADD: Functionality for updating position
      */
     fun updateImageInDatabase(imageData : ImageData, title : String? = null, description : String? = null,entry_id : Int? = null)
@@ -86,10 +86,6 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
         }
     }
 
-    fun initTripsList()
-    {
-        initTripSearchResultsFromDatabase()
-    }
 
 
     fun initImagesList()
@@ -115,7 +111,6 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
     }
 
 
-
     fun initTripSearchResultsFromDatabase()
     {
         viewModelScope.launch{
@@ -123,6 +118,7 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
         }
     }
 
+    //TO MAYBE ADD: (There's likely just not enough time)
     /*
     fun tripSearch(query: String?){
         viewModelScope.launch{
@@ -204,7 +200,10 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
      */
     fun insertTripReturnId(tripData: TripData): Int? = runBlocking{
         var deferredId = async { mRepository.insertTripReturnId(tripData) }
-        deferredId.await()
+        val id = deferredId.await()
+        //Update observable liveData tracking all trips
+        initTripSearchResultsFromDatabase()
+        id
     }
 
     /**
@@ -216,7 +215,20 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
          viewModelScope.launch()
          {
              mRepository.insertTrip(tripData)
+             initTripSearchResultsFromDatabase()
          }
+    }
+    /**
+     * Delete a trip from the database
+     */
+    //NOTE: TODO I will refactor all of these and make the function naming convention consistent.
+    // I keep using Camel case and underscores in the same API, it's probably frustrating to use
+    fun delete_trip(tripData: TripData)
+    {
+        viewModelScope.launch()
+        {
+            mRepository.deleteTrip(tripData)
+        }
     }
 
     /**

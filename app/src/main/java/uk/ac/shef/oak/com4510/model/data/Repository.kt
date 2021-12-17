@@ -98,4 +98,9 @@ class Repository(application: Application) {
         tripDataDao?.insert(tripData)
     }
 
+    suspend fun deleteTrip(tripData: TripData) = withContext(Dispatchers.IO)
+    {
+        tripDataDao?.delete(tripData)
+    }
+
 }
