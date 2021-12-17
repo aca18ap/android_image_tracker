@@ -75,36 +75,11 @@ class ImagesAdapter : RecyclerView.Adapter<ImagesAdapter.ViewHolder> {
             }catch(e: IllegalArgumentException){
                 val action = ViewTripDetailsFragmentDirections.actionViewTripDetailsFragmentToShowImageFragment(position)
                 view.findNavController().navigate(action)
-
             }
         }
 
     }
 
-    /*
-    override fun getFilter() : Filter {
-        return object : Filter() {
-            override fun performFiltering(filter: CharSequence?): FilterResults {
-                val charString = filter?.toString() ?: ""
-                if (charString.isEmpty()) itemsFiltered = items as ArrayList<ImageData> else {
-                    items.filter {
-                        (it.imageTitle.contains(filter!!)) or
-                                (it.imageDescription!!.contains(filter))
-                    }.forEach {itemsFiltered.add(it)}
-                }
-                return FilterResults().apply { values = itemsFiltered }
-            }
-
-            override fun publishResults(filter: CharSequence?, results: FilterResults?) {
-               itemsFiltered = if (results?.values == null)
-                   ArrayList()
-                else
-                    results.values as ArrayList<ImageData>
-                notifyDataSetChanged()
-            }
-        }
-    }
-    */
 
     override fun getItemCount(): Int {
         return items.size
@@ -112,7 +87,6 @@ class ImagesAdapter : RecyclerView.Adapter<ImagesAdapter.ViewHolder> {
 
     class ViewHolder constructor(itemView: View) : RecyclerView.ViewHolder(itemView){
         var imageView: ImageView = itemView.findViewById<View>(R.id.image_item) as ImageView
-
 
 
     }

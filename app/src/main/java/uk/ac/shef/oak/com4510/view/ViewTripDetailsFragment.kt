@@ -35,7 +35,6 @@ class ViewTripDetailsFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate<FragmentViewTripDetailsBinding>(inflater,
             R.layout.fragment_view_trip_details, container, false)
-        Log.d("debugging", args.tripID.toString())
         if (args.tripID != -1){
             displayData(args.position)
         }
@@ -64,7 +63,6 @@ class ViewTripDetailsFragment : Fragment() {
             }
         }.attach()
 
-        Log.d("debugging", args.tripID.toString())
         viewModel.updateLiveDataEntriesOfTrip(args.tripID)
         viewModel.updateImagesOfTrip(args.tripID)
 
@@ -84,9 +82,9 @@ class ViewTripDetailsFragment : Fragment() {
             title.text = tripData.title
             location.text = tripData.country
             date.text = tripData.trip_timestamp.toString()
-            if (imageData != null){
-                thumbnail.setImageBitmap((TripsAdapter.items[position].second?.thumbnail))
-            }
+            //if (imageData != null){
+               // thumbnail.setImageBitmap((TripsAdapter.items[position].second?.thumbnail))
+            //}
 
 
 
