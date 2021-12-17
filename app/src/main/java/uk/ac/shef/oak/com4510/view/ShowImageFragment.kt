@@ -36,8 +36,12 @@ class ShowImageFragment : Fragment() {
             displayData(args.position, binding)
         }
 
+        binding.lifecycleOwner = this
+
         return binding.root
     }
+
+
 
     private fun displayData(position: Int, binding: FragmentShowImageBinding){
         val imageView = binding.showImage

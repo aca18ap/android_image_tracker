@@ -2,6 +2,7 @@ package uk.ac.shef.oak.com4510.view
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.widget.SearchView
 import androidx.fragment.app.Fragment
@@ -23,7 +24,6 @@ class GalleryFragment : Fragment() {
     private lateinit var easyImage: EasyImage
     private lateinit var binding : FragmentGalleryBinding
     private var viewModel: TravelViewModel? = null
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -63,7 +63,8 @@ class GalleryFragment : Fragment() {
             ImagesAdapter.items = images as MutableList<ImageData>
             mAdapter.notifyDataSetChanged()
         })
-        viewModel!!.initAll() // Populate the imageList observable with all the images in the database
+        viewModel!!.initImagesList() // Populate the imageList observable with all the images in the database
+
 
         return binding.root
     }

@@ -11,7 +11,11 @@ class Repository(application: Application) {
 
     init {
         val db: ImageRoomDatabase? = ImageRoomDatabase.getDatabase(application)
-        if (db != null) { imageDataDao = db.imageDataDao() }
+        if (db != null) {
+            imageDataDao = db.imageDataDao()
+            entryDataDao = db.entryDataDao()
+            tripDataDao = db.tripDataDao()
+        }
     }
 
     //Separate constructor that allows passing a custom dao. For testing
@@ -38,10 +42,15 @@ class Repository(application: Application) {
         imageDataDao?.delete(imageData)
     }
 
+    suspend fun getImagesOfEntry(entryData: EntryData) = withContext(Dispatchers.IO)
+    {
+        imageDataDao?.getEntryImages(entryData.id)
+    }
+
     /**
      * Inserts an imageData object into the database. Returns the id it was assigned to
      */
-    suspend fun insertDataReturnId(imageData: ImageData): Int = coroutineScope {
+    suspend fun insertImageReturnId(imageData: ImageData): Int = coroutineScope {
         var defferedID = async { imageDataDao?.insert(imageData) }
         defferedID.await()?.toInt()!!
     }
@@ -62,12 +71,41 @@ class Repository(application: Application) {
         entryDataDao?.getEntriesForTrip(tripData.id)
     }
 
+    suspend fun insertEntryReturnId(entryData: EntryData): Int? = withContext(Dispatchers.IO) {
+        var defferedID = async { entryDataDao?.insert(entryData) }
+        defferedID.await()?.toInt()
+    }
+
+    suspend fun insertEntry(entryData: EntryData) = withContext(Dispatchers.IO)
+    {
+        entryDataDao?.insert(entryData)
+    }
+
+
 
 
     // ---------TripData related --------------------------------------
     suspend fun getAllTrips() : List<TripData>? = withContext(Dispatchers.IO)
     {
         tripDataDao?.getItems()
+    }
+
+    suspend fun getTrip(tripId: Int) = coroutineScope {
+        tripDataDao?.getItem(tripId)
+    }
+
+    suspend fun insertTripReturnId(tripData: TripData): Int? = withContext(Dispatchers.IO) {
+        var defferedID = async { tripDataDao?.insert(tripData) }
+        defferedID.await()?.toInt()
+    }
+    suspend fun insertTrip(tripData: TripData) = withContext(Dispatchers.IO)
+    {
+        tripDataDao?.insert(tripData)
+    }
+
+    suspend fun deleteTrip(tripData: TripData) = withContext(Dispatchers.IO)
+    {
+        tripDataDao?.delete(tripData)
     }
 
 }

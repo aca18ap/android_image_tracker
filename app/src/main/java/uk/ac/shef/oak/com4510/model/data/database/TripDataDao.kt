@@ -24,6 +24,7 @@ interface TripDataDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(singleTripData: TripData): Long
 
+
     @Update
     suspend fun update(tripData: TripData)
 

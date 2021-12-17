@@ -1,11 +1,17 @@
 package uk.ac.shef.oak.com4510.view
 
+import android.app.Activity
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SearchView
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -17,20 +23,37 @@ import uk.ac.shef.oak.com4510.viewModel.ImagesAdapter
 import uk.ac.shef.oak.com4510.viewModel.TravelViewModel
 import uk.ac.shef.oak.com4510.viewModel.TripsAdapter
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [ViewPastTripsFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
+
 class ViewPastTripsFragment : Fragment() {
     private var viewModel: TravelViewModel? = null
     private lateinit var mAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>
     private lateinit var mRecyclerView: RecyclerView
+
+    companion object {
+        val ADAPTER_ITEM_DELETED = 100
+        private const val REQUEST_READ_EXTERNAL_STORAGE = 2987
+        private const val REQUEST_WRITE_EXTERNAL_STORAGE = 7829
+        private const val REQUEST_CAMERA_CODE = 100
+
+    }
+
+    val startForResult =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val pos = result.data?.getIntExtra("position", -1)!!
+                val id = result.data?.getIntExtra("id", -1)!!
+                val del_flag = result.data?.getIntExtra("deletion_flag", -1)!!
+                if (pos != -1 && id != -1) {
+                    if (result.resultCode == Activity.RESULT_OK) {
+                        when(del_flag){
+                            -1, 0 -> mAdapter.notifyDataSetChanged()
+                            else -> mAdapter.notifyItemRemoved(pos)
+                        }
+                    }
+                }
+            }
+        }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,8 +62,8 @@ class ViewPastTripsFragment : Fragment() {
         // Inflate the layout for this fragment
         val binding : FragmentViewPastTripsBinding = DataBindingUtil.inflate(inflater,
             R.layout.fragment_view_past_trips, container, false)
-        viewModel = ViewModelProvider(this)[TravelViewModel::class.java]
 
+        viewModel = ViewModelProvider(this)[TravelViewModel::class.java]
 
         mRecyclerView = binding.contentTrips.tripGridRecyclerView
         val numberOfColumns = 4
@@ -49,7 +72,28 @@ class ViewPastTripsFragment : Fragment() {
         mRecyclerView.adapter = mAdapter
 
 
+        binding.searchBarTrips.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(p0: String?): Boolean {
+                return false
+            }
 
+            override fun onQueryTextChange(p0: String?): Boolean {
+                viewModel!!.search(p0)
+                return false
+            }
+        })
+
+
+
+
+        viewModel!!.tripsSearchResults.observe(this, Observer<List<Pair<TripData,ImageData?>>>{ trips ->
+            Log.d("ObserverTrips",trips.toString())
+            TripsAdapter.items = trips as MutableList<Pair<TripData,ImageData?>>
+            mAdapter.notifyDataSetChanged()
+        })
+
+
+        viewModel!!.initTripSearchResultsFromDatabase()
 
         return binding.root
     }
