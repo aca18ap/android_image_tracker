@@ -18,6 +18,8 @@ import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.Polyline
+import com.google.android.gms.maps.model.PolylineOptions
 import uk.ac.shef.oak.com4510.view.TravellingFragment
 import java.text.DateFormat
 import java.util.*
@@ -27,15 +29,15 @@ class LocationService : Service {
     private var mCurrentPressure: Float? = null
     private var mCurrentTemperature: Float? = null
     private var mLastUpdateTime: String? = null
+    private var mLine: Polyline? = null
 
-    //private var barometerEventListener: SensorEventListener? = null
     private var barometerEventListener  = object : SensorEventListener {
         override fun onSensorChanged(event: SensorEvent) {
             mCurrentPressure = event.values[0]
         }
         override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
     }
-    //private var thermometerEventListener: SensorEventListener? = null
+
     private var thermometerEventListener  = object : SensorEventListener {
         override fun onSensorChanged(event: SensorEvent) {
             mCurrentTemperature = event.values[0]
@@ -50,6 +52,8 @@ class LocationService : Service {
     private lateinit var sensorManager: SensorManager
     private lateinit var barometer: Sensor
     private lateinit var thermometer: Sensor
+
+    private var doneFirstReading: Boolean = false // First reading often has inaccurate location
 
     constructor(name: String?) : super() {}
     constructor() : super() {}
@@ -75,34 +79,40 @@ class LocationService : Service {
                 Log.i("Sensors", "Pressure: $mCurrentPressure, Temperature: $mCurrentTemperature")
                 mCurrentLocation = location
                 mLastUpdateTime = DateFormat.getTimeInstance().format(Date())
+                val newPoint = LatLng(
+                    mCurrentLocation!!.latitude,
+                    mCurrentLocation!!.longitude
+                )
                 Log.i("This is in service, MAP", "New location " + mCurrentLocation.toString())
                 if (TravellingFragment.getActivity() != null) {
                     TravellingFragment.getActivity()?.runOnUiThread(Runnable {
                         try {
-                            TravellingFragment.getMap().addMarker(
-                                MarkerOptions().position(
-                                    LatLng(
-                                        mCurrentLocation!!.latitude,
-                                        mCurrentLocation!!.longitude
-                                    )
-                                ).title(mLastUpdateTime)
-                            )
                             val zoom = CameraUpdateFactory.zoomTo(15f)
                             TravellingFragment.getMap().moveCamera(
-                                CameraUpdateFactory.newLatLng(
-                                    LatLng(
-                                        mCurrentLocation!!.latitude,
-                                        mCurrentLocation!!.longitude
-                                    )
-                                )
+                                CameraUpdateFactory.newLatLng(newPoint)
                             )
                             TravellingFragment.getMap().animateCamera(zoom)
+                            if (doneFirstReading) {
+                                TravellingFragment.getMap().addMarker(
+                                    MarkerOptions().position(newPoint)
+                                        .title("$mLastUpdateTime")
+                                        .snippet(
+                                        "Pressure: $mCurrentPressure mbar\nTemperature: $mCurrentTemperature C"
+                                        )
+                                )
+                                if (mLine == null) mLine = TravellingFragment.getMap()
+                                    .addPolyline(PolylineOptions())
+                                val points = mLine!!.points
+                                points.add(newPoint)
+                                mLine!!.points = points
+                            }
                         } catch (e: Exception) {
                             Log.e("LocationService", "Error cannot write on map " + e.message)
                         }
                     })
                 }
             }
+            if (!doneFirstReading) doneFirstReading = true
         }
         return Service.START_STICKY
     }
