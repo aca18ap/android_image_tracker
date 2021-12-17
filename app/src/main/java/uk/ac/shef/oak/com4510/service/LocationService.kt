@@ -52,8 +52,8 @@ class LocationService : Service {
     private var allowRebind: Boolean = false
 
     private lateinit var sensorManager: SensorManager
-    private lateinit var barometer: Sensor
-    private lateinit var thermometer: Sensor
+    private var barometer: Sensor? = null
+    private var thermometer: Sensor? = null
 
     private var doneFirstReading: Boolean = false // First reading often has inaccurate location
 
@@ -82,10 +82,10 @@ class LocationService : Service {
      */
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         sensorManager = applicationContext.getSystemService(Context.SENSOR_SERVICE) as SensorManager
-        barometer = sensorManager?.getDefaultSensor(Sensor.TYPE_PRESSURE)!!
-        thermometer = sensorManager?.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE)!!
-        sensorManager.registerListener(barometerEventListener, barometer, SensorManager.SENSOR_DELAY_NORMAL)
-        sensorManager.registerListener(thermometerEventListener, thermometer, SensorManager.SENSOR_DELAY_NORMAL)
+        barometer = sensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE)
+        thermometer = sensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE)
+        if (barometer != null) sensorManager.registerListener(barometerEventListener, barometer, SensorManager.SENSOR_DELAY_NORMAL)
+        if (thermometer != null) sensorManager.registerListener(thermometerEventListener, thermometer, SensorManager.SENSOR_DELAY_NORMAL)
         Log.i("LocationService", "onStartCommand")
         if (LocationResult.hasResult(intent!!)) {
             Log.i("LocationResult", "Has result")
