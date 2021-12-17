@@ -32,6 +32,9 @@ interface ImageDataDao {
     @Query("SELECT * from image WHERE id = :id")
     fun getItem(id: Int): ImageData
 
+    @Query("SELECT * from image WHERE entry_id = :entryId")
+    fun getEntryImages(entryId: Int): List<ImageData>
+
     // Specify the conflict strategy as REPLACE,
     // when the trying to add an existing Item
     // into the database.

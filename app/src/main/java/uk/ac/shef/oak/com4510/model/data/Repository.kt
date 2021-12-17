@@ -42,6 +42,11 @@ class Repository(application: Application) {
         imageDataDao?.delete(imageData)
     }
 
+    suspend fun getImagesOfEntry(entryData: EntryData) = withContext(Dispatchers.IO)
+    {
+        imageDataDao?.getEntryImages(entryData.id)
+    }
+
     /**
      * Inserts an imageData object into the database. Returns the id it was assigned to
      */

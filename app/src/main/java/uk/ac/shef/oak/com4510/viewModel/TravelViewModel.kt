@@ -2,6 +2,7 @@ package uk.ac.shef.oak.com4510.viewModel
 
 
 import android.app.Application
+import android.media.Image
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -40,10 +41,10 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
 
 
     /**
-     * Observable list of trips that can be used with searching
+     * Observable list of pairs of (TripData,ImageData?). The ImageData represents one of the images on the given trip if there is any, otherwise null
      */
-    private val _tripsSearchResults = MutableLiveData<MutableList<TripData>>()
-    val tripsSearchResults : LiveData<MutableList<TripData>>
+    private val _tripsSearchResults = MutableLiveData<MutableList<Pair<TripData,ImageData?>>>()
+    val tripsSearchResults : LiveData<MutableList<Pair<TripData,ImageData?>>>
         get() = _tripsSearchResults
 
 
@@ -110,11 +111,49 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
         }
     }
 
-
+    /**
+     * Updates the tripsSearchResults observable LiveData. Finds all trips, then an image associated with a given trip
+     */
     fun initTripSearchResultsFromDatabase()
     {
-        viewModelScope.launch{
-            _tripsSearchResults.value = mRepository.getAllTrips() as MutableList<TripData>
+        //We go through all the trips. Then we go through all entries. Then we find some entry that hopefully has an image
+        viewModelScope.launch(Dispatchers.IO){
+            val allTrips = mRepository.getAllTrips() as MutableList<TripData>
+            //Initialize the returnlist
+            val returnList =  ArrayList<Pair<TripData,ImageData?>>()
+
+            //Iterate through trips
+            for(trip in allTrips)
+            {
+                val allEntries = mRepository.getEntriesOfTrip(trip)
+                //If trip has no entries
+                if (allEntries?.size == 0)
+                {
+                    //Then it certainly has no image
+                    returnList.add(Pair(trip,null))
+                    continue
+                }
+                //Otherwise
+                var foundImage = false
+                //Go through all entries to find an image
+                for (entry in allEntries!!)
+                {
+                    val allImages = mRepository.getImagesOfEntry(entry)
+                    //If at least an image is found, add it to the pair
+                    if (allImages?.size!! > 0)
+                    {
+
+                        returnList.add(Pair(trip,allImages[0]))
+                        foundImage = true
+                        break
+                    }
+                }
+                //If no image has been found, add a pair with null
+                if (foundImage == false)
+                    returnList.add(Pair(trip,null))
+            }
+
+            _tripsSearchResults.postValue(returnList as MutableList<Pair<TripData,ImageData?>>)
         }
     }
 
@@ -215,6 +254,7 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
          viewModelScope.launch()
          {
              mRepository.insertTrip(tripData)
+             //Update observable liveData tracking all trips
              initTripSearchResultsFromDatabase()
          }
     }
@@ -228,6 +268,8 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
         viewModelScope.launch()
         {
             mRepository.deleteTrip(tripData)
+            //Update observable liveData tracking all trips
+            initTripSearchResultsFromDatabase()
         }
     }
 
@@ -259,6 +301,28 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
     }
 
     //-----------------------Entry related functionality------------
+
+    /*TODO If there is time, implement an observable that can be updated given a trip as an argument. And it just shows all the entry,List<Image>
+    Pairs for that trip. This would be a way to avoid blocking the UI thread with the get_entry_image calls
+    */
+    /**
+     * Updates the observable containing pairs of entry,image
+     */
+    //NOT IMPLEMENTED
+
+    /**
+     * Return the images associated with an entry if they exists. Otherwise an empty list
+     * Does block the main thread.
+     */
+    fun get_entry_images(entryData: EntryData) : List<ImageData>
+    {
+        var entryImages : ArrayList<ImageData>
+        //I need to find all images that point to this entry
+        runBlocking {
+            entryImages = mRepository.getImagesOfEntry(entryData) as ArrayList<ImageData>
+        }
+        return entryImages
+    }
 
     /**
      * Given a tripData object and measurements, create and insert an Entry into the database

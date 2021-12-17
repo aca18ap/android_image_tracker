@@ -16,6 +16,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import uk.ac.shef.oak.com4510.R
+import uk.ac.shef.oak.com4510.model.data.database.ImageData
 import uk.ac.shef.oak.com4510.model.data.database.TripData
 import uk.ac.shef.oak.com4510.view.ViewPastTripsFragmentDirections
 import uk.ac.shef.oak.com4510.viewModel.ImagesAdapter.Companion.decodeSampledBitmapFromResource
@@ -25,7 +26,7 @@ class TripsAdapter : RecyclerView.Adapter<TripsAdapter.ViewHolder> {
     private lateinit var context: Context
 
     constructor(items: List<TripData>) : super() {
-        Companion.items = items as MutableList<TripData>
+        Companion.items = items as MutableList<Pair<TripData,ImageData?>>
     }
 
 
@@ -47,23 +48,23 @@ class TripsAdapter : RecyclerView.Adapter<TripsAdapter.ViewHolder> {
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        if (items[position].thumbnail == null) {
+        if (items[position].first.thumbnail == null) {
             items[position].let {
                 scope.launch {
                     val bitmap = decodeSampledBitmapFromResource("drawable://"+ R.drawable.missing, 150,150)
                     bitmap.let {
-                        items[position].thumbnail = it
-                        holder.thumbnail.setImageBitmap((items[position].thumbnail))
+                        items[position].first.thumbnail = it
+                        holder.thumbnail.setImageBitmap((items[position].first.thumbnail))
                     }
                 }
             }
-        }else { holder.thumbnail.setImageBitmap(items[position].thumbnail) }
+        }else { holder.thumbnail.setImageBitmap(items[position].first.thumbnail) }
 
 
 
         items[position].let {
             scope.launch {
-                holder.title.text = items[position].title
+                holder.title.text = items[position].first.title
             }
         }
 
@@ -83,7 +84,7 @@ class TripsAdapter : RecyclerView.Adapter<TripsAdapter.ViewHolder> {
 
 
     companion object {
-        lateinit var items: MutableList<TripData>
+        lateinit var items: MutableList<Pair<TripData, ImageData?>>
         private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 
     }

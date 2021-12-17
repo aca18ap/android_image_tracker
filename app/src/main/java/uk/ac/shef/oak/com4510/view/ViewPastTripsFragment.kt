@@ -2,6 +2,7 @@ package uk.ac.shef.oak.com4510.view
 
 import android.app.Activity
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -85,8 +86,9 @@ class ViewPastTripsFragment : Fragment() {
 
 
 
-        viewModel!!.tripsSearchResults.observe(this, Observer<List<TripData>>{ trips ->
-            TripsAdapter.items = trips as MutableList<TripData>
+        viewModel!!.tripsSearchResults.observe(this, Observer<List<Pair<TripData,ImageData?>>>{ trips ->
+            Log.d("ObserverTrips",trips.toString())
+            TripsAdapter.items = trips as MutableList<Pair<TripData,ImageData?>>
             mAdapter.notifyDataSetChanged()
         })
 
