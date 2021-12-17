@@ -33,6 +33,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.tasks.CancellationTokenSource
+import pl.aprilapps.easyphotopicker.*
 import uk.ac.shef.oak.com4510.databinding.FragmentTravellingBinding
 import uk.ac.shef.oak.com4510.service.LocationService
 import uk.ac.shef.oak.com4510.viewModel.TravelViewModel
@@ -41,9 +42,12 @@ import java.util.*
 
 
 class TravellingFragment : Fragment(), OnMapReadyCallback {
+    private lateinit var easyImage: EasyImage
     private lateinit var locationRequest: LocationRequest
     private lateinit var locationClient: FusedLocationProviderClient
     private lateinit var ctx: Context
+    private lateinit var binding : FragmentTravellingBinding
+    private var viewModel: TravelViewModel? = null
     private var locationCallback: LocationCallback = object : LocationCallback() {
         override fun onLocationResult(locationResult: LocationResult) {
             super.onLocationResult(locationResult)
@@ -105,13 +109,21 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
         setActivity(requireActivity())
         setContext(requireActivity())
 
-        val binding : FragmentTravellingBinding = DataBindingUtil.inflate(inflater,
+        binding = DataBindingUtil.inflate(inflater,
             R.layout.fragment_travelling, container, false)
         var viewModel = ViewModelProvider(this)[TravelViewModel::class.java]
         locationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
 
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
+
+        // required by Android 6.0 +
+        initEasyImage()
+
+        //Doesn't exist yet
+        binding.fabGallery.setOnClickListener{
+            //easyImage.openChooser(this)
+        }
 
         return binding.root
     }
@@ -206,4 +218,26 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
     private fun setContext(context: Context) {
         ctx = context
     }
+
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?){
+        easyImage.handleActivityResult(requestCode, resultCode, data, requireActivity(),
+            object : DefaultCallback(){
+                override fun onMediaFilesPicked(imageFiles: Array<MediaFile>, source: MediaSource) {
+                    viewModel!!.debug_insertArrayMediaFiles(imageFiles)
+                }
+            })
+    }
+
+
+    private fun initEasyImage() {
+        easyImage = EasyImage.Builder(requireActivity())
+//        .setChooserTitle("Pick media")
+//        .setFolderName(GALLERY_DIR)
+            .setChooserType(ChooserType.CAMERA_AND_GALLERY)
+            .allowMultiple(true)
+//        .setCopyImagesToPublicGalleryFolder(true)
+            .build()
+    }
+
 }
