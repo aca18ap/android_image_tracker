@@ -52,7 +52,6 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
     private lateinit var locationRequest: LocationRequest
     private lateinit var locationClient: FusedLocationProviderClient
     private lateinit var ctx: Context
-    private lateinit var binding : FragmentTravellingBinding
     private var service : LocationService? = null
 //    private var viewModel: TravelViewModel? = null
     private var locationCallback: LocationCallback = object : LocationCallback() {
@@ -138,6 +137,7 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
         private var mLastTimestamp: Long = 0
         private var tripID: Int = -1
         private var entryID: Int = -1
+        private lateinit var binding : FragmentTravellingBinding
 
 
         fun getActivity(): FragmentActivity? {
@@ -158,8 +158,12 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
 
         fun setData(location: Location?, pressure: Float?, temperature: Float?, time: Long) {
             mCurrentLocation = location
+            binding.latitudeText.text = "Latitude: ${location!!.latitude}"
+            binding.longitudeText.text = "Longitude: ${location!!.longitude}"
             mCurrentPressure = pressure
+            if (pressure != null) binding.pressureText.text = "Pressure: $pressure mbar"
             mCurrentTemperature = temperature
+            if (temperature != null) binding.temperatureText.text =  "Temperature: $temperature C"
             mLastTimestamp = time
         }
 
@@ -202,7 +206,6 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
             this.findNavController().popBackStack() // New Trip page
             this.findNavController().popBackStack() // Welcome page
         }
-
         return binding.root
     }
 
