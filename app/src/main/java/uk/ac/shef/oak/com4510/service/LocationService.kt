@@ -18,23 +18,6 @@ import uk.ac.shef.oak.com4510.view.TravellingFragment
 import java.text.DateFormat
 import java.util.*
 
-// TODO: Rename actions, choose action names that describe tasks that this
-// IntentService can perform, e.g. ACTION_FETCH_NEW_ITEMS
-private const val ACTION_FOO = "uk.ac.shef.oak.com4510.viewModel.action.FOO"
-private const val ACTION_BAZ = "uk.ac.shef.oak.com4510.viewModel.action.BAZ"
-
-// TODO: Rename parameters
-private const val EXTRA_PARAM1 = "uk.ac.shef.oak.com4510.viewModel.extra.PARAM1"
-private const val EXTRA_PARAM2 = "uk.ac.shef.oak.com4510.viewModel.extra.PARAM2"
-
-/**
- * An [IntentService] subclass for handling asynchronous task requests in
- * a service on a separate handler thread.
-
- * TODO: Customize class - update intent actions, extra parameters and static
- * helper methods.
-
- */
 class LocationService : Service {
     private var mCurrentLocation: Location? = null
     private var mLastUpdateTime: String? = null
