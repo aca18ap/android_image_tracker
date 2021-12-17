@@ -34,6 +34,14 @@ class HomeFragment : Fragment() {
             view.findNavController().navigate(R.id.action_homeFragment_to_newTripFragment)
         }
 
+        binding.viewTripsButton.setOnClickListener{view : View ->
+            view.findNavController().navigate(R.id.action_homeFragment_to_viewPastTripsFragment)
+        }
+
+        binding.debugButton.setOnClickListener{view : View ->
+            view.findNavController().navigate(R.id.action_homeFragment_to_debugFragment)
+        }
+
         return binding.root
     }
 

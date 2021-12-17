@@ -14,8 +14,10 @@ import uk.ac.shef.oak.com4510.model.data.database.ImageData
 import uk.ac.shef.oak.com4510.view.GalleryFragmentDirections
 import kotlinx.coroutines.*
 
-class MyAdapter : RecyclerView.Adapter<MyAdapter.ViewHolder> {
+class ImagesAdapter : RecyclerView.Adapter<ImagesAdapter.ViewHolder> {
     private lateinit var context: Context
+
+
 
     constructor(items: List<ImageData>) : super() {
         Companion.items = items as MutableList<ImageData>
@@ -66,6 +68,31 @@ class MyAdapter : RecyclerView.Adapter<MyAdapter.ViewHolder> {
         }
 
     }
+
+    /*
+    override fun getFilter() : Filter {
+        return object : Filter() {
+            override fun performFiltering(filter: CharSequence?): FilterResults {
+                val charString = filter?.toString() ?: ""
+                if (charString.isEmpty()) itemsFiltered = items as ArrayList<ImageData> else {
+                    items.filter {
+                        (it.imageTitle.contains(filter!!)) or
+                                (it.imageDescription!!.contains(filter))
+                    }.forEach {itemsFiltered.add(it)}
+                }
+                return FilterResults().apply { values = itemsFiltered }
+            }
+
+            override fun publishResults(filter: CharSequence?, results: FilterResults?) {
+               itemsFiltered = if (results?.values == null)
+                   ArrayList()
+                else
+                    results.values as ArrayList<ImageData>
+                notifyDataSetChanged()
+            }
+        }
+    }
+    */
 
     override fun getItemCount(): Int {
         return items.size

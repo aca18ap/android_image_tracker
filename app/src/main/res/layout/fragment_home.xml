@@ -6,7 +6,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/homeConstraint"
-        >
+        android:gravity="center">
 
         <TextView
             android:id="@+id/welcome_message"
@@ -24,14 +24,16 @@
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/welcome_message"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
+            app:layout_constraintStart_toStartOf="parent"
+            android:id="@+id/trip_buttons">
+
             <Button
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:id="@+id/go_to_images_button"
+                android:id="@+id/view_trips_button"
                 android:layout_margin="10dp"
-                android:text="GO TO IMAGES"
+                android:text="View Previous Trips"
                 />
             <Button
                 android:layout_width="0dp"
@@ -43,6 +45,24 @@
                 android:text="Start new trip"
                 />
         </LinearLayout>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/go_to_images_button"
+            android:layout_margin="10dp"
+            android:text="View images' gallery"
+            app:layout_constraintTop_toBottomOf="@id/trip_buttons" />
+
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:id="@+id/debug_button"
+                android:layout_margin="10dp"
+                android:text="Debug me"
+                app:layout_constraintTop_toBottomOf="@id/go_to_images_button" />
 
 
 
