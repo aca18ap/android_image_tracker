@@ -6,7 +6,7 @@ import androidx.room.*
 /**
  * Entity data class represents a single row in the database.
  */
-@Entity(tableName = "image", indices = [Index(value = ["id","title"])],
+@Entity(tableName = "image", indices = [Index(value = ["id","title"]),Index(value = ["uri"], unique = true)],
     foreignKeys = arrayOf(ForeignKey(entity = EntryData::class,
     parentColumns = arrayOf("id"),
     childColumns = arrayOf("entry_id"))))

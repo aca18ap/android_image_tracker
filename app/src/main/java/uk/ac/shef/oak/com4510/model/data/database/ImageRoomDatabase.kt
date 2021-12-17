@@ -9,7 +9,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 /**
  * Database class with a singleton INSTANCE object.
  */
-@Database(entities = [ImageData::class, ImageDataFTS::class, EntryData::class, TripData::class], version = 6, exportSchema = false)
+@Database(entities = [ImageData::class, ImageDataFTS::class, EntryData::class, TripData::class], version = 7, exportSchema = false)
 abstract class ImageRoomDatabase: RoomDatabase() {
 
     abstract fun imageDataDao(): ImageDataDao
