@@ -48,6 +48,7 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
     private lateinit var locationClient: FusedLocationProviderClient
     private lateinit var ctx: Context
     private lateinit var binding : FragmentTravellingBinding
+    private lateinit var service : LocationService
     private var viewModel: TravelViewModel? = null
     private var locationCallback: LocationCallback = object : LocationCallback() {
         override fun onLocationResult(locationResult: LocationResult) {
@@ -194,7 +195,7 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
                 intent,
                 PendingIntent.FLAG_UPDATE_CURRENT
             )
-
+        Log.d("StartLocationUpdates", "Pending: $mLocationPendingIntent")
         val locationTask = locationClient.requestLocationUpdates(
             locationRequest,
             mLocationPendingIntent!!
