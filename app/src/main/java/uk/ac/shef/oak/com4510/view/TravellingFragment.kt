@@ -47,26 +47,26 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
     private var locationCallback: LocationCallback = object : LocationCallback() {
         override fun onLocationResult(locationResult: LocationResult) {
             super.onLocationResult(locationResult)
-            mCurrentLocation = locationResult.lastLocation
-            mLastUpdateTime = DateFormat.getTimeInstance().format(Date())
-            Log.i("MAP", "new location " + mCurrentLocation.toString())
-            mMap.addMarker(
-                MarkerOptions().position(
-                    LatLng(
-                        mCurrentLocation!!.latitude,
-                        mCurrentLocation!!.longitude
-                    )
-                )
-                    .title(mLastUpdateTime)
-            )
-            mMap.moveCamera(
-                CameraUpdateFactory.newLatLngZoom(
-                    LatLng(
-                        mCurrentLocation!!.latitude,
-                        mCurrentLocation!!.longitude
-                    ), 15f
-                )
-            )
+//            mCurrentLocation = locationResult.lastLocation
+//            mLastUpdateTime = DateFormat.getTimeInstance().format(Date())
+//            Log.i("MAP", "new location " + mCurrentLocation.toString())
+//            mMap.addMarker(
+//                MarkerOptions().position(
+//                    LatLng(
+//                        mCurrentLocation!!.latitude,
+//                        mCurrentLocation!!.longitude
+//                    )
+//                )
+//                    .title(mLastUpdateTime)
+//            )
+//            mMap.moveCamera(
+//                CameraUpdateFactory.newLatLngZoom(
+//                    LatLng(
+//                        mCurrentLocation!!.latitude,
+//                        mCurrentLocation!!.longitude
+//                    ), 15f
+//                )
+//            )
         }
     }
 
@@ -109,8 +109,6 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
             R.layout.fragment_travelling, container, false)
         var viewModel = ViewModelProvider(this)[TravelViewModel::class.java]
         locationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
-
-
 
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
