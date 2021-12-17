@@ -60,13 +60,13 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
     /**
      * Updates the entriesOfTrip observable with all (DataEntry,List<ImageData>) for a given a tripData input.
      */
-    fun updateLiveDataEntriesOfTrip(tripData : TripData)
+    fun updateLiveDataEntriesOfTrip(tripDataID : Int)
     {
         viewModelScope.launch(Dispatchers.IO)
         {
             val updatedList = ArrayList<Pair<EntryData,List<ImageData>>>()
             //1. get all the entries in one place
-            val allEntries = mRepository.getEntriesOfTrip(tripData.id)
+            val allEntries = mRepository.getEntriesOfTrip(tripDataID)
             //2. Iterate through allEntries, and make a pair whenever you find a list, make it null when you don't, you know the drill
             //Think of what happens when there's no entry in the list
             for (entry in allEntries!!)
