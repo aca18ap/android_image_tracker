@@ -1,10 +1,10 @@
+@file:Suppress("MemberVisibilityCanBePrivate")
+
 package uk.ac.shef.oak.com4510.viewModel
 
 
 import android.app.Application
-import android.media.Image
 import android.util.Log
-import android.util.Log.WARN
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -31,7 +31,6 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
      * Observable list of images. Contains all images a user has taken or added to the Travel app represented as ImageData.
      */
     private val _imageList: MutableLiveData<MutableList<ImageData>> = MutableLiveData<MutableList<ImageData>>()
-    val imageList : LiveData<MutableList<ImageData>> get() = _imageList
 
     /**
      * Observable list of images to be used with searching. The search function given a string updates this livedata with
@@ -56,26 +55,6 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
     private val _entriesOfTrip = MutableLiveData<MutableList<Pair<EntryData,List<ImageData>>>>()
     val entriesOfTrip : LiveData<MutableList<Pair<EntryData,List<ImageData>>>>
         get() = _entriesOfTrip
-
-    /**
-     * Observable list of images for a particular entry. Holds images for a given entry
-     */
-    private val _imagesOfEntry = MutableLiveData<MutableList<ImageData>>()
-    val imagesOfEntry : LiveData<MutableList<ImageData>>
-        get() = _imagesOfEntry
-    /**
-     * Given an entry, it updates the _imagesOfEntry observable LiveData to contain all images of a given entry
-     */
-    fun updateImagesOfEntry(entryData: EntryData)
-    {
-        viewModelScope.launch(Dispatchers.IO)
-        {
-            //Get all images for a given entry
-            val allImages = mRepository.getImagesOfEntry(entryData)
-            _imagesOfEntry.postValue(allImages as MutableList<ImageData>?)
-        }
-    }
-
 
     /**
      * Updates the entriesOfTrip observable with all (DataEntry,List<ImageData>) for a given a tripData input.
@@ -103,6 +82,26 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
     }
 
     /**
+     * Observable list of images for a particular entry. Holds images for a given entry
+     */
+    private val _imagesOfEntry = MutableLiveData<MutableList<ImageData>>()
+    val imagesOfEntry : LiveData<MutableList<ImageData>>
+        get() = _imagesOfEntry
+    /**
+     * Given an entry, it updates the _imagesOfEntry observable LiveData to contain all images of a given entry
+     */
+    fun updateImagesOfEntry(entryData: EntryData)
+    {
+        viewModelScope.launch(Dispatchers.IO)
+        {
+            //Get all images for a given entry
+            val allImages = mRepository.getImagesOfEntry(entryData)
+            _imagesOfEntry.postValue(allImages as MutableList<ImageData>?)
+        }
+    }
+
+
+    /**
      * Observable liveData containing all images of a given trip
      */
     private val _imagesOfTrip = MutableLiveData<MutableList<ImageData>>()
@@ -125,7 +124,7 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
 
             //We have entries, we can get to all the images pointing to those entries
             //If the trip has any entries, collect images in allImages
-            if (!allEntries!!.isEmpty()) {
+            if (allEntries!!.isNotEmpty()) {
                 for (entry in allEntries) {
                     //For each entry we can get its individual images
                     val imagesOfEntry = mRepository.getImagesOfEntry(entry)
@@ -146,7 +145,7 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
      * This does not update the imageList livedata object
      */
     fun insertImageReturnId(imageData: ImageData): Int = runBlocking{
-        var deferredId = async { mRepository.insertImageReturnId(imageData) }
+        val deferredId = async { mRepository.insertImageReturnId(imageData) }
         deferredId.await()
     }
 
@@ -154,22 +153,31 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
      * Handles the photos returned by EasyImage. Inserts an array of MediaFiles into the database and also changes the imageList livedata
      */
     fun debug_insertArrayMediaFiles(mediaFileArray: Array<MediaFile>) {
-        var imageDataList = mediaFileArray.convertToImageDataWithoutId()
+        val imageDataList = mediaFileArray.convertToImageDataWithoutId()
         insertAndUpdateImageDataList(imageDataList)
-        _imageList.append(imageDataList)
     }
+
     /**
-     * Handles the photos returned by EasyImage. Inserts an array of MediaFiles into the database and also changes the imageList livedata
-     * Also associates each image with an entry
+     * Meant to be used with easyImage. Given an array of Mediafile images returned by easyImage and an EntryData object, it converts the MediaFile
+     * into ImageData, inserts them into the database and links the given entry to the images.
+     *
+     * @param  mediaFileArray  Array of mediafiles returned by the easyImage library when a user selects images from the gallery and submits them
+     * , or takes a photo and submits it.
+     * @param  entryData Entry object to link the array of image to
      */
     fun insertArrayMediaFilesWithEntry(mediaFileArray: Array<MediaFile>, entryData : EntryData) {
-        var imageDataList = mediaFileArray.convertToImageDataWithoutId()
+        val imageDataList = mediaFileArray.convertToImageDataWithoutId()
         insertAndUpdateImageDataListWithEntry(imageDataList,entryData)
-        _imageList.append(imageDataList)
     }
+
     /**
-     * Handles the photos returned by EasyImage. Inserts an array of MediaFiles into the database and also changes the imageList livedata
-     * Also associates each image with the last entry in the database by Id
+     * Given an ImageData and ImageData fields, updates the corresponding ImageData with the fields inside the database.
+     * Any of the imageData fields could be ommited.
+     *
+     * @param  imageData  imageData to update. It's id is used to match an ImageData from the database
+     * @param  title title of ImageData to update to
+     * @param  description title of ImageData to update to
+     * @param  entry_id title of ImageData to update to
      */
     fun insertArrayMediaFilesWithLastEntryById(mediaFileArray: Array<MediaFile>)
     {
@@ -177,9 +185,8 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
         {
             val lastEntry = mRepository.getLastEntryById()
             if (lastEntry != null) {
-                var imageDataList = mediaFileArray.convertToImageDataWithoutId()
+                val imageDataList = mediaFileArray.convertToImageDataWithoutId()
                 insertAndUpdateImageDataListWithEntry(imageDataList,lastEntry)
-                _imageList.append(imageDataList)
             }
             else
             {
@@ -190,7 +197,11 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
 
 
     /**
-     * Given an ImageData and an Entry, associates them in the database
+     * Links an ImageData to an EntryData. This simply means that the imageData's entry_id
+     * is equalized to the id of the EntryData argument
+     *
+     * @param  imageData  ImageData to be linked to EntryData
+     * @param  name EntryData to be linked to ImageData
      */
     fun associateImageDataWithEntry(imageData: ImageData,entryData: EntryData)
     {
@@ -201,19 +212,24 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
     }
 
     /**
-     * Updates an imageData in the database. TO ADD: Functionality for updating position
+     * Given an ImageData and ImageData fields, updates the corresponding ImageData with the fields inside the database.
+     * Any of the imageData fields could be ommited.
+     *
+     * @param  imageData  imageData to update. Its id is used to match an ImageData from the database
+     * @param  title title of ImageData to update to
+     * @param  description title of ImageData to update to
+     * @param  entry_id title of ImageData to update to
      */
     fun updateImageInDatabase(imageData : ImageData, title : String? = null, description : String? = null,entry_id : Int? = null)
     {
-        var updatedImage = ImageData(imageData.id,
-            imageData.imageUri,
-            title ?: imageData.imageTitle,
-            description ?: imageData.imageDescription,
-            imageData.thumbnailUri,
-            imageData.position,
-            entry_id ?: imageData.entry_id)
-        updatedImage.thumbnail = imageData.thumbnail
         viewModelScope.launch {
+            val updatedImage = ImageData(imageData.id,
+                imageData.imageUri,
+                title ?: imageData.imageTitle,
+                description ?: imageData.imageDescription,
+                imageData.thumbnailUri,
+                entry_id ?: imageData.entry_id)
+            updatedImage.thumbnail = imageData.thumbnail
             mRepository.updateImage(updatedImage)
         }
     }
@@ -222,18 +238,9 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
 
     fun initImagesList()
     {
-        initImageListFromDatabase()
         initSearchResultsFromDatabase()
     }
-    /**
-     * Initializes the imageList to hold every image from the database
-     */
-    fun initImageListFromDatabase()
-    {
-        viewModelScope.launch(Dispatchers.IO){
-            _imageList.postValue(mRepository.getAllImages() as MutableList<ImageData>)
-        }
-    }
+
 
     fun initSearchResultsFromDatabase()
     {
@@ -280,7 +287,7 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
                     }
                 }
                 //If no image has been found, add a pair with null
-                if (foundImage == false)
+                if (!foundImage)
                     returnList.add(Pair(trip,null))
             }
 
@@ -316,7 +323,7 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
     {
         for (imageData in imageDataList)
         {
-            var id = insertImageReturnId(imageData)
+            val id = insertImageReturnId(imageData)
             imageData.id = id
         }
         //Update the observable live data
@@ -332,7 +339,7 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
         for (imageData in imageDataList)
         {
             imageData.entry_id = entryData.id
-            var id = insertImageReturnId(imageData)
+            val id = insertImageReturnId(imageData)
             imageData.id = id
         }
         //Update the observable live data
@@ -340,52 +347,29 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
     }
 
     /**
-     * Given an imageData, it deletes it from the database and updates the observable liveadata
+     * Given an imageData, it deletes it from the database and updates the observable livedata
      */
     fun deleteImageInDatabase(imageData : ImageData)
     {
         viewModelScope.launch {
             mRepository.deleteImage(imageData)
         }
-        //Update the livedata
-        updateImageList()
     }
 
-    /**
-     * Updates the imageList LiveData to reflect what is in the database
-     */
-    private fun updateImageList()
-    {
-        viewModelScope.launch{
-            _imageList.value = mRepository.getAllImages() as MutableList<ImageData>
-        }
-    }
+
     //----------------------- Trip related functionality------------
 
     /**
      * Insert a trip and return it's generated id
      */
     fun insertTripReturnId(tripData: TripData): Int? = runBlocking{
-        var deferredId = async { mRepository.insertTripReturnId(tripData) }
+        val deferredId = async { mRepository.insertTripReturnId(tripData) }
         val id = deferredId.await()
         //Update observable liveData tracking all trips
         initTripSearchResultsFromDatabase()
         id
     }
 
-    /**
-     * Insert a trip into the database
-     */
-    //UNTESTED
-    fun insert_trip(tripData: TripData)
-    {
-         viewModelScope.launch()
-         {
-             mRepository.insertTrip(tripData)
-             //Update observable liveData tracking all trips
-             initTripSearchResultsFromDatabase()
-         }
-    }
 
     //NOTE: TODO I will refactor all of these and make the function naming convention consistent.
     // I keep using Camel case and underscores in the same API, it's probably frustrating to use
@@ -429,21 +413,6 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
 
     //-----------------------Entry related functionality------------
 
-
-
-    /**
-     * Return the images associated with an entry if they exist. Otherwise return an empty list
-     * Does block the main thread.
-     */
-    fun get_entry_images(entryData: EntryData) : List<ImageData>
-    {
-        var entryImages : ArrayList<ImageData>
-        //I need to find all images that point to this entry
-        runBlocking {
-            entryImages = mRepository.getImagesOfEntry(entryData) as ArrayList<ImageData>
-        }
-        return entryImages
-    }
 
     /**
      * Given a tripData object and measurements, create and insert an Entry into the database
@@ -489,21 +458,11 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
      * be avoided with some sort of callback magic?
      */
     fun insertEntryReturnId(entryData: EntryData): Int? = runBlocking{
-        var deferredId = async { mRepository.insertEntryReturnId(entryData) }
+        val deferredId = async { mRepository.insertEntryReturnId(entryData) }
         deferredId.await()
     }
 
-    //Temporary debug functions
-
-    fun debug_getLastEntry() : EntryData
-    {
-        val entryData : EntryData
-        runBlocking(Dispatchers.IO) {
-            entryData = mRepository.getLastEntryById()!!
-        }
-        return entryData
-    }
-
+    // DEBUG FUNCTIONS
     fun debug_getImages() : List<ImageData>?
     {
         var imageList : List<ImageData>?
@@ -521,6 +480,5 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
         }
         return returnTripData
     }
-
 }
 

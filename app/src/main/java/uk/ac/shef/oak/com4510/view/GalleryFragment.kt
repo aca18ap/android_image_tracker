@@ -64,9 +64,6 @@ class GalleryFragment : Fragment() {
         })
         viewModel!!.initImagesList() // Populate the imageList observable with all the images in the database
 
-        //Debug temporary
-        Log.d("DebugLastEntry",viewModel!!.debug_getLastEntry().toString())
-
 
         return binding.root
     }
