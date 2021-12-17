@@ -377,7 +377,7 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
     /**
      * Given a tripData object and measurements, create and insert an Entry into the database
      */
-    fun create_insert_entry(tripData: TripData, temperature:Float, pressure:Float, lat:Float, lon:Float, timestamp:Float)
+    fun create_insert_entry(tripData: TripData, temperature:Float?, pressure:Float?, lat:Double, lon:Double, timestamp:Long)
     {
         val createdEntry = EntryData(lat = lat,lon = lon,
             entry_timestamp = timestamp, entry_temperature = temperature,
@@ -389,7 +389,7 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
      * Given a tripData object and measurements, create and insert an Entry into the database. Returns the inserted Entry
      * (including the generated it from inserting)
      */
-    fun create_insert_entry_returnEntry(tripData: TripData, temperature:Float, pressure:Float, lat:Float, lon:Float, timestamp:Float) : EntryData
+    fun create_insert_entry_returnEntry(tripData: TripData, temperature:Float?, pressure:Float?, lat:Double, lon:Double, timestamp:Long) : EntryData
     {
         val createdEntry = EntryData(lat = lat,lon = lon,
             entry_timestamp = timestamp, entry_temperature = temperature,

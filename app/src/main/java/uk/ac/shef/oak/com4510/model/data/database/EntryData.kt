@@ -15,9 +15,9 @@ import androidx.room.*
     onDelete = ForeignKey.CASCADE)))
 data class EntryData(
     @PrimaryKey(autoGenerate = true)var id: Int = 0,
-    @ColumnInfo(name="lat") var lat: Float,
-    @ColumnInfo(name="lon") var lon: Float,
-    @ColumnInfo(name="timestamp") var entry_timestamp: Float,
-    @ColumnInfo(name="temperature") var entry_temperature: Float,
-    @ColumnInfo(name="pressure") var entry_pressure: Float,
+    @ColumnInfo(name="lat") var lat: Double,
+    @ColumnInfo(name="lon") var lon: Double,
+    @ColumnInfo(name="timestamp") var entry_timestamp: Long,
+    @ColumnInfo(name="temperature") var entry_temperature: Float?,
+    @ColumnInfo(name="pressure") var entry_pressure: Float?,
     @ColumnInfo(name="trip_id") var trip_id: Int)// TO DO: Figure out foreign keys
