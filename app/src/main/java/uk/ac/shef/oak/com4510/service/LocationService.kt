@@ -28,14 +28,13 @@ class LocationService : Service {
     private var mCurrentTemperature: Float? = null
     private var mLastUpdateTime: String? = null
 
-    //private var barometerEventListener: SensorEventListener? = null
     private var barometerEventListener  = object : SensorEventListener {
         override fun onSensorChanged(event: SensorEvent) {
             mCurrentPressure = event.values[0]
         }
         override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
     }
-    //private var thermometerEventListener: SensorEventListener? = null
+
     private var thermometerEventListener  = object : SensorEventListener {
         override fun onSensorChanged(event: SensorEvent) {
             mCurrentTemperature = event.values[0]
