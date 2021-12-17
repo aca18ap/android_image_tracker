@@ -382,11 +382,11 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
      * Given a tripData object and measurements, create and insert an Entry into the database. Returns the inserted Entry
      * (including the generated it from inserting)
      */
-    fun create_insert_entry_returnEntry(tripData: TripData, temperature:Float?, pressure:Float?, lat:Double, lon:Double, timestamp:Long) : EntryData
+    fun create_insert_entry_returnEntry(tripDataID: Int, temperature:Float?, pressure:Float?, lat:Double, lon:Double, timestamp:Long) : EntryData
     {
         val createdEntry = EntryData(lat = lat,lon = lon,
             entry_timestamp = timestamp, entry_temperature = temperature,
-            entry_pressure = pressure, trip_id = tripData.id)
+            entry_pressure = pressure, trip_id = tripDataID)
 
         val id = insertEntryReturnId(createdEntry)
         createdEntry.id = id!!

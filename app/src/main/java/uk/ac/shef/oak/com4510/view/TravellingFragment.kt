@@ -128,7 +128,7 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
 
         //Doesn't exist yet
         binding.fabGallery.setOnClickListener{
-            //easyImage.openChooser(this)
+            easyImage.openChooser(this)
         }
 
         return binding.root
@@ -224,12 +224,18 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
         ctx = context
     }
 
-
+    //Handle easyImage
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?){
         easyImage.handleActivityResult(requestCode, resultCode, data, requireActivity(),
             object : DefaultCallback(){
                 override fun onMediaFilesPicked(imageFiles: Array<MediaFile>, source: MediaSource) {
-                    viewModel!!.debug_insertArrayMediaFiles(imageFiles)
+                    //This is where you get control after choosing a bunch of images
+                    Log.d("InsideDanFragment","InsideDanFragment")
+                    //Get hold of an entry
+
+                    //val entryData = viewModel.create_insert_entry_returnEntry(TripData, temperature:Float?, pressure:Float?, lat:Double, lon:Double, timestamp:Long)
+
+                    viewModel!!.insertArrayMediaFilesWithEntry(imageFiles,entryData)
                 }
             })
     }
