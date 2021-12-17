@@ -61,6 +61,7 @@
                   tools:layout_editor_absoluteX="191dp">
 
                   <TextView
+                      android:id="@+id/latitude_box"
                       android:layout_width="match_parent"
                       android:layout_height="wrap_content"
                       android:text="@string/latitude"
@@ -68,6 +69,7 @@
                       android:textSize="30sp"></TextView>
 
                   <TextView
+                      android:id="@+id/longitude_box"
                       android:layout_width="match_parent"
                       android:layout_height="wrap_content"
                       android:text="@string/longitude"
@@ -75,9 +77,18 @@
                       android:textSize="30sp"></TextView>
 
                   <TextView
+                      android:id="@+id/pressure_box"
                       android:layout_width="match_parent"
                       android:layout_height="wrap_content"
-                      android:text="@string/more_info"
+                      android:text="@string/pressure"
+                      android:textAlignment="center"
+                      android:textSize="30sp"></TextView>
+
+                  <TextView
+                      android:id="@+id/temperature_box"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:text="@string/temperature"
                       android:textAlignment="center"
                       android:textSize="30sp"></TextView>
 
