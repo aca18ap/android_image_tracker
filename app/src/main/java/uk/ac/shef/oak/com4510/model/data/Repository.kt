@@ -11,7 +11,11 @@ class Repository(application: Application) {
 
     init {
         val db: ImageRoomDatabase? = ImageRoomDatabase.getDatabase(application)
-        if (db != null) { imageDataDao = db.imageDataDao() }
+        if (db != null) {
+            imageDataDao = db.imageDataDao()
+            entryDataDao = db.entryDataDao()
+            tripDataDao = db.tripDataDao()
+        }
     }
 
     //Separate constructor that allows passing a custom dao. For testing
