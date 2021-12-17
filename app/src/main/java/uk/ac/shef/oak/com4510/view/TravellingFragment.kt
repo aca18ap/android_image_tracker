@@ -13,9 +13,12 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.app.PendingIntent
 import android.app.PendingIntent.getActivity
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.content.ServiceConnection
 import android.location.Location
+import android.os.IBinder
 import android.os.Looper
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -48,7 +51,7 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
     private lateinit var locationClient: FusedLocationProviderClient
     private lateinit var ctx: Context
     private lateinit var binding : FragmentTravellingBinding
-    private lateinit var service : LocationService
+    private var service : LocationService? = null
     private var viewModel: TravelViewModel? = null
     private var locationCallback: LocationCallback = object : LocationCallback() {
         override fun onLocationResult(locationResult: LocationResult) {
@@ -73,6 +76,41 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
 //                    ), 15f
 //                )
 //            )
+        }
+    }
+
+//    private ServiceConnection mConnection = new ServiceConnection() {
+//        public void onServiceConnected(ComponentName className, IBinder service) {
+//            // This is called when the connection with the service has been
+//            // established, giving us the service object we can use to
+//            // interact with the service.  Because we have bound to a explicit
+//            // service that we know is running in our own process, we can
+//            // cast its IBinder to a concrete class and directly access it.
+//            mBoundService = ((LocalService.LocalBinder)service).getService();
+//
+//            // Tell the user about this for our demo.
+//            Toast.makeText(Binding.this, R.string.local_service_connected,
+//                Toast.LENGTH_SHORT).show();
+//        }
+//
+//        public void onServiceDisconnected(ComponentName className) {
+//            // This is called when the connection with the service has been
+//            // unexpectedly disconnected -- that is, its process crashed.
+//            // Because it is running in our same process, we should never
+//            // see this happen.
+//            mBoundService = null;
+//            Toast.makeText(Binding.this, R.string.local_service_disconnected,
+//                Toast.LENGTH_SHORT).show();
+//        }
+//    }
+
+    private var mConnection: ServiceConnection = object: ServiceConnection {
+        override fun onServiceConnected(className: ComponentName, binder: IBinder) {
+            service = (binder as LocationService.LocalBinder).getService()
+        }
+
+        override fun onServiceDisconnected(name: ComponentName?) {
+            service = null
         }
     }
 
@@ -129,7 +167,7 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
 
         //Doesn't exist yet
         binding.fabGallery.setOnClickListener{
-            //easyImage.openChooser(this)
+            easyImage.openChooser(this)
         }
 
         return binding.root
@@ -189,13 +227,14 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
         Log.e("Location update", "Starting...")
 
         val intent = Intent(ctx, LocationService::class.java)
+        ctx.bindService(intent, mConnection, Context.BIND_AUTO_CREATE)
         mLocationPendingIntent =
             PendingIntent.getService(ctx,
                 1,
                 intent,
                 PendingIntent.FLAG_UPDATE_CURRENT
             )
-        Log.d("StartLocationUpdates", "Pending: $mLocationPendingIntent")
+        Log.d("StartLocationUpdates", "Loc?: ${service?.getLastLocation()}")
         val locationTask = locationClient.requestLocationUpdates(
             locationRequest,
             mLocationPendingIntent!!
@@ -225,16 +264,21 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
         ctx = context
     }
 
-
+    //Handle easyImage
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?){
         easyImage.handleActivityResult(requestCode, resultCode, data, requireActivity(),
             object : DefaultCallback(){
                 override fun onMediaFilesPicked(imageFiles: Array<MediaFile>, source: MediaSource) {
-                    viewModel!!.debug_insertArrayMediaFiles(imageFiles)
+                    //This is where you get control after choosing a bunch of images
+                    Log.d("InsideDanFragment","Loc: ${service?.getLastLocation()}")
+                    //Get hold of an entry
+
+                    //val entryData = viewModel.create_insert_entry_returnEntry(TripData, temperature:Float?, pressure:Float?, lat:Double, lon:Double, timestamp:Long)
+
+                    //viewModel!!.insertArrayMediaFilesWithEntry(imageFiles,entryData)
                 }
             })
     }
-
 
     private fun initEasyImage() {
         easyImage = EasyImage.Builder(requireActivity())

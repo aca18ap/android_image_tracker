@@ -245,6 +245,11 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
 
 
     /**
+     *
+     */
+
+
+    /**
      * Updates the imageList LiveData to reflect what is in the database
      */
     private fun updateImageList()
@@ -297,16 +302,14 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
 
     /**
      * Create a new trip based on trip description and inserts it into the database.
-     * This returns the tripData object. Because this returns the object, it blocks the main thread.
+     * This returns the triData's id. Because this returns something it blocks the main thread.
      */
-    fun create_insert_return_trip(title :String,country :String, timestamp: Float) : TripData
+    fun create_insert_return_tripID(title :String,country :String, timestamp: Float) : Int
     {
        val createdTrip = TripData(title = title, country = country, trip_timestamp = timestamp)
        //Block the main thread in order to wait for the id to return
        val id : Int? = insertTripReturnId(createdTrip)
-
-       createdTrip.id = id!!
-       return createdTrip
+       return id!!
     }
 
     /**
@@ -384,12 +387,12 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
      * Given a tripData object and measurements, create and insert an Entry into the database. Returns the inserted Entry
      * (including the generated it from inserting)
      */
-    fun create_insert_entry_returnEntry(tripData: TripData, temperature:Float?, pressure:Float?, lat:Double, lon:Double, timestamp:Long) : EntryData
+    fun create_insert_entry_returnEntry(tripDataID: Int, temperature:Float?, pressure:Float?, lat:Double, lon:Double, timestamp:Long) : EntryData
     {
         val createdEntry = EntryData(
             lat = lat, lon = lon,
             entry_timestamp = timestamp, entry_temperature = temperature,
-            entry_pressure = pressure, trip_id = tripData.id)
+            entry_pressure = pressure, trip_id = tripDataID)
 
         val id = insertEntryReturnId(createdEntry)
         createdEntry.id = id!!
