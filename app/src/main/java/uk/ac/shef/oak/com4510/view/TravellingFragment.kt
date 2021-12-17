@@ -193,9 +193,14 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
         // required by Android 6.0 +
         initEasyImage()
 
-        //Doesn't exist yet
         binding.fabGallery.setOnClickListener{
             easyImage.openChooser(this)
+        }
+
+        binding.tripEndBtn.setOnClickListener{
+            stopLocationUpdates()
+            this.findNavController().popBackStack() // New Trip page
+            this.findNavController().popBackStack() // Welcome page
         }
 
         return binding.root
