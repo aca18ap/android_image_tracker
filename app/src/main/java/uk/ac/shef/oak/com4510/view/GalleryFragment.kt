@@ -2,6 +2,7 @@ package uk.ac.shef.oak.com4510.view
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.widget.SearchView
 import androidx.fragment.app.Fragment
@@ -62,6 +63,7 @@ class GalleryFragment : Fragment() {
             mAdapter.notifyDataSetChanged()
         })
         viewModel!!.initImagesList() // Populate the imageList observable with all the images in the database
+
 
 
         return binding.root
