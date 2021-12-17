@@ -43,13 +43,10 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
     private lateinit var locationClient: FusedLocationProviderClient
     private lateinit var ctx: Context
     private var service : LocationService? = null
-    private var mLastUpdateTime: String? = null
     private var mLocationPendingIntent: PendingIntent? = null
 
     private var locationCallback: LocationCallback = object : LocationCallback() {
-        override fun onLocationResult(locationResult: LocationResult) {
-            super.onLocationResult(locationResult)
-        }
+
     }
 
     private var mConnection: ServiceConnection = object: ServiceConnection {
@@ -66,21 +63,17 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
     }
 
     companion object {
-        private const val REQUEST_ACCESS_COARSE_LOCATION = 1121 // Used in section 1.1.2 of brief
         private const val REQUEST_ACCESS_FINE_LOCATION = 1122 // Used in section 1.1.2 of brief
-        private const val REQUEST_CLOSE_MAP = 1129
-
-        private var activity: FragmentActivity? = null
         private lateinit var mMap: GoogleMap
         private lateinit var viewModel: TravelViewModel
-        //private const val ACCESS_FINE_LOCATION = 123
+        private lateinit var binding : FragmentTravellingBinding
+        private var activity: FragmentActivity? = null
         private var mCurrentLocation: Location? = null
         private var mCurrentPressure: Float? = null
         private var mCurrentTemperature: Float? = null
         private var mLastTimestamp: Long = 0
         private var tripID: Int = -1
         private var entryID: Int = -1
-        private lateinit var binding : FragmentTravellingBinding
 
         /**
          * Activity getter
@@ -255,7 +248,7 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
      * Requests maximum accuracy
      */
     private fun createLocationRequest() {
-        locationRequest = LocationRequest.create()?.apply {
+        locationRequest = LocationRequest.create().apply {
             interval = 20000
             fastestInterval = 20000
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY
@@ -294,21 +287,19 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
                 intent,
                 PendingIntent.FLAG_UPDATE_CURRENT
             )
-        Log.d("StartLocationUpdates", "Svc?: $mLocationPendingIntent.")
-        Log.d("StartLocationUpdates", "Loc?: ${service?.getLastLocation()}")
         val locationTask = locationClient.requestLocationUpdates(
             locationRequest,
             mLocationPendingIntent!!
         )
         locationTask.addOnFailureListener { e ->
             if (e is ApiException) {
-                e.message?.let { Log.w("NewTripFragment", it) }
+                e.message?.let { Log.w("TravellingFragment", it) }
             } else {
-                Log.w("NewTripFragment", e.message!!)
+                Log.w("Travelling", e.message!!)
             }
         }
         locationTask.addOnCompleteListener {
-            Log.d("NewTripFragment", "Starting gps successfully!")
+            Log.d("Travelling", "Started gps")
         }
     }
 
