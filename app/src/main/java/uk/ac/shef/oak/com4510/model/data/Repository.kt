@@ -66,9 +66,9 @@ class Repository(application: Application) {
     /**
      * Get all entries for a given trip
      */
-    suspend fun getEntriesOfTrip(tripData : TripData) : List<EntryData>? = withContext(Dispatchers.IO)
+    suspend fun getEntriesOfTrip(tripDataID : Int) : List<EntryData>? = withContext(Dispatchers.IO)
     {
-        entryDataDao?.getEntriesForTrip(tripData.id)
+        entryDataDao?.getEntriesForTrip(tripDataID)
     }
 
     suspend fun insertEntryReturnId(entryData: EntryData): Int? = withContext(Dispatchers.IO) {
