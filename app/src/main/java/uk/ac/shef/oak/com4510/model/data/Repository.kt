@@ -41,7 +41,7 @@ class Repository(application: Application) {
     /**
      * Inserts an imageData object into the database. Returns the id it was assigned to
      */
-    suspend fun insertDataReturnId(imageData: ImageData): Int = coroutineScope {
+    suspend fun insertImageReturnId(imageData: ImageData): Int = coroutineScope {
         var defferedID = async { imageDataDao?.insert(imageData) }
         defferedID.await()?.toInt()!!
     }
@@ -62,12 +62,23 @@ class Repository(application: Application) {
         entryDataDao?.getEntriesForTrip(tripData.id)
     }
 
+    suspend fun insertEntryReturnId(entryData: EntryData): Int? = coroutineScope {
+        var defferedID = async { entryDataDao?.insert(entryData) }
+        defferedID.await()?.toInt()
+    }
+
+
 
 
     // ---------TripData related --------------------------------------
     suspend fun getAllTrips() : List<TripData>? = withContext(Dispatchers.IO)
     {
         tripDataDao?.getItems()
+    }
+
+    suspend fun insertTripReturnId(tripData: TripData): Int? = coroutineScope {
+        var defferedID = async { tripDataDao?.insert(tripData) }
+        defferedID.await()?.toInt()
     }
 
 }

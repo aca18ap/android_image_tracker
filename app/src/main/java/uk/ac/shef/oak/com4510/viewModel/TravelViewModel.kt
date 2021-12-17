@@ -9,7 +9,9 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.*
 import pl.aprilapps.easyphotopicker.MediaFile
 import uk.ac.shef.oak.com4510.model.data.Repository
+import uk.ac.shef.oak.com4510.model.data.database.EntryData
 import uk.ac.shef.oak.com4510.model.data.database.ImageData
+import uk.ac.shef.oak.com4510.model.data.database.TripData
 import uk.ac.shef.oak.com4510.util.append
 import uk.ac.shef.oak.com4510.util.convertToImageDataWithoutId
 import uk.ac.shef.oak.com4510.util.sanitizeSearchQuery
@@ -41,8 +43,8 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
      * Inserts an imageData into the database and returns the id it was associated with. Warning: This does block the UI thread.
      * This does not update the imageList livedata object
      */
-    fun insertDataReturnId(imageData: ImageData): Int = runBlocking{
-        var deferredId = async { mRepository.insertDataReturnId(imageData) }
+    fun insertImageReturnId(imageData: ImageData): Int = runBlocking{
+        var deferredId = async { mRepository.insertImageReturnId(imageData) }
         deferredId.await()
     }
 
@@ -58,14 +60,15 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
     /**NOT TESTED BUT PROBABLY WORKS
      * Updates an imageData in the database. TO ADD: Functionality for updating position
      */
-    fun updateImageInDatabase(imageData : ImageData, title : String? = null, description : String? = null)
+    fun updateImageInDatabase(imageData : ImageData, title : String? = null, description : String? = null,entry_id : Int? = null)
     {
         var updatedImage = ImageData(imageData.id,
             imageData.imageUri,
             title ?: imageData.imageTitle,
             description ?: imageData.imageDescription,
             imageData.thumbnailUri,
-            imageData.position)
+            imageData.position,
+            entry_id ?: imageData.entry_id)
         updatedImage.thumbnail = imageData.thumbnail
         viewModelScope.launch {
             mRepository.updateImage(updatedImage)
@@ -121,9 +124,11 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
     {
         for (imageData in imageDataList)
         {
-            var id = insertDataReturnId(imageData)
+            var id = insertImageReturnId(imageData)
             imageData.id = id
         }
+        //Update the observable live data
+        initAll()
     }
 
     /**
@@ -147,6 +152,31 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
         viewModelScope.launch{
             _imageList.value = mRepository.getAllImages() as MutableList<ImageData>
         }
+    }
+    // Trip related functionality
+
+    fun insertTripReturnId(tripData: TripData): Int? = runBlocking{
+        var deferredId = async { mRepository.insertTripReturnId(tripData) }
+        deferredId.await()
+    }
+
+
+    // Entry related functionality
+
+    fun insertEntryReturnId(entryData: EntryData): Int? = runBlocking{
+        var deferredId = async { mRepository.insertEntryReturnId(entryData) }
+        deferredId.await()
+    }
+
+    //Temporary debug functions
+
+    fun debug_getImages() : List<ImageData>?
+    {
+        var imageList : List<ImageData>?
+        runBlocking {
+            imageList = mRepository.getAllImages()
+        }
+        return imageList
     }
 
 }
