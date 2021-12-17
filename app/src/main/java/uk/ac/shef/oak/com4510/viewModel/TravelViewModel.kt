@@ -47,6 +47,15 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
     val tripsSearchResults : LiveData<MutableList<Pair<TripData,ImageData?>>>
         get() = _tripsSearchResults
 
+    /**
+     * Observable list of (EntryData,List<ImageData>) corresponding to a particular trip. The List<ImageData> represents the list of images associated with each entry,
+     * if. If there are none, it is empty
+     */
+    private val _entriesOfTrip = MutableLiveData<MutableList<Pair<EntryData,List<ImageData>>>>()
+    val entriesOfTrip : LiveData<MutableList<Pair<EntryData,List<ImageData>>>>
+        get() = _entriesOfTrip
+
+
 
 
 
@@ -99,15 +108,15 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
      */
     fun initImageListFromDatabase()
     {
-        viewModelScope.launch{
-            _imageList.value = mRepository.getAllImages() as MutableList<ImageData>
+        viewModelScope.launch(Dispatchers.IO){
+            _imageList.postValue(mRepository.getAllImages() as MutableList<ImageData>)
         }
     }
 
     fun initSearchResultsFromDatabase()
     {
-        viewModelScope.launch{
-            _searchResults.value = mRepository.getAllImages() as MutableList<ImageData>
+        viewModelScope.launch(Dispatchers.IO){
+            _searchResults.postValue(mRepository.getAllImages() as MutableList<ImageData>)
         }
     }
 
@@ -156,25 +165,6 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
             _tripsSearchResults.postValue(returnList as MutableList<Pair<TripData,ImageData?>>)
         }
     }
-
-    //TO MAYBE ADD: (There's likely just not enough time)
-    /*
-    fun tripSearch(query: String?){
-        viewModelScope.launch{
-            if(query.isNullOrBlank())
-            {
-                _tripsSearchResults.value = mRepository.getAllTrips() as MutableList<TripData>
-            }else{
-                val sanitizedQuery = sanitizeSearchQuery(query)
-                mRepository.search(sanitizedQuery).let {
-                    _tripsSearchResults.value = it as MutableList<TripData>
-                }
-            }
-        }
-    }
-    */
-
-
 
     /**
      * Given a query, it updates the _searchResults livedata
@@ -258,11 +248,12 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
              initTripSearchResultsFromDatabase()
          }
     }
+
+    //NOTE: TODO I will refactor all of these and make the function naming convention consistent.
+    // I keep using Camel case and underscores in the same API, it's probably frustrating to use
     /**
      * Delete a trip from the database
      */
-    //NOTE: TODO I will refactor all of these and make the function naming convention consistent.
-    // I keep using Camel case and underscores in the same API, it's probably frustrating to use
     fun delete_trip(tripData: TripData)
     {
         viewModelScope.launch()
@@ -302,16 +293,38 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
 
     //-----------------------Entry related functionality------------
 
-    /*TODO If there is time, implement an observable that can be updated given a trip as an argument. And it just shows all the entry,List<Image>
-    Pairs for that trip. This would be a way to avoid blocking the UI thread with the get_entry_image calls
-    */
+
     /**
      * Updates the observable containing pairs of entry,image
      */
-    //NOT IMPLEMENTED
+    fun updateLiveDataEntriesOfTrip(tripData : TripData)
+    {
+        viewModelScope.launch(Dispatchers.IO)
+        {
+            val updatedList = ArrayList<Pair<EntryData,List<ImageData>>>()
+            //1. get all the entries in one place
+            val allEntries = mRepository.getEntriesOfTrip(tripData)
+            //2. Iterate through allEntries, and make a pair whenever you find a list, make it null when you don't, you know the drill
+            //Think of what happens when there's no entry in the list
+            for (entry in allEntries!!)
+            {
+                val allImages = mRepository.getImagesOfEntry(entry)
+                //Now I have all the images for an entry. It could be an empty list
+                //I think I just add that?
+                updatedList.add(Pair(entry,allImages!!))
+            }
+
+            //Update this based on the tripData
+            _entriesOfTrip.postValue(updatedList)
+        }
+    }
+
+
+
+
 
     /**
-     * Return the images associated with an entry if they exists. Otherwise an empty list
+     * Return the images associated with an entry if they exist. Otherwise return an empty list
      * Does block the main thread.
      */
     fun get_entry_images(entryData: EntryData) : List<ImageData>
