@@ -44,12 +44,38 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
     private lateinit var locationRequest: LocationRequest
     private lateinit var locationClient: FusedLocationProviderClient
     private lateinit var ctx: Context
-    lateinit var locationCallback: LocationCallback
-    lateinit var mMap: GoogleMap
+    private var locationCallback: LocationCallback = object : LocationCallback() {
+        override fun onLocationResult(locationResult: LocationResult) {
+            super.onLocationResult(locationResult)
+            mCurrentLocation = locationResult.lastLocation
+            mLastUpdateTime = DateFormat.getTimeInstance().format(Date())
+            Log.i("MAP", "new location " + mCurrentLocation.toString())
+            mMap.addMarker(
+                MarkerOptions().position(
+                    LatLng(
+                        mCurrentLocation!!.latitude,
+                        mCurrentLocation!!.longitude
+                    )
+                )
+                    .title(mLastUpdateTime)
+            )
+            mMap.moveCamera(
+                CameraUpdateFactory.newLatLngZoom(
+                    LatLng(
+                        mCurrentLocation!!.latitude,
+                        mCurrentLocation!!.longitude
+                    ), 15f
+                )
+            )
+        }
+    }
+    //lateinit var mMap: GoogleMap
 
     private var mCurrentLocation: Location? = null
     private var mLastUpdateTime: String? = null
     private var mLocationPendingIntent: PendingIntent? = null
+
+
 
     companion object {
         private const val REQUEST_ACCESS_COARSE_LOCATION = 1121 // Used in section 1.1.2 of brief
@@ -59,6 +85,7 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
         private var activity: FragmentActivity? = null
         private lateinit var mMap: GoogleMap
         //private const val ACCESS_FINE_LOCATION = 123
+
 
         fun getActivity(): FragmentActivity? {
             return activity
@@ -73,6 +100,8 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
+
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -86,31 +115,7 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
         var viewModel = ViewModelProvider(this)[TravelViewModel::class.java]
         locationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
 
-        locationCallback = object : LocationCallback() {
-            override fun onLocationResult(locationResult: LocationResult) {
-                super.onLocationResult(locationResult)
-                mCurrentLocation = locationResult.lastLocation
-                mLastUpdateTime = DateFormat.getTimeInstance().format(Date())
-                 Log.i("MAP", "new location " + mCurrentLocation.toString())
-                mMap.addMarker(
-                    MarkerOptions().position(
-                        LatLng(
-                            mCurrentLocation!!.latitude,
-                            mCurrentLocation!!.longitude
-                        )
-                    )
-                        .title(mLastUpdateTime)
-                )
-                mMap.moveCamera(
-                    CameraUpdateFactory.newLatLngZoom(
-                        LatLng(
-                            mCurrentLocation!!.latitude,
-                            mCurrentLocation!!.longitude
-                        ), 15f
-                    )
-                )
-            }
-        }
+
 
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
@@ -121,27 +126,34 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
 
     override fun onMapReady(googleMap: GoogleMap) {
         println("Created Map in fragment")
-        mMap = googleMap;
+        mMap = googleMap
 
         if (ActivityCompat.checkSelfPermission(
                 requireActivity(),
                 Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+            ) != PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(
                 requireActivity(),
                 Manifest.permission.ACCESS_COARSE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED
         ) {
             println("Asking for location permissions...")
+//            ActivityCompat.requestPermissions(
+//                requireActivity(),
+//                arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION),
+//                REQUEST_ACCESS_COARSE_LOCATION
+//            )
+//            ActivityCompat.requestPermissions(
+//                requireActivity(),
+//                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+//                REQUEST_ACCESS_FINE_LOCATION
+//            )
             ActivityCompat.requestPermissions(
                 requireActivity(),
-                arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION),
-                REQUEST_ACCESS_COARSE_LOCATION
-            )
-            ActivityCompat.requestPermissions(
-                requireActivity(),
-                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION),
                 REQUEST_ACCESS_FINE_LOCATION
             )
+        } else {
+            println("Already have permissions!")
         }
         if (ActivityCompat.checkSelfPermission(
                 requireActivity(),
@@ -153,34 +165,32 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
         ) {
             this.findNavController().popBackStack()
         } else {
-            println("Getting location...")
-            var locationCts = CancellationTokenSource()
-            var location = locationClient.getCurrentLocation(100, locationCts.token) // High accuracy
-            var position = arrayOf(location.result.latitude, location.result.longitude)
-            println("Got location")
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(position[0], position[1]), 15F))
-            println("Moved camera")
+//            println("Getting location...")
+//            var locationCts = CancellationTokenSource()
+//            var location = locationClient.getCurrentLocation(100, locationCts.token) // High accuracy
+//            var position = arrayOf(location.result.latitude, location.result.longitude)
+//            println("Got location")
+//            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(position[0], position[1]), 15F))
+//            println("Moved camera")
         }
     }
 
-    fun createLocationRequest() {
-        val locationRequest = LocationRequest.create()?.apply {
+    private fun createLocationRequest() {
+        locationRequest = LocationRequest.create()?.apply {
             interval = 20000
             fastestInterval = 10000
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         }
     }
 
-    fun getMap(): GoogleMap {
-        return mMap
-    }
-
     override fun onResume() {
+        Log.i("TravellingFragment", "onResume")
         super.onResume()
-        locationRequest = LocationRequest.create()
-        locationRequest.interval = 10000
-        locationRequest.fastestInterval = 5000
-        locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+        createLocationRequest()
+//        locationRequest = LocationRequest.create()
+//        locationRequest.interval = 10000
+//        locationRequest.fastestInterval = 5000
+//        locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         locationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
         startLocationUpdates()
     }

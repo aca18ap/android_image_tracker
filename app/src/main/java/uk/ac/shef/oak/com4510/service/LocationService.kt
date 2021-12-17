@@ -47,11 +47,14 @@ class LocationService : Service {
     constructor() : super() {}
 
     override fun onCreate() {
+        Log.i("LocationService", "onCreate")
         super.onCreate()
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        Log.i("LocationService", "onStartCommand")
         if (LocationResult.hasResult(intent!!)) {
+            Log.i("LocationResult", "Has result")
             val locResults = LocationResult.extractResult(intent)
             for (location in locResults.locations) {
                 if (location == null) continue
@@ -106,5 +109,8 @@ class LocationService : Service {
         Log.e("Service", "end")
     }
 
+    fun getLastLocation(): Location? {
+        return mCurrentLocation
+    }
 
 }
