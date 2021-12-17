@@ -136,6 +136,8 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
         private var mCurrentPressure: Float? = null
         private var mCurrentTemperature: Float? = null
         private var mLastTimestamp: Long = 0
+        private var tripID: Int = -1
+        private var entryID: Int = -1
 
 
         fun getActivity(): FragmentActivity? {
@@ -160,12 +162,22 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
             mCurrentTemperature = temperature
             mLastTimestamp = time
         }
+
+        fun getTripId(): Int {
+            return tripID
+        }
+
+        fun setEntryID(id: Int) {
+            entryID = id
+        }
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
         ): View? {
+        tripID = args.tripID
+        Log.i("Current Trip ID", "$tripID")
 
         setActivity(requireActivity())
         setContext(requireActivity())
@@ -286,7 +298,7 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
             object : DefaultCallback(){
                 override fun onMediaFilesPicked(imageFiles: Array<MediaFile>, source: MediaSource) {
                     //This is where you get control after choosing a bunch of images
-                    Log.d("InsideDanFragment","Loc: $mCurrentLocation")
+                    Log.d("InsideDanFragment","TripID: $tripID, EntryID: $entryID, Loc: $mCurrentLocation")
                     //Get hold of an entry
 
                     //val entryData = viewModel.create_insert_entry_returnEntry(TripData, temperature:Float?, pressure:Float?, lat:Double, lon:Double, timestamp:Long)
