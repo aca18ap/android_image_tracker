@@ -2,12 +2,10 @@ package uk.ac.shef.oak.com4510.view
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
@@ -73,7 +71,7 @@ class GalleryFragment : Fragment() {
         easyImage.handleActivityResult(requestCode, resultCode, data, requireActivity(),
             object : DefaultCallback(){
             override fun onMediaFilesPicked(imageFiles: Array<MediaFile>, source: MediaSource) {
-                viewModel!!.insertArrayMediaFiles(imageFiles)
+                viewModel!!.debug_insertArrayMediaFiles(imageFiles)
             }
         })
     }

@@ -72,10 +72,30 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
     /**
      * Handles the photos returned by EasyImage. Inserts an array of MediaFiles into the database and also changes the imageList livedata
      */
-    fun insertArrayMediaFiles(mediaFileArray: Array<MediaFile>) {
+    fun debug_insertArrayMediaFiles(mediaFileArray: Array<MediaFile>) {
         var imageDataList = mediaFileArray.convertToImageDataWithoutId()
         insertAndUpdateImageDataList(imageDataList)
         _imageList.append(imageDataList)
+    }
+    /**
+     * Handles the photos returned by EasyImage. Inserts an array of MediaFiles into the database and also changes the imageList livedata
+     * Also associates each image with an entry
+     */
+    fun insertArrayMediaFilesWithEntry(mediaFileArray: Array<MediaFile>, entryData : EntryData) {
+        var imageDataList = mediaFileArray.convertToImageDataWithoutId()
+        insertAndUpdateImageDataListWithEntry(imageDataList,entryData)
+        _imageList.append(imageDataList)
+    }
+
+    /**
+     * Given an ImageData and an Entry, associates them in the database
+     */
+    fun associateImageDataWithEntry(imageData: ImageData,entryData: EntryData)
+    {
+        imageData.entry_id = entryData.id
+        viewModelScope.launch(Dispatchers.IO){
+            mRepository.updateImage(imageData)
+        }
     }
 
     /**
@@ -188,11 +208,23 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
     //Maybe add this as a function of the Repository?
     /**
      * Internal function that inserts a list of ImageData objects into the database. Updates the list with their generated id's
+     * Also associates the imageData with an entry
      */
     private fun insertAndUpdateImageDataList(imageDataList : List<ImageData>)
     {
         for (imageData in imageDataList)
         {
+            var id = insertImageReturnId(imageData)
+            imageData.id = id
+        }
+        //Update the observable live data
+        initImagesList()
+    }
+    private fun insertAndUpdateImageDataListWithEntry(imageDataList : List<ImageData>, entryData: EntryData)
+    {
+        for (imageData in imageDataList)
+        {
+            imageData.entry_id = entryData.id
             var id = insertImageReturnId(imageData)
             imageData.id = id
         }
@@ -346,7 +378,21 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
             entry_timestamp = timestamp, entry_temperature = temperature,
             entry_pressure = pressure, trip_id = tripData.id)
 
-            insertEntry(createdEntry)
+        insertEntry(createdEntry)
+    }
+    /**
+     * Given a tripData object and measurements, create and insert an Entry into the database. Returns the inserted Entry
+     * (including the generated it from inserting)
+     */
+    fun create_insert_entry_returnEntry(tripData: TripData, temperature:Float, pressure:Float, lat:Float, lon:Float, timestamp:Float) : EntryData
+    {
+        val createdEntry = EntryData(lat = lat,lon = lon,
+            entry_timestamp = timestamp, entry_temperature = temperature,
+            entry_pressure = pressure, trip_id = tripData.id)
+
+        val id = insertEntryReturnId(createdEntry)
+        createdEntry.id = id!!
+        return createdEntry
     }
 
     /**
