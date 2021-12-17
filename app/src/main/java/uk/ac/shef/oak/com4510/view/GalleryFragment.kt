@@ -24,7 +24,6 @@ class GalleryFragment : Fragment() {
     private lateinit var binding : FragmentGalleryBinding
     private var viewModel: TravelViewModel? = null
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -63,7 +62,7 @@ class GalleryFragment : Fragment() {
             ImagesAdapter.items = images as MutableList<ImageData>
             mAdapter.notifyDataSetChanged()
         })
-        viewModel!!.initAll() // Populate the imageList observable with all the images in the database
+        viewModel!!.initImagesList() // Populate the imageList observable with all the images in the database
 
         return binding.root
     }

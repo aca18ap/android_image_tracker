@@ -38,6 +38,17 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
     val searchResults : LiveData<MutableList<ImageData>>
         get() = _searchResults
 
+
+    /**
+     * Observable list of trips that can be used with searching
+     */
+    private val _tripsSearchResults = MutableLiveData<MutableList<TripData>>()
+    val tripsSearchResults : LiveData<MutableList<TripData>>
+        get() = _tripsSearchResults
+
+
+
+
     // To do: Find a way not to block the ui thread here. Worst case scenario provide a function that inserts multiple ImageData's at a time each on its own coroutine
     /**
      * Inserts an imageData into the database and returns the id it was associated with. Warning: This does block the UI thread.
@@ -75,7 +86,13 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
         }
     }
 
-    fun initAll()
+    fun initTripsList()
+    {
+        initTripSearchResultsFromDatabase()
+    }
+
+
+    fun initImagesList()
     {
         initImageListFromDatabase()
         initSearchResultsFromDatabase()
@@ -96,6 +113,33 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
             _searchResults.value = mRepository.getAllImages() as MutableList<ImageData>
         }
     }
+
+
+
+    fun initTripSearchResultsFromDatabase()
+    {
+        viewModelScope.launch{
+            _tripsSearchResults.value = mRepository.getAllTrips() as MutableList<TripData>
+        }
+    }
+
+    /*
+    fun tripSearch(query: String?){
+        viewModelScope.launch{
+            if(query.isNullOrBlank())
+            {
+                _tripsSearchResults.value = mRepository.getAllTrips() as MutableList<TripData>
+            }else{
+                val sanitizedQuery = sanitizeSearchQuery(query)
+                mRepository.search(sanitizedQuery).let {
+                    _tripsSearchResults.value = it as MutableList<TripData>
+                }
+            }
+        }
+    }
+    */
+
+
 
     /**
      * Given a query, it updates the _searchResults livedata
@@ -128,7 +172,7 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
             imageData.id = id
         }
         //Update the observable live data
-        initAll()
+        initImagesList()
     }
 
     /**
