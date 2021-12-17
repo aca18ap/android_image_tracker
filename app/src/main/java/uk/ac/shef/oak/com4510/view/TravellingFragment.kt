@@ -54,7 +54,7 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
     private lateinit var ctx: Context
     private lateinit var binding : FragmentTravellingBinding
     private var service : LocationService? = null
-    private var viewModel: TravelViewModel? = null
+//    private var viewModel: TravelViewModel? = null
     private var locationCallback: LocationCallback = object : LocationCallback() {
         override fun onLocationResult(locationResult: LocationResult) {
             super.onLocationResult(locationResult)
@@ -184,7 +184,7 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
 
         binding = DataBindingUtil.inflate(inflater,
             R.layout.fragment_travelling, container, false)
-        viewModel = ViewModelProvider(this)[TravelViewModel::class.java]
+        viewModel = ViewModelProvider(requireActivity())[TravelViewModel::class.java]
         locationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
 
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
@@ -300,7 +300,7 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
                     //This is where you get control after choosing a bunch of images
                     Log.d("InsideDanFragment","TripID: $tripID, EntryID: $entryID, Loc: $mCurrentLocation")
                     //Get hold of an entry
-
+                    viewModel!!.insertArrayMediaFilesWithLastEntryById(imageFiles)
                     //val entryData = viewModel.create_insert_entry_returnEntry(TripData, temperature:Float?, pressure:Float?, lat:Double, lon:Double, timestamp:Long)
 
                     //viewModel!!.insertArrayMediaFilesWithEntry(imageFiles,entryData)

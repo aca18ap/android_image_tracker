@@ -110,6 +110,8 @@ class LocationService : Service {
                                     getLastLocation()!!.longitude,
                                     System.currentTimeMillis()
                                 ).id
+                                Log.i("ServiceEntryID", "ID: $currentEntryID")
+                                TravellingFragment.setEntryID(currentEntryID)
                                 TravellingFragment.getMap().addMarker(
                                     MarkerOptions().position(newPoint)
                                         .title("$mLastUpdateTime")
