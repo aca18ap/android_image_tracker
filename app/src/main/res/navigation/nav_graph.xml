@@ -83,6 +83,10 @@
         android:name="uk.ac.shef.oak.com4510.view.TravellingFragment"
         android:label="TravellingFragment"
         tools:layout="@layout/fragment_travelling"/>
+        <argument
+            android:name="tripID"
+            app:argType="integer"
+            android:defaultValue="0"/>
     <fragment
         android:id="@+id/viewPastTripsFragment"
         android:name="uk.ac.shef.oak.com4510.view.ViewPastTripsFragment"
