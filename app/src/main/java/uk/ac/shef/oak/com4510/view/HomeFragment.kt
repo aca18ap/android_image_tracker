@@ -26,22 +26,25 @@ class HomeFragment : Fragment() {
         val binding = DataBindingUtil.inflate<FragmentHomeBinding>(inflater,
             R.layout.fragment_home, container, false)
 
+        //Navigating to gallery
         binding.goToImagesButton.setOnClickListener{view : View ->
             view.findNavController().navigate(R.id.action_homeFragment_to_galleryFragment)
         }
 
+        //Navigating to new trip
         binding.newTripButton.setOnClickListener{view : View ->
             view.findNavController().navigate(R.id.action_homeFragment_to_newTripFragment)
         }
-
+        //Navigating to pastTrips
         binding.viewTripsButton.setOnClickListener{view : View ->
             view.findNavController().navigate(R.id.action_homeFragment_to_viewPastTripsFragment)
         }
 
+        /*
         binding.debugButton.setOnClickListener{view : View ->
             view.findNavController().navigate(R.id.action_homeFragment_to_debugFragment)
         }
-
+        */
         return binding.root
     }
 

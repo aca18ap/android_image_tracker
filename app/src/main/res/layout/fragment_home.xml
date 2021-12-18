@@ -54,7 +54,7 @@
             android:text="View images' gallery"
             app:layout_constraintTop_toBottomOf="@id/trip_buttons" />
 
-        <Button
+        <!--Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"
@@ -62,7 +62,7 @@
                 android:id="@+id/debug_button"
                 android:layout_margin="10dp"
                 android:text="Debug me"
-                app:layout_constraintTop_toBottomOf="@id/go_to_images_button" />
+                app:layout_constraintTop_toBottomOf="@id/go_to_images_button" /-->
 
 
 

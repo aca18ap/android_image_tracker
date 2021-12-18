@@ -37,6 +37,8 @@ class EditImageFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate<FragmentEditImageBinding>(inflater,
             R.layout.fragment_edit_image, container, false )
+
+        //Assigning view texts
         if (args.position != -1){
             ImagesAdapter.items[args.position].let{
                 binding.editImage.setImageBitmap(it.thumbnail)
@@ -50,6 +52,10 @@ class EditImageFragment : Fragment() {
         return binding.root
     }
 
+
+    /**
+     * Connects button listeners to the three buttons in the view
+     */
     private fun makeButtonListeners(position: Int) {
         val cancelButton: Button = binding.cancelButton
         cancelButton.setOnClickListener {

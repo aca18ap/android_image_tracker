@@ -1,5 +1,6 @@
 package uk.ac.shef.oak.com4510.view
 
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -58,7 +59,7 @@ class ShowImageFragment : Fragment() {
 
             val imageData = ImagesAdapter.items[position]
 
-            imageView.setImageBitmap(imageData.thumbnail!!)
+            imageView.setImageBitmap(BitmapFactory.decodeFile(imageData.imageUri))
             titleToolbar.title = imageData.imageTitle
             descriptionTextView.text = imageData.imageDescription
 
@@ -82,6 +83,9 @@ class ShowImageFragment : Fragment() {
         }
     }
 
+    /**
+     * Toggle the description views
+     */
     private fun toggleDescription(elem : View, viewsList: List<View>){
         for (view in viewsList){
             if (view != elem) {

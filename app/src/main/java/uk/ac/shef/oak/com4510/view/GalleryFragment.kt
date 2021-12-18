@@ -32,21 +32,22 @@ class GalleryFragment : Fragment() {
         binding = DataBindingUtil.inflate(inflater,
             R.layout.fragment_gallery, container, false)
 
+
         viewModel = ViewModelProvider(this)[TravelViewModel::class.java]
 
+        //Binding recycler view to adapter
         val mRecyclerView = binding.contentCamera.gridRecyclerView
         val numberOfColumns = 4
         mRecyclerView.layoutManager = GridLayoutManager(activity, numberOfColumns)
         val mAdapter = ImagesAdapter(ArrayList<ImageData>()) as RecyclerView.Adapter<RecyclerView.ViewHolder>
         mRecyclerView.adapter = mAdapter
 
-        // required by Android 6.0 +
-        initEasyImage()
 
         binding.fabGallery.setOnClickListener{
             easyImage.openChooser(this)
         }
 
+        //Search bar listeners
         binding.searchBarGallery.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(filter: String?): Boolean {
                 return false
@@ -58,16 +59,17 @@ class GalleryFragment : Fragment() {
             }
         })
 
+        //Observing searcResults object in the view model
         viewModel!!.searchResults.observe(this, Observer<List<ImageData>>{ images ->
             ImagesAdapter.items = images as MutableList<ImageData>
             mAdapter.notifyDataSetChanged()
         })
         viewModel!!.initImagesList() // Populate the imageList observable with all the images in the database
 
-
         return binding.root
     }
 
+    //Called when an image is picked
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?){
         easyImage.handleActivityResult(requestCode, resultCode, data, requireActivity(),
             object : DefaultCallback(){

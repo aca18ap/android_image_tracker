@@ -4,11 +4,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
-
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/viewTripDetailsConstraint">
+        android:fitsSystemWindows="true"
+        android:orientation="vertical">
 
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/trip_appBarLayout"
@@ -33,26 +33,77 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/trip_appBarLayout"
-            app:layout_constraintBottom_toTopOf="@id/content_camera_trip"
-            android:id="@+id/trip_info">
+            android:orientation="horizontal">
 
-            <TextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:id="@+id/trip_info"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/trip_title"
+                    android:text="Trip Title">
+
+                </TextView>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/trip_location"
+                    android:text="Location">
+
+                </TextView>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:id="@+id/trip_date"
+                    android:layout_height="wrap_content"
+                    android:text="Date and Time">
+                </TextView>
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:text="Longitude">
+                android:id="@+id/trip_thumbnail"
+                android:src="@drawable/missing">
 
-            </TextView>
+            </ImageView>
         </LinearLayout>
 
-        <include
-            android:id="@+id/content_camera_trip"
-            layout="@layout/content_camera"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/trip_info"
-            tools:layout_editor_absoluteX="0dp" />
+        <com.google.android.material.tabs.TabLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/tablayout">
+
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/images_tab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Images">
 
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.google.android.material.tabs.TabItem>
+
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/entries_tab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Entries" />
+
+        </com.google.android.material.tabs.TabLayout>
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/viewpager">
+
+        </androidx.viewpager2.widget.ViewPager2>
+
+    </LinearLayout>
 
 </layout>

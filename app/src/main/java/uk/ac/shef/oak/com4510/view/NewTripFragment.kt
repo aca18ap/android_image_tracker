@@ -36,6 +36,7 @@ class NewTripFragment : Fragment() {
         val tripID = viewModel.create_insert_return_tripID(binding.titleInput.text.toString(), "placeholderCountry", System.currentTimeMillis().toFloat())
 
         binding.startTripButton.setOnClickListener{view : View ->
+
             val action : NavDirections = NewTripFragmentDirections.actionNewTripFragmentToTravellingFragment(tripID)
             view.findNavController().navigate(action)
         }

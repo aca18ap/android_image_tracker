@@ -195,7 +195,6 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
         }
     }
 
-
     /**
      * Links an ImageData to an EntryData. This simply means that the imageData's entry_id
      * is equalized to the id of the EntryData argument
@@ -240,7 +239,7 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
     {
         initSearchResultsFromDatabase()
     }
-
+    
 
     fun initSearchResultsFromDatabase()
     {

@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-
+    // Binding activity with layout holding the navgraph
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
