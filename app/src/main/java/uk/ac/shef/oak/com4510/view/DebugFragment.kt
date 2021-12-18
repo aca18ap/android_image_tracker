@@ -67,6 +67,7 @@ class DebugFragment : Fragment() {
                 model.insertEntryReturnId(EntryData(8,650.0,650.0,1639698825,25f,35f,3))
                 model.insertEntryReturnId(EntryData(9,700.0,700.0,1639698825,23f,43f,3))
 
+
             }
             else
             {

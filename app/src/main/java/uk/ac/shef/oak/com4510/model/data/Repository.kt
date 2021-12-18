@@ -132,6 +132,11 @@ class Repository(application: Application) {
 
 
     // ---------TripData related --------------------------------------
+
+    /**
+     *
+     */
+
     /**
      * Return all trips in the database
      * @return All trips in the database

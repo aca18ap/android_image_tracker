@@ -29,6 +29,8 @@ interface EntryDataDao {
             "    )")
     suspend fun getLastEntryById() : EntryData
 
+
+
     // Specify the conflict strategy as REPLACE,
     // when the trying to add an existing Item
     // into the database.

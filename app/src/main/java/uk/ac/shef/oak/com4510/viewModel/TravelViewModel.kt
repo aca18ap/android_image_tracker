@@ -406,6 +406,22 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
     //----------------------- Trip related functionality----------------------------
 
     /**
+     * If a trip has entries associated with it return true otherwise false.
+     * Warning: Blocks the ui thread. Use sparingly
+     *
+     * @param tripDataID Id of the trip
+     * @return Boolean that represents whether the trip corresponding to [tripDataID] has any entries associated with it
+     */
+    fun tripHasEntries(tripDataID: Int) : Boolean = runBlocking(Dispatchers.IO){
+        var triphasentries = true
+
+        if (mRepository.getEntriesOfTrip(tripDataID)?.isEmpty() == true)
+            triphasentries = false
+
+        triphasentries
+    }
+
+    /**
      * Insert a trip and return its generated id
      * Warning: This does block the UI thread. Use sparingly
      *

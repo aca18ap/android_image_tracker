@@ -27,6 +27,7 @@ import com.google.android.gms.location.*
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.material.snackbar.Snackbar
 import pl.aprilapps.easyphotopicker.*
 import uk.ac.shef.oak.com4510.R
 import uk.ac.shef.oak.com4510.databinding.FragmentTravellingBinding
@@ -334,7 +335,10 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
             object : DefaultCallback(){
                 override fun onMediaFilesPicked(imageFiles: Array<MediaFile>, source: MediaSource) {
                     Log.d("InsideDanFragment","TripID: $tripID, EntryID: $entryID, Loc: $mCurrentLocation")
-                    viewModel.insertArrayMediaFilesWithLastEntryById(imageFiles)
+                    if (viewModel.tripHasEntries(tripID))
+                        viewModel.insertArrayMediaFilesWithLastEntryById(imageFiles)
+                    else
+                        Snackbar.make(binding.root, "WOAH DUDE! Wait a second, the trip needs to have at least one entry before you can add images to it.", Snackbar.LENGTH_LONG).show()
                 }
             })
     }

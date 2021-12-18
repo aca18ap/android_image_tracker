@@ -2,6 +2,7 @@ package uk.ac.shef.oak.com4510.view
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.widget.SearchView
 import androidx.fragment.app.Fragment
@@ -59,7 +60,7 @@ class GalleryFragment : Fragment() {
             }
         })
 
-        //Observing searcResults object in the view model
+        //Observing searchResults object in the view model
         viewModel!!.searchResults.observe(this, Observer<List<ImageData>>{ images ->
             ImagesAdapter.items = images as MutableList<ImageData>
             mAdapter.notifyDataSetChanged()
