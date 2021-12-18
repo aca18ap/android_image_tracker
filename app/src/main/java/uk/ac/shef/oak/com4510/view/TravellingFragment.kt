@@ -183,7 +183,11 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
         initEasyImage()
 
         binding.fabGallery.setOnClickListener{
-            easyImage.openChooser(this)
+            //Only open the gallery/camera if the trip has an entry associated with it
+            if (viewModel.tripHasEntries(tripID))
+                easyImage.openChooser(this)
+            else
+                Snackbar.make(binding.root, "WOAH DUDE! Wait a second, the trip needs to have at least one entry before you can add images to it.", Snackbar.LENGTH_LONG).show()
         }
 
         binding.tripEndBtn.setOnClickListener{
@@ -335,10 +339,7 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
             object : DefaultCallback(){
                 override fun onMediaFilesPicked(imageFiles: Array<MediaFile>, source: MediaSource) {
                     Log.d("InsideDanFragment","TripID: $tripID, EntryID: $entryID, Loc: $mCurrentLocation")
-                    if (viewModel.tripHasEntries(tripID))
                         viewModel.insertArrayMediaFilesWithLastEntryById(imageFiles)
-                    else
-                        Snackbar.make(binding.root, "WOAH DUDE! Wait a second, the trip needs to have at least one entry before you can add images to it.", Snackbar.LENGTH_LONG).show()
                 }
             })
     }
