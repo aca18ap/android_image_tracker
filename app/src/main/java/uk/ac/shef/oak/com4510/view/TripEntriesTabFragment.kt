@@ -41,7 +41,7 @@ class TripEntriesTabFragment(tripID: Int) : Fragment() {
             EntriesAdapter.items = pair
             mAdapter.notifyDataSetChanged()
         })
-        viewModel!!.updateLiveDataEntriesOfTrip(tripID)
+        viewModel!!.updateEntriesOfTrip(tripID)
 
         return binding.root
 

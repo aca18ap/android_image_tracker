@@ -41,6 +41,9 @@ interface ImageDataDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(singleImageData: ImageData): Long
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertList(listImageData: List<ImageData>) : List<Long>
+
     @Update
     suspend fun update(imageData: ImageData)
 

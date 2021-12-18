@@ -15,243 +15,78 @@ import uk.ac.shef.oak.com4510.model.data.Repository
 import uk.ac.shef.oak.com4510.model.data.database.EntryData
 import uk.ac.shef.oak.com4510.model.data.database.ImageData
 import uk.ac.shef.oak.com4510.model.data.database.TripData
-import uk.ac.shef.oak.com4510.util.append
 import uk.ac.shef.oak.com4510.util.convertToImageDataWithoutId
 import uk.ac.shef.oak.com4510.util.sanitizeSearchQuery
 
 class TravelViewModel (application: Application) : AndroidViewModel(application) {
     private var mRepository: Repository = Repository(application)
+    init {
+        //Initializes the searchResults liveData to initially contain all images from the database
+        initSearchResults()
+        //Initializes the allTrips observable to contain all the trips in the database
+        updateAllTripsObservable()
+    }
 
     //Separate constructor to allow passing a different repository. For testing
     constructor(repository: Repository, app : Application) : this(app) {
         mRepository = repository
     }
 
-    /**
-     * Observable list of images. Contains all images a user has taken or added to the Travel app represented as ImageData.
-     */
-    private val _imageList: MutableLiveData<MutableList<ImageData>> = MutableLiveData<MutableList<ImageData>>()
 
-    /**
-     * Observable list of images to be used with searching. The search function given a string updates this livedata with
-     * a list of all ImageData that contains one of the keywords of the string in either the Title or its Description
-     * */
     private val _searchResults  = MutableLiveData<MutableList<ImageData>>()
+    /**
+     * Observable list of images that contains the result of a search performed on a given query.
+     *
+     * Functions that update this observable:
+     * @see search
+     */
     val searchResults : LiveData<MutableList<ImageData>>
         get() = _searchResults
 
-
     /**
-     * Observable list of pairs of (TripData,ImageData?). The ImageData represents one of the images on the given trip if there is any, otherwise null
+     * Given a query, it updates the _searchResults livedata with the all the
+     * images whose description or title match the query.
+     * @param query Query string
      */
-    private val _tripsSearchResults = MutableLiveData<MutableList<Pair<TripData,ImageData?>>>()
-    val tripsSearchResults : LiveData<MutableList<Pair<TripData,ImageData?>>>
-        get() = _tripsSearchResults
-
-    /**
-     * Observable list of (EntryData,List<ImageData>) corresponding to a particular trip. The List<ImageData> represents the list of images associated with each entry,
-     * if. If there are none, it is empty. The
-     */
-    private val _entriesOfTrip = MutableLiveData<MutableList<Pair<EntryData,List<ImageData>>>>()
-    val entriesOfTrip : LiveData<MutableList<Pair<EntryData,List<ImageData>>>>
-        get() = _entriesOfTrip
-
-    /**
-     * Updates the entriesOfTrip observable with all (DataEntry,List<ImageData>) for a given a tripData input.
-     */
-    fun updateLiveDataEntriesOfTrip(tripDataID : Int)
-    {
-        viewModelScope.launch(Dispatchers.IO)
-        {
-            val updatedList = ArrayList<Pair<EntryData,List<ImageData>>>()
-            //1. get all the entries in one place
-            val allEntries = mRepository.getEntriesOfTrip(tripDataID)
-            //2. Iterate through allEntries, and make a pair whenever you find a list, make it null when you don't, you know the drill
-            //Think of what happens when there's no entry in the list
-            for (entry in allEntries!!)
+    fun search(query: String?) {
+        viewModelScope.launch {
+            if (query.isNullOrBlank())
             {
-                val allImages = mRepository.getImagesOfEntry(entry)
-                //Now I have all the images for an entry. It could be an empty list
-                //I think I just add that?
-                updatedList.add(Pair(entry,allImages!!))
-            }
-
-            //Update this based on the tripData
-            _entriesOfTrip.postValue(updatedList)
-        }
-    }
-
-    /**
-     * Observable list of images for a particular entry. Holds images for a given entry
-     */
-    private val _imagesOfEntry = MutableLiveData<MutableList<ImageData>>()
-    val imagesOfEntry : LiveData<MutableList<ImageData>>
-        get() = _imagesOfEntry
-    /**
-     * Given an entry, it updates the _imagesOfEntry observable LiveData to contain all images of a given entry
-     */
-    fun updateImagesOfEntry(entryData: EntryData)
-    {
-        viewModelScope.launch(Dispatchers.IO)
-        {
-            //Get all images for a given entry
-            val allImages = mRepository.getImagesOfEntry(entryData)
-            _imagesOfEntry.postValue(allImages as MutableList<ImageData>?)
-        }
-    }
-
-
-    /**
-     * Observable liveData containing all images of a given trip
-     */
-    private val _imagesOfTrip = MutableLiveData<MutableList<ImageData>>()
-    val imagesOfTrip : LiveData<MutableList<ImageData>>
-        get() = _imagesOfTrip
-
-    /**
-     * Updates the _imagesOfTrip observable liveData to contain all images of a given trip
-     */
-    fun updateImagesOfTrip(tripDataID: Int)
-    {
-        viewModelScope.launch(Dispatchers.IO)
-        {
-
-            val allImages = ArrayList<ImageData>()
-            //We have a trip, we can get to all the entries pointing to that trip
-
-            val allEntries = mRepository.getEntriesOfTrip(tripDataID)
-
-
-            //We have entries, we can get to all the images pointing to those entries
-            //If the trip has any entries, collect images in allImages
-            if (allEntries!!.isNotEmpty()) {
-                for (entry in allEntries) {
-                    //For each entry we can get its individual images
-                    val imagesOfEntry = mRepository.getImagesOfEntry(entry)
-                    allImages.addAll(imagesOfEntry!!)
+                _searchResults.value = mRepository.getAllImages() as MutableList<ImageData>
+            } else
+            {
+                val sanitizedQuery = sanitizeSearchQuery(query)
+                mRepository.search(sanitizedQuery).let {
+                    _searchResults.value = it as MutableList<ImageData>
                 }
             }
-            //Otherwise update _imageOfTrip with an empty list
-            _imagesOfTrip.postValue(allImages)
-        }
-
-    }
-
-
-
-    // To do: Find a way not to block the ui thread here. Worst case scenario provide a function that inserts multiple ImageData's at a time each on its own coroutine
-    /**
-     * Inserts an imageData into the database and returns the id it was associated with. Warning: This does block the UI thread.
-     * This does not update the imageList livedata object
-     */
-    fun insertImageReturnId(imageData: ImageData): Int = runBlocking{
-        val deferredId = async { mRepository.insertImageReturnId(imageData) }
-        deferredId.await()
-    }
-
-    /**
-     * Handles the photos returned by EasyImage. Inserts an array of MediaFiles into the database and also changes the imageList livedata
-     */
-    fun debug_insertArrayMediaFiles(mediaFileArray: Array<MediaFile>) {
-        val imageDataList = mediaFileArray.convertToImageDataWithoutId()
-        insertAndUpdateImageDataList(imageDataList)
-    }
-
-    /**
-     * Meant to be used with easyImage. Given an array of Mediafile images returned by easyImage and an EntryData object, it converts the MediaFile
-     * into ImageData, inserts them into the database and links the given entry to the images.
-     *
-     * @param  mediaFileArray  Array of mediafiles returned by the easyImage library when a user selects images from the gallery and submits them
-     * , or takes a photo and submits it.
-     * @param  entryData Entry object to link the array of image to
-     */
-    fun insertArrayMediaFilesWithEntry(mediaFileArray: Array<MediaFile>, entryData : EntryData) {
-        val imageDataList = mediaFileArray.convertToImageDataWithoutId()
-        insertAndUpdateImageDataListWithEntry(imageDataList,entryData)
-    }
-
-    /**
-     * Given an ImageData and ImageData fields, updates the corresponding ImageData with the fields inside the database.
-     * Any of the imageData fields could be ommited.
-     *
-     * @param  imageData  imageData to update. It's id is used to match an ImageData from the database
-     * @param  title title of ImageData to update to
-     * @param  description title of ImageData to update to
-     * @param  entry_id title of ImageData to update to
-     */
-    fun insertArrayMediaFilesWithLastEntryById(mediaFileArray: Array<MediaFile>)
-    {
-        viewModelScope.launch(Dispatchers.IO)
-        {
-            val lastEntry = mRepository.getLastEntryById()
-            if (lastEntry != null) {
-                val imageDataList = mediaFileArray.convertToImageDataWithoutId()
-                insertAndUpdateImageDataListWithEntry(imageDataList,lastEntry)
-            }
-            else
-            {
-                Log.e("TravelViewModel","You attempted to insert images before any entry has been created")
-            }
         }
     }
 
     /**
-     * Links an ImageData to an EntryData. This simply means that the imageData's entry_id
-     * is equalized to the id of the EntryData argument
-     *
-     * @param  imageData  ImageData to be linked to EntryData
-     * @param  name EntryData to be linked to ImageData
+     * Initializes the _searchResults LiveData to contain every image from the database.
      */
-    fun associateImageDataWithEntry(imageData: ImageData,entryData: EntryData)
-    {
-        imageData.entry_id = entryData.id
-        viewModelScope.launch(Dispatchers.IO){
-            mRepository.updateImage(imageData)
-        }
-    }
-
-    /**
-     * Given an ImageData and ImageData fields, updates the corresponding ImageData with the fields inside the database.
-     * Any of the imageData fields could be ommited.
-     *
-     * @param  imageData  imageData to update. Its id is used to match an ImageData from the database
-     * @param  title title of ImageData to update to
-     * @param  description title of ImageData to update to
-     * @param  entry_id title of ImageData to update to
-     */
-    fun updateImageInDatabase(imageData : ImageData, title : String? = null, description : String? = null,entry_id : Int? = null)
-    {
-        viewModelScope.launch {
-            val updatedImage = ImageData(imageData.id,
-                imageData.imageUri,
-                title ?: imageData.imageTitle,
-                description ?: imageData.imageDescription,
-                imageData.thumbnailUri,
-                entry_id ?: imageData.entry_id)
-            updatedImage.thumbnail = imageData.thumbnail
-            mRepository.updateImage(updatedImage)
-        }
-    }
-
-
-
-    fun initImagesList()
-    {
-        initSearchResultsFromDatabase()
-    }
-    
-
-    fun initSearchResultsFromDatabase()
+    private fun initSearchResults()
     {
         viewModelScope.launch(Dispatchers.IO){
-            _searchResults.postValue(mRepository.getAllImages() as MutableList<ImageData>)
+            val allImages = mRepository.getAllImages() ?: ArrayList<ImageData>()
+            _searchResults.postValue(allImages as MutableList<ImageData>?)
         }
     }
 
+    private val _allTripsObservable = MutableLiveData<MutableList<Pair<TripData,ImageData?>>>()
     /**
-     * Updates the tripsSearchResults observable LiveData. Finds all trips, then an image associated with a given trip
+     * Observable list of pair<TripData,ImageData?>. Kept updated with all the trips in the Database
+     *
+     * @see updateAllTripsObservable
      */
-    fun initTripSearchResultsFromDatabase()
+    val allTripsObservable : LiveData<MutableList<Pair<TripData,ImageData?>>>
+        get() = _allTripsObservable
+
+    /**
+     * Updates allTripsObservable to contain all trips in the database, along with some image associated with each trip.
+     */
+    fun updateAllTripsObservable()
     {
         //We go through all the trips. Then we go through all entries. Then we find some entry that hopefully has an image
         viewModelScope.launch(Dispatchers.IO){
@@ -275,7 +110,7 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
                 //Go through all entries to find an image
                 for (entry in allEntries!!)
                 {
-                    val allImages = mRepository.getImagesOfEntry(entry)
+                    val allImages = mRepository.getImagesOfEntry(entry.id)
                     //If at least an image is found, add it to the pair
                     if (allImages?.size!! > 0)
                     {
@@ -289,105 +124,326 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
                 if (!foundImage)
                     returnList.add(Pair(trip,null))
             }
+            _allTripsObservable.postValue(returnList as MutableList<Pair<TripData,ImageData?>>)
+        }
+    }
 
-            _tripsSearchResults.postValue(returnList as MutableList<Pair<TripData,ImageData?>>)
+    private val _entriesOfTrip = MutableLiveData<MutableList<Pair<EntryData,List<ImageData>>>>()
+    /**
+     * Observable list of (EntryData,List<ImageData>) corresponding to a particular trip. The List<ImageData> represents the
+     * list of images associated with each entry.
+     *
+     * @see updateEntriesOfTrip
+     */
+    val entriesOfTrip : LiveData<MutableList<Pair<EntryData,List<ImageData>>>>
+        get() = _entriesOfTrip
+
+    /**
+     * Updates the entriesOfTrip observable with all (DataEntry,List<ImageData>) for a given trip.
+     * @param tripDataID Id of the trip we're retrieving the entries for.
+     */
+    fun updateEntriesOfTrip(tripDataID : Int)
+    {
+        viewModelScope.launch(Dispatchers.IO)
+        {
+            val updatedList = ArrayList<Pair<EntryData,List<ImageData>>>()
+            val allEntries = mRepository.getEntriesOfTrip(tripDataID)
+            for (entry in allEntries!!)
+            {
+                val allImages = mRepository.getImagesOfEntry(entry.id)
+                //Now I have all the images for an entry. It could be an empty list
+                updatedList.add(Pair(entry,allImages!!))
+            }
+            _entriesOfTrip.postValue(updatedList)
+        }
+    }
+
+
+    private val _imagesOfEntry = MutableLiveData<MutableList<ImageData>>()
+    /**
+     * Observable list of images that contains images for a particular entry.
+     *
+     * @see updateImagesOfEntry
+     */
+    val imagesOfEntry : LiveData<MutableList<ImageData>>
+        get() = _imagesOfEntry
+
+    /**
+     * Updates the imagesOfEntry observable LiveData to contain all images of an entry.
+     * @param entryDataID Id of the entry whose associated images are going to be reflected by the imagesOfEntry observable
+     */
+    fun updateImagesOfEntry(entryDataID: Int)
+    {
+        viewModelScope.launch(Dispatchers.IO)
+        {
+            //Get all images for a given entry
+            val allImages = mRepository.getImagesOfEntry(entryDataID)
+            _imagesOfEntry.postValue(allImages as MutableList<ImageData>?)
+        }
+    }
+
+    private val _imagesOfTrip = MutableLiveData<MutableList<ImageData>>()
+    /**
+     * Observable liveData containing all images for a given trip.
+     *
+     * @see updateImagesOfTrip
+     */
+    val imagesOfTrip : LiveData<MutableList<ImageData>>
+        get() = _imagesOfTrip
+
+    /**
+     * Updates the imagesOfTrip observable liveData to contain all images of a given trip
+     * @param tripDataID Id of the trip whose associated images are going to be reflected by the imagesOfTrip observable
+     */
+    fun updateImagesOfTrip(tripDataID: Int)
+    {
+        viewModelScope.launch(Dispatchers.IO)
+        {
+
+            val allImages = ArrayList<ImageData>()
+            //We have a trip, we can get to all the entries pointing to that trip
+
+            val allEntries = mRepository.getEntriesOfTrip(tripDataID)
+
+
+            //We have entries, we can get to all the images pointing to those entries
+            //If the trip has any entries, collect images in allImages
+            if (allEntries!!.isNotEmpty()) {
+                for (entry in allEntries) {
+                    //For each entry we can get its individual images
+                    val imagesOfEntry = mRepository.getImagesOfEntry(entry.id)
+                    allImages.addAll(imagesOfEntry!!)
+                }
+            }
+            //Otherwise update _imageOfTrip with an empty list
+            _imagesOfTrip.postValue(allImages)
         }
     }
 
     /**
-     * Given a query, it updates the _searchResults livedata
+     * Inserts an imageData into the database and returns the id it was associated with.
+     * Warning: This does block the UI thread, it is meant to be used sparingly, if at all.
+     *
+     * @param  imageData  ImageData to be inserted
+     * @return id of the inserted image
      */
-    fun search(query: String?) {
-        viewModelScope.launch {
-            if (query.isNullOrBlank())
+    fun insertImageReturnId(imageData: ImageData): Int = runBlocking{
+        val deferredId = async { mRepository.insertImageReturnId(imageData) }
+        val id = deferredId.await()
+        //update the searchResults observable to match what is inside the database
+        initSearchResults()
+        id
+    }
+
+    /**
+     * Inserts an imageData into the database.
+     *
+     * @param imageData ImageData to be inserted
+     */
+    private fun insertImage(imageData: ImageData)
+    {
+        viewModelScope.launch(Dispatchers.IO)
+        {
+            mRepository.insertImageReturnId(imageData)
+
+            //update the searchResults observable to match what is inside the database
+            initSearchResults()
+        }
+    }
+    /**
+     * Inserts a list of imageData into the database.
+     *
+     * @param  listImageData  List of ImageData to be inserted
+     */
+    private fun insertImageList(listImageData : List<ImageData>)
+    {
+        viewModelScope.launch(Dispatchers.IO)
+        {
+            mRepository.insertListImageData(listImageData)
+
+            //update the searchResults observable to match what is inside the database
+            initSearchResults()
+        }
+    }
+
+    /**
+     * Debug function used to add images to the database without having them be associated with any entry.
+     *
+     * Meant to be used with the easyImage library. An array of Mediafiles is made available by the EasyImage library as an argument
+     * in the onMediaFilesPicked callback function used when handling the relevant ActivityResult.
+     * The MediaFile objects in this array are converted to ImageData objects and inserted into the database.
+     *
+     * @param mediaFileArray Array made available by the EasyImage library.
+     * in the onMediaFilesPicked callback function used when handling the relevant ActivityResult
+     */
+    fun debug_insertArrayMediaFiles(mediaFileArray: Array<MediaFile>) {
+        val imageDataList = mediaFileArray.convertToImageDataWithoutId()
+        insertImageList(imageDataList)
+    }
+
+    /**
+     * Meant to be used with the easyImage library. An array of Mediafiles is made available by the EasyImage library as an argument
+     * in the onMediaFilesPicked callback function used when handling the relevant ActivityResult.
+     * The MediaFile objects in this array are converted to ImageData objects, inserted into the database and associated with the given
+     * entry.
+     *
+     * @param  mediaFileArray  Array of mediafiles returned by the easyImage library when a user selects images from the gallery and submits them
+     * , or takes a photo and submits it.
+     * @param  entryDataID Entry object to link the array of image to
+     */
+    fun insertArrayMediaFilesWithEntry(mediaFileArray: Array<MediaFile>, entryDataID : Int) {
+        viewModelScope.launch(Dispatchers.IO)
+        {
+            val imageDataList = mediaFileArray.convertToImageDataWithoutId()
+            insertImageListWithEntry(imageDataList, entryDataID)
+        }
+    }
+
+    /**
+     * Meant to be used with easyImage. Equivalent to passing the last entry by id to [insertArrayMediaFilesWithEntry].
+     *
+     * Given an array of Mediafile images returned by easyImage, it converts the MediaFiles
+     * into ImageData, inserts them into the database and links them with the last entry in the database by id.
+     *
+     * @param  mediaFileArray  Array of mediafiles returned by the easyImage library when a user selects images from the gallery and submits
+     * them or takes a photo and submits it.
+     */
+    fun insertArrayMediaFilesWithLastEntryById(mediaFileArray: Array<MediaFile>)
+    {
+        viewModelScope.launch(Dispatchers.IO)
+        {
+            val lastEntry = mRepository.getLastEntryById()
+            if (lastEntry != null) {
+                insertArrayMediaFilesWithEntry(mediaFileArray,lastEntry.id)
+            }
+            else
             {
-                _searchResults.value = mRepository.getAllImages() as MutableList<ImageData>
-            } else
-            {
-                val sanitizedQuery = sanitizeSearchQuery(query)
-                mRepository.search(sanitizedQuery).let {
-                    _searchResults.value = it as MutableList<ImageData>
-                }
+                Log.e("TravelViewModel","You attempted to insert images before any entry has been created")
             }
         }
     }
 
-    //REFACTOR this to spawn a coroutine at each iteration, then wait at the end for the results to improve runtime
-    //Maybe add this as a function of the Repository?
     /**
-     * Internal function that inserts a list of ImageData objects into the database. Updates the list with their generated id's
+     * Links an ImageData to an EntryData. i.e The imageData's entry_id
+     * is made equal to the id of the EntryData argument
      *
+     * @param  imageData ImageData to be linked to EntryData
+     * @param  entryData EntryData to be linked to ImageData
      */
-    private fun insertAndUpdateImageDataList(imageDataList : List<ImageData>)
+    fun linkImageDataWithEntry(imageData: ImageData,entryData: EntryData)
     {
-        for (imageData in imageDataList)
-        {
-            val id = insertImageReturnId(imageData)
-            imageData.id = id
+        imageData.entry_id = entryData.id
+        viewModelScope.launch(Dispatchers.IO){
+            mRepository.updateImage(imageData)
+
+            //Update the allTripsObservable. Now that a new entry has an image, a new trip might have an image that it didn't have before.
+            updateAllTripsObservable()
         }
-        //Update the observable live data
-        initImagesList()
     }
 
     /**
-     * Internal function that inserts a list of ImageData objects into the database. Updates the list with their generated id's
-     * Also associates the imageData with an entry
+     * Given an ImageData and ImageData fields, updates the corresponding ImageData with the fields inside the database.
+     * Any of the imageData fields could be omitted.
+     *
+     * @param  imageData  imageData to update.
+     * @param  title title of ImageData to update to
+     * @param  description title of ImageData to update to
+     * @param  entry_id title of ImageData to update to
      */
-    private fun insertAndUpdateImageDataListWithEntry(imageDataList : List<ImageData>, entryData: EntryData)
+    fun updateImageInDatabase(imageData : ImageData, title : String? = null, description : String? = null,entry_id : Int? = null)
+    {
+        viewModelScope.launch {
+            val updatedImage = ImageData(imageData.id,
+                imageData.imageUri,
+                title ?: imageData.imageTitle,
+                description ?: imageData.imageDescription,
+                imageData.thumbnailUri,
+                entry_id ?: imageData.entry_id)
+            updatedImage.thumbnail = imageData.thumbnail
+            mRepository.updateImage(updatedImage)
+
+            //update the searchResults observable to match what is inside the database
+            initSearchResults()
+
+            //If this image was associated with a new entry, update the allTripsObservable.
+            // Since now that a new entry has an image, a new trip might have an image that it didn't have before.
+            if (entry_id != null)
+                updateAllTripsObservable()
+        }
+    }
+
+
+    /**
+     * Inserts a list of ImageData objects into the database and
+     * associates each imageData in the list with a specified entry
+     *
+     * @param  imageDataList  List of ImageData objects to insert.
+     * @param  entryDataID Entry to associate the images with
+     */
+    private fun insertImageListWithEntry(imageDataList : List<ImageData>, entryDataID: Int)
     {
         for (imageData in imageDataList)
         {
-            imageData.entry_id = entryData.id
-            val id = insertImageReturnId(imageData)
-            imageData.id = id
+            imageData.entry_id = entryDataID
         }
-        //Update the observable live data
-        initImagesList()
+        insertImageList(imageDataList)
     }
 
     /**
-     * Given an imageData, it deletes it from the database and updates the observable livedata
+     * Deletes an imageData from the database.
+     * @param  imageData  ImageData to delete from the list
      */
-    fun deleteImageInDatabase(imageData : ImageData)
+    fun deleteImageFromDatabase(imageData : ImageData)
     {
         viewModelScope.launch {
             mRepository.deleteImage(imageData)
+
+            //update the searchResults observable to match what is inside the database
+            initSearchResults()
         }
     }
 
-
-    //----------------------- Trip related functionality------------
+    //----------------------- Trip related functionality----------------------------
 
     /**
-     * Insert a trip and return it's generated id
+     * Insert a trip and return its generated id
+     * Warning: This does block the UI thread. Use sparingly
+     *
+     * @param tripData Trip to insert
+     * @return id of the inserted TripData generated by the database
      */
     fun insertTripReturnId(tripData: TripData): Int? = runBlocking{
         val deferredId = async { mRepository.insertTripReturnId(tripData) }
         val id = deferredId.await()
         //Update observable liveData tracking all trips
-        initTripSearchResultsFromDatabase()
+        updateAllTripsObservable()
         id
     }
 
-
-    //NOTE: TODO I will refactor all of these and make the function naming convention consistent.
-    // I keep using Camel case and underscores in the same API, it's probably frustrating to use
     /**
      * Delete a trip from the database
+     *
+     * @param tripData Trip to delete
      */
-    fun delete_trip(tripData: TripData)
+    fun deleteTrip(tripData: TripData)
     {
         viewModelScope.launch()
         {
             mRepository.deleteTrip(tripData)
             //Update observable liveData tracking all trips
-            initTripSearchResultsFromDatabase()
+            updateAllTripsObservable()
         }
     }
 
     /**
-     * Create a new trip based on trip description and inserts it into the database.
-     * This returns the triData's id. Because this returns something it blocks the main thread.
+     * Create a new trip based on trip attributes and inserts it into the database.
+     * Returns the tripData's id.
+     * Warning: This does block the UI thread, it is meant for light use.
+     *
+     * @param title Title of the trip
+     * @param country Name of the trip country
+     * @param timestamp Time at which the trip was started
+     * @return Created trip's id
      */
     fun create_insert_return_tripID(title :String,country :String, timestamp: Float) : Int
     {
@@ -398,36 +454,77 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
     }
 
     /**
-     * Create a new trip based on trip description and inserts it into the database.
+     * Same as [create_insert_return_tripID] but does not return the trip ID.
+     * Because of that, it does not need to block the UI thread
+     *
+     * Create a new trip based on trip attributes and inserts it into the database.
+     * This does block the main UI thread.
+     *
+     * @param title Title of the trip
+     * @param country Name of the trip country
+     * @param timestamp Time at which the trip was started
      */
-    //UNTESTED
     fun create_insert_trip(title :String,country :String, timestamp: Float)
     {
         val createdTrip = TripData(title = title, country = country, trip_timestamp = timestamp)
         viewModelScope.launch()
         {
-            mRepository.insertTrip(createdTrip)
+            mRepository.insertTripReturnId(createdTrip)
+
+            //Update observable liveData tracking all trips
+            updateAllTripsObservable()
         }
     }
 
-    //-----------------------Entry related functionality------------
-
+    //-----------------------Entry related functionality-------------------------
 
     /**
-     * Given a tripData object and measurements, create and insert an Entry into the database
+     * Deletes an entry from the database
+     * @param entryData EntryData to delete
      */
-    fun create_insert_entry(tripData: TripData, temperature:Float?, pressure:Float?, lat:Double, lon:Double, timestamp:Long)
+    fun deleteEntry(entryData: EntryData)
     {
-        val createdEntry = EntryData(
-            lat = lat, lon = lon,
-            entry_timestamp = timestamp, entry_temperature = temperature,
-            entry_pressure = pressure, trip_id = tripData.id)
+        viewModelScope.launch(Dispatchers.IO)
+        {
+            mRepository.deleteEntry(entryData)
+        }
+        //Update observable liveData tracking all trips
+        updateAllTripsObservable()
+    }
 
-        insertEntry(createdEntry)
+    /**
+     * Given a trip's id and sensor measurements, create and insert an Entry into the database
+     *
+     * @param tripDataID Id of the trip this entry is to be linked with
+     * @param temperature Temperature taken at the entry position and time
+     * @param pressure Pressure measurement taken at the entry position and time
+     * @param lat Latitude coordinate of the entry
+     * @param lon Longitude coordinate of the entry
+     * @param timestamp time at which the entry was captured
+     */
+    fun create_insert_entry(tripDataID: Int, temperature:Float?, pressure:Float?, lat:Double, lon:Double, timestamp:Long)
+    {
+        viewModelScope.launch(Dispatchers.IO)
+        {
+            val createdEntry = EntryData(
+                lat = lat, lon = lon,
+                entry_timestamp = timestamp, entry_temperature = temperature,
+                entry_pressure = pressure, trip_id = tripDataID)
+            mRepository.insertEntryReturnId(createdEntry)
+        }
+
     }
     /**
-     * Given a tripData object and measurements, create and insert an Entry into the database. Returns the inserted Entry
-     * (including the generated it from inserting)
+     * Given a tripData ID and entry measurements, creates and inserts an Entry into the database.
+     * WARNING: This does block the UI thread, to be used sparingly.
+     *
+     * @param tripDataID Id of the trip this entry is to be linked with
+     * @param temperature Temperature taken at the entry position and time
+     * @param pressure Pressure measurement taken at the entry position and time
+     * @param lat Latitude coordinate of the entry
+     * @param lon Longitude coordinate of the entry
+     * @return The entry that was inserted into the database
+     * @see create_insert_entry for a function that creates and inserts and entry but does not block the UI thread
      */
     fun create_insert_entry_returnEntry(tripDataID: Int, temperature:Float?, pressure:Float?, lat:Double, lon:Double, timestamp:Long) : EntryData
     {
@@ -437,31 +534,36 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
             entry_pressure = pressure, trip_id = tripDataID)
 
         val id = insertEntryReturnId(createdEntry)
-        createdEntry.id = id!!
+        createdEntry.id = id
         return createdEntry
     }
 
     /**
-     * Inserts an entry into the database. Does not return anything. Does not block the main UI thread
+     * Inserts an entry into the database.
+     * @param entryData Entry to be inserted into the database
      */
     fun insertEntry(entryData: EntryData)
     {
         viewModelScope.launch()
         {
-            mRepository.insertEntry(entryData)
+            mRepository.insertEntryReturnId(entryData)
         }
     }
 
     /**
-     * Inserts an entry into the database. Returns the id of the entry. Since it returns the id, it blocks the main thread. This could perhaps
-     * be avoided with some sort of callback magic?
+     * Inserts an entry into the database and returns the id of the entry.
+     * WARNING:This does block the main thread. To be used sparingly.
+     *
+     * @param entryData EntryData to insert into the database
+     * @return id of the inserted EntryData
+     * @see insertEntry for a function that inserts entries without blocking the UI thread
      */
-    fun insertEntryReturnId(entryData: EntryData): Int? = runBlocking{
+    fun insertEntryReturnId(entryData: EntryData): Int = runBlocking{
         val deferredId = async { mRepository.insertEntryReturnId(entryData) }
         deferredId.await()
     }
 
-    // DEBUG FUNCTIONS
+    // -------------------------- DEBUG FUNCTIONS
     fun debug_getImages() : List<ImageData>?
     {
         var imageList : List<ImageData>?

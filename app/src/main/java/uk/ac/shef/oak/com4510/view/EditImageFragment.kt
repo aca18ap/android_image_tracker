@@ -1,7 +1,5 @@
 package uk.ac.shef.oak.com4510.view
 
-import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -65,7 +63,7 @@ class EditImageFragment : Fragment() {
         // Delete button listener
         val deleteButton: Button = binding.deleteButton
         deleteButton.setOnClickListener {
-            model.deleteImageInDatabase(ImagesAdapter.items[position])
+            model.deleteImageFromDatabase(ImagesAdapter.items[position])
             // Pop back stack twice to get back to the gallery
             it.findNavController().popBackStack()
             it.findNavController().popBackStack()

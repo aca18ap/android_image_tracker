@@ -1,15 +1,11 @@
 package uk.ac.shef.oak.com4510.view
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.databinding.ViewDataBinding
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import androidx.viewpager.widget.ViewPager
@@ -63,7 +59,7 @@ class ViewTripDetailsFragment : Fragment() {
             }
         }.attach()
 
-        viewModel.updateLiveDataEntriesOfTrip(args.tripID)
+        viewModel.updateEntriesOfTrip(args.tripID)
         viewModel.updateImagesOfTrip(args.tripID)
 
         return binding.root

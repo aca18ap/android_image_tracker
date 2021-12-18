@@ -2,7 +2,6 @@ package uk.ac.shef.oak.com4510.view
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.widget.SearchView
 import androidx.fragment.app.Fragment
@@ -42,6 +41,7 @@ class GalleryFragment : Fragment() {
         val mAdapter = ImagesAdapter(ArrayList<ImageData>()) as RecyclerView.Adapter<RecyclerView.ViewHolder>
         mRecyclerView.adapter = mAdapter
 
+        initEasyImage()
 
         binding.fabGallery.setOnClickListener{
             easyImage.openChooser(this)
@@ -64,7 +64,6 @@ class GalleryFragment : Fragment() {
             ImagesAdapter.items = images as MutableList<ImageData>
             mAdapter.notifyDataSetChanged()
         })
-        viewModel!!.initImagesList() // Populate the imageList observable with all the images in the database
 
         return binding.root
     }
@@ -82,11 +81,8 @@ class GalleryFragment : Fragment() {
 
     private fun initEasyImage() {
         easyImage = EasyImage.Builder(requireActivity())
-//        .setChooserTitle("Pick media")
-//        .setFolderName(GALLERY_DIR)
             .setChooserType(ChooserType.CAMERA_AND_GALLERY)
             .allowMultiple(true)
-//        .setCopyImagesToPublicGalleryFolder(true)
             .build()
     }
 

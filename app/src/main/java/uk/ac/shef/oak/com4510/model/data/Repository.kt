@@ -1,6 +1,7 @@
 package uk.ac.shef.oak.com4510.model.data
 
 import android.app.Application
+import android.media.Image
 import kotlinx.coroutines.*
 import uk.ac.shef.oak.com4510.model.data.database.*
 
@@ -27,60 +28,101 @@ class Repository(application: Application) {
     // ---------ImageData related -------------------------------------
     /**
      * Returns every image in the databases
+     * @return Every image in the database
      */
     suspend fun getAllImages() : List<ImageData>? = withContext(Dispatchers.IO)
     {
         imageDataDao?.getItems()
     }
-
+    /**
+     * Returns images whose title or description contain words from the query
+     * @param query Query string to use when searching the database
+     * @return List of images whose title or description contain words from the query
+     */
     suspend fun search(query : String) : List<ImageData>? = withContext(Dispatchers.IO)
     {
         imageDataDao?.search(query)
     }
+
+    /**
+     * Deletes an image from the database
+     * @param imageData Image to be deleted from the database
+     */
     suspend fun deleteImage(imageData: ImageData) = withContext(Dispatchers.IO)
     {
         imageDataDao?.delete(imageData)
     }
 
-    suspend fun getImagesOfEntry(entryData: EntryData) = withContext(Dispatchers.IO)
+    /**
+     * Gets all images of a given entry
+     * @param entryDataID id of entry whose associated images are to be retrieved
+     * @return All images corresponding to the entry whose id = [entryDataID]
+     */
+    suspend fun getImagesOfEntry(entryDataID: Int) = withContext(Dispatchers.IO)
     {
-        imageDataDao?.getEntryImages(entryData.id)
+        imageDataDao?.getEntryImages(entryDataID)
+    }
+
+    /**
+     * Inserts a list of images in the database
+     * @param listImageData List of images to be inserted
+     */
+    suspend fun insertListImageData(listImageData : List<ImageData>) = withContext(Dispatchers.IO)
+    {
+        imageDataDao?.insertList(listImageData)
     }
 
     /**
      * Inserts an imageData object into the database. Returns the id it was assigned to
+     * @param imageData ImageData objected to be inserted
+     * @return id of the image that got inserted
      */
     suspend fun insertImageReturnId(imageData: ImageData): Int = coroutineScope {
-        var defferedID = async { imageDataDao?.insert(imageData) }
-        defferedID.await()?.toInt()!!
+        imageDataDao?.insert(imageData)!!.toInt()
     }
 
     /**
      *  Updates the database given an imageData object
+     *  @param imageData ImageData object to replace the previous ImageData object with the same id.
      */
     suspend fun updateImage(imageData : ImageData) = withContext(Dispatchers.IO)
     {
         imageDataDao?.update(imageData)
     }
     // ---------EntryData related -------------------------------------
+
+    /**
+     * Delete an entry from the database
+     * @param entryData EntryData to delete
+     */
+    suspend fun deleteEntry(entryData : EntryData) = withContext(Dispatchers.IO)
+    {
+        entryDataDao?.delete(entryData)
+    }
+
     /**
      * Get all entries for a given trip
+     * @param tripDataID Trip id of the trip whose entries are to be returned
+     * @return All entries corresponding to the trip whose id = tripDataID
      */
     suspend fun getEntriesOfTrip(tripDataID : Int) : List<EntryData>? = withContext(Dispatchers.IO)
     {
         entryDataDao?.getEntriesForTrip(tripDataID)
     }
 
-    suspend fun insertEntryReturnId(entryData: EntryData): Int? = withContext(Dispatchers.IO) {
-        var defferedID = async { entryDataDao?.insert(entryData) }
-        defferedID.await()?.toInt()
+    /**
+     * Inserts an entry into the database and returns an id
+     * @param entryData Entry to be inserted
+     * @return Id of the EntryData that just got inserted
+     */
+    suspend fun insertEntryReturnId(entryData: EntryData): Int = withContext(Dispatchers.IO) {
+        entryDataDao?.insert(entryData)!!.toInt()
     }
 
-    suspend fun insertEntry(entryData: EntryData) = withContext(Dispatchers.IO)
-    {
-        entryDataDao?.insert(entryData)
-    }
-
+    /**
+     * Gets the last entry in the database by id
+     * @return Last entry in the database by id
+     */
     suspend fun getLastEntryById() = withContext(Dispatchers.IO)
     {
         entryDataDao?.getLastEntryById()
@@ -90,24 +132,36 @@ class Repository(application: Application) {
 
 
     // ---------TripData related --------------------------------------
+    /**
+     * Return all trips in the database
+     * @return All trips in the database
+     */
     suspend fun getAllTrips() : List<TripData>? = withContext(Dispatchers.IO)
     {
         tripDataDao?.getItems()
     }
-
+    /**
+     * Retrieve a trip object by id
+     * @param tripId Id of object to be retrieved
+     * @return Trip object corresponding to tripId
+     */
     suspend fun getTrip(tripId: Int) = coroutineScope {
         tripDataDao?.getItem(tripId)
     }
 
+    /**
+     * Inserts a trip into the database
+     * @param tripData Trip to be inserted
+     * @return Id of the inserted trip
+     */
     suspend fun insertTripReturnId(tripData: TripData): Int? = withContext(Dispatchers.IO) {
-        var defferedID = async { tripDataDao?.insert(tripData) }
-        defferedID.await()?.toInt()
-    }
-    suspend fun insertTrip(tripData: TripData) = withContext(Dispatchers.IO)
-    {
-        tripDataDao?.insert(tripData)
+        tripDataDao?.insert(tripData)!!.toInt()
     }
 
+    /**
+     * Deletes a trip from the database
+     * @param tripData Trip to be deleted
+     */
     suspend fun deleteTrip(tripData: TripData) = withContext(Dispatchers.IO)
     {
         tripDataDao?.delete(tripData)

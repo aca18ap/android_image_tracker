@@ -79,7 +79,7 @@ class DebugFragment : Fragment() {
 
         binding.DebugButton1.setOnClickListener {
 
-            model.create_insert_entry(model.debug_returnTripDataOfId(1)!!,12f,13f,100.0,1234.0,1639698825)
+            model.create_insert_entry(1,12f,13f,100.0,1234.0,1639698825)
         }
 
         binding.DebugButton2.setOnClickListener {

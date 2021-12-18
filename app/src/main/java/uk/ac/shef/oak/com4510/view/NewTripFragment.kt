@@ -29,14 +29,9 @@ class NewTripFragment : Fragment() {
         val binding = DataBindingUtil.inflate<FragmentNewTripBinding>(inflater,
             R.layout.fragment_new_trip, container, false)
 
-        binding.titleInput
-
-        //Get back to this in a little bit
-        //val tripID = viewModel.create_insert_return_tripID(title = binding.titleInput,country = binding.countryInput, System.currentTimeMillis())
-        val tripID = viewModel.create_insert_return_tripID(binding.titleInput.text.toString(), "placeholderCountry", System.currentTimeMillis().toFloat())
 
         binding.startTripButton.setOnClickListener{view : View ->
-
+            val tripID = viewModel.create_insert_return_tripID(binding.titleInput.text.toString(),"placeholderCountry", System.currentTimeMillis().toFloat())
             val action : NavDirections = NewTripFragmentDirections.actionNewTripFragmentToTravellingFragment(tripID)
             view.findNavController().navigate(action)
         }
