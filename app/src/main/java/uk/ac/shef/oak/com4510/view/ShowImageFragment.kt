@@ -60,10 +60,11 @@ class ShowImageFragment : Fragment() {
         val descriptionTextView = binding.showImageDescription
         val sensorsTextView = binding.showSensors
         val buttonShowMap = binding.showMapButton
+        var entryID = -1
+        var tripID = -1
         if (position != -1) {
 
             val imageData = ImagesAdapter.items[position]
-            val entryID = imageData.entry_id
 
             var sensorText = ""
 
@@ -71,11 +72,13 @@ class ShowImageFragment : Fragment() {
             titleToolbar.title = imageData.imageTitle
             descriptionTextView.text = imageData.imageDescription
 
-            if (entryID != null) {
+            if (imageData.entry_id != null) {
+                entryID = imageData.entry_id!!
                 val entry = viewModel.getEntry(entryID)
                 val timestamp = entry!!.entry_timestamp
                 val pressure = entry!!.entry_pressure
                 val temperature = entry!!.entry_temperature
+                tripID = entry.trip_id
 
                 val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
                 val dateTime = formatter.format(Date(timestamp))
@@ -98,8 +101,8 @@ class ShowImageFragment : Fragment() {
             })
 
             buttonShowMap.setOnClickListener(View.OnClickListener {
-                // val action = ShowImageFragmentDirections.actionShowImageFragmentToEditImageFragment(position)
-                // it.findNavController().navigate(action)
+                val action = ShowImageFragmentDirections.actionShowImageFragmentToExistingTravelFragment(tripID, entryID)
+                it.findNavController().navigate(action)
             })
         }
     }
