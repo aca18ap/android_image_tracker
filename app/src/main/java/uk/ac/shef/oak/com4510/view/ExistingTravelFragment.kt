@@ -53,15 +53,7 @@ class ExistingTravelFragment : Fragment(), OnMapReadyCallback {
             // This is where perhaps, Dan, you could update the map on this fragment to display the image for each entry on the map
             Log.i("EntryCallback", listOfEntryImagePair.toString())
             try{
-                val zoomTarget = listOfEntryImagePair.last().first
-                Log.i("ExistingTravelFragment", zoomTarget.toString())
 
-                mMap.moveCamera(
-                    CameraUpdateFactory.newLatLngZoom(LatLng(
-                        zoomTarget.lat,
-                        zoomTarget.lon
-                    ), 15f)
-                )
 
 //                mLine!!.points.clear() // Reset the lines
 //                mLineLoc!!.points.clear()
@@ -81,6 +73,15 @@ class ExistingTravelFragment : Fragment(), OnMapReadyCallback {
                         val highlightPoints = mLineLoc!!.points
                         highlightPoints.add(LatLng(entry.lat, entry.lon))
                         mLineLoc!!.points = highlightPoints
+
+                        if (entry.id == entryID) {
+                            mMap.moveCamera(
+                                CameraUpdateFactory.newLatLngZoom(LatLng(
+                                    entry.lat,
+                                    entry.lon
+                                ), 18f)
+                            )
+                        }
                     }
                     if (images.isNotEmpty()) {
                         Log.i("Images", images.toString())
