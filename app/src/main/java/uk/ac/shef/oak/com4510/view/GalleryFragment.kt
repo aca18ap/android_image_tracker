@@ -1,27 +1,31 @@
 package uk.ac.shef.oak.com4510.view
 
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.widget.CompoundButton
 import android.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.room.FtsOptions
 import uk.ac.shef.oak.com4510.viewModel.TravelViewModel
 import uk.ac.shef.oak.com4510.R
 import uk.ac.shef.oak.com4510.databinding.FragmentGalleryBinding
 import uk.ac.shef.oak.com4510.model.data.database.ImageData
 import uk.ac.shef.oak.com4510.viewModel.ImagesAdapter
 import pl.aprilapps.easyphotopicker.*
+import uk.ac.shef.oak.com4510.viewModel.OrderBy
 
 
 class GalleryFragment : Fragment() {
     private lateinit var easyImage: EasyImage
     private lateinit var binding : FragmentGalleryBinding
+    private var orderSwitchToggleValue : Boolean = false
     private var viewModel: TravelViewModel? = null
 
     override fun onCreateView(
@@ -45,7 +49,11 @@ class GalleryFragment : Fragment() {
         initEasyImage()
 
         binding.fabGallery.setOnClickListener{
-            easyImage.openChooser(this)
+            //If this device has a camera, allow the user to choose between the camera and gallery
+            if (context?.packageManager!!.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY))
+                easyImage.openChooser(this)
+            else // Otherwise simply open the gallery
+                easyImage.openGallery(this)
         }
 
         //Search bar listeners
@@ -55,8 +63,13 @@ class GalleryFragment : Fragment() {
             }
 
             override fun onQueryTextChange(filter: String?): Boolean {
-                viewModel!!.search(filter)
+                viewModel!!.search(filter,if (orderSwitchToggleValue) OrderBy.ASC else OrderBy.DESC)
                 return false
+            }
+        })
+        binding.OrderByTimeSwitch.setOnCheckedChangeListener(object : CompoundButton.OnCheckedChangeListener{
+            override fun onCheckedChanged(buttonView: CompoundButton?, isChecked: Boolean) {
+                viewModel!!.search(binding.searchBarGallery.query.toString(),if (isChecked) OrderBy.ASC else OrderBy.DESC)
             }
         })
 
@@ -78,7 +91,6 @@ class GalleryFragment : Fragment() {
             }
         })
     }
-
 
     private fun initEasyImage() {
         easyImage = EasyImage.Builder(requireActivity())

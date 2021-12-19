@@ -193,7 +193,6 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
         viewModel.entriesOfTrip.observe(this,{ listOfEntryImagePair ->
             // listOfEntryImagePair is a list of Pairs of (EntryData,List<ImageData>). It contains each entry and it's associated list of images.
             // This is where perhaps, Dan, you could update the map on this fragment to display the image for each entry on the map
-
         })
 
         // Update the entriesOfTrip observable to contain all entries of this trip

@@ -4,6 +4,7 @@ import android.app.Application
 import android.media.Image
 import kotlinx.coroutines.*
 import uk.ac.shef.oak.com4510.model.data.database.*
+import uk.ac.shef.oak.com4510.viewModel.OrderBy
 
 class Repository(application: Application) {
     private var imageDataDao: ImageDataDao? = null
@@ -28,20 +29,34 @@ class Repository(application: Application) {
     // ---------ImageData related -------------------------------------
     /**
      * Returns every image in the databases
+     * @param order Order to return the images in
      * @return Every image in the database
      */
-    suspend fun getAllImages() : List<ImageData>? = withContext(Dispatchers.IO)
+    suspend fun getAllImages(order : OrderBy) : List<ImageData>? = withContext(Dispatchers.IO)
     {
-        imageDataDao?.getItems()
+        val allImagesSorted = when(order)
+        {
+            OrderBy.NOPARTICULARORDER -> imageDataDao?.getItems()
+            OrderBy.ASC -> imageDataDao?.getItemsTimeASC()
+            else -> imageDataDao?.getItemsTimeDESC()
+        }
+        allImagesSorted
     }
     /**
      * Returns images whose title or description contain words from the query
      * @param query Query string to use when searching the database
      * @return List of images whose title or description contain words from the query
      */
-    suspend fun search(query : String) : List<ImageData>? = withContext(Dispatchers.IO)
+    suspend fun search(query : String, order : OrderBy) : List<ImageData>? = withContext(Dispatchers.IO)
     {
-        imageDataDao?.search(query)
+        val matchedImages = when(order)
+        {
+            OrderBy.NOPARTICULARORDER -> imageDataDao?.search(query)
+            OrderBy.ASC -> imageDataDao?.searchOrderByTimeStampASC(query)
+            else -> imageDataDao?.searchOrderByTimeStampDESC(query)
+        }
+
+        matchedImages
     }
 
     /**
