@@ -36,6 +36,8 @@ class NewTripFragment : Fragment() {
             view.findNavController().navigate(action)
         }
 
+
+
         return binding.root
 
     }

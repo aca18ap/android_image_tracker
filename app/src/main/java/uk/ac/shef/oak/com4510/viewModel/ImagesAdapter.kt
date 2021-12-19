@@ -19,20 +19,30 @@ import uk.ac.shef.oak.com4510.view.ViewTripDetailsFragment
 import uk.ac.shef.oak.com4510.view.ViewTripDetailsFragmentDirections
 import java.lang.IllegalArgumentException
 
+/**
+ * Adapter for the recycler view responsible for showing images in gallery and
+ * within trip details.
+ * @see GalleryFragment, TripImagesTabFragment
+ */
 class ImagesAdapter : RecyclerView.Adapter<ImagesAdapter.ViewHolder> {
+
+    //Activity context
     private lateinit var context: Context
 
 
-
+    /**
+     * @constructor: the companion object is assigned a list of ImageData
+     */
     constructor(items: List<ImageData>) : super() {
         Companion.items = items as MutableList<ImageData>
     }
 
-    constructor(cont: Context, items: List<ImageData>) : super() {
-        Companion.items = items as MutableList<ImageData>
-        context = cont
-    }
 
+    /**
+     * Called on creation of the recycler view. Each list item is inflated uwing list_item_image.xml.
+     * On creation, each image is attached to an onclicklistener that redirects
+     * to the ShowImageFragment for that specific image.
+     */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         //Inflate the layout, initialize the View Holder
         val v: View = LayoutInflater.from(parent.context).inflate(
@@ -41,15 +51,24 @@ class ImagesAdapter : RecyclerView.Adapter<ImagesAdapter.ViewHolder> {
         )
 
         val holder: ViewHolder = ViewHolder(v)
+        /*
         context = parent.context
         holder.itemView.setOnClickListener(View.OnClickListener {
-
+            //setting onclicklistener for each image
             it.findNavController().navigate(R.id.action_galleryFragment_to_showImageFragment)
 
-        })
+        })*/
         return holder
     }
 
+
+    /**
+     * The actual content of each list item is bound in this function. The thumbnail of
+     * each image is calculated using the function decodeSampledBitmapFromResource.
+     * Each item is given onClickListener too, which will redirect to the showImageFragment.
+     * This can be accessed from either the TripImageTabFragment or the GalleryFragment.
+     *
+     */
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         //Use the provided View Holder on the onCreateViewHolder method to populate the
         // current row on the RecyclerView
@@ -68,10 +87,13 @@ class ImagesAdapter : RecyclerView.Adapter<ImagesAdapter.ViewHolder> {
         }
         else {holder.imageView.setImageBitmap(items[position].thumbnail)}
         holder.itemView.setOnClickListener{view: View ->
+            //This will throw an exception if the action is done from the wrong fragment
             try{
                 val action = GalleryFragmentDirections.actionGalleryFragmentToShowImageFragment(position)
                 view.findNavController().navigate(action)
 
+            //As the action can only be called from two fragments, the app will check first if the action
+            // is called from the GalleryFragment, if unsuccessful the call must have been dine from the ViewTripDetailsFragment.
             }catch(e: IllegalArgumentException){
                 val action = ViewTripDetailsFragmentDirections.actionViewTripDetailsFragmentToShowImageFragment(position)
                 view.findNavController().navigate(action)
@@ -85,6 +107,7 @@ class ImagesAdapter : RecyclerView.Adapter<ImagesAdapter.ViewHolder> {
         return items.size
     }
 
+
     class ViewHolder constructor(itemView: View) : RecyclerView.ViewHolder(itemView){
         var imageView: ImageView = itemView.findViewById<View>(R.id.image_item) as ImageView
 
@@ -96,7 +119,13 @@ class ImagesAdapter : RecyclerView.Adapter<ImagesAdapter.ViewHolder> {
         private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 
         /**
-         * helper function to generate a bitmap object of a given size from an image's file path.
+         * This function is used to convert full sized images into thumbnails of a given sizw
+         *
+         * @param filePath: relative filepath of the image to be decoded
+         * @param reqHeight: height the image is to be resized into
+         * @param reqWidth: width the image is to be resized into
+         *
+         * @return resized bitmap object
          */
         fun decodeSampledBitmapFromResource(
             filePath: String,

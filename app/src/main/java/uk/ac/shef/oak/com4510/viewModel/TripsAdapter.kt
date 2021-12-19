@@ -21,10 +21,21 @@ import uk.ac.shef.oak.com4510.model.data.database.TripData
 import uk.ac.shef.oak.com4510.view.ViewPastTripsFragmentDirections
 import uk.ac.shef.oak.com4510.viewModel.ImagesAdapter.Companion.decodeSampledBitmapFromResource
 
-
+/**
+ * Class TripsAdapter, used by the recyclerview responsible for showing
+ * a list of all trips achieved so far.
+ * @see ViewPastTripsFragment
+ */
 class TripsAdapter : RecyclerView.Adapter<TripsAdapter.ViewHolder> {
     private lateinit var context: Context
 
+    /**
+     * @constructor creating a list of items containing the trips data
+     * @params items: a list of TripData files.
+     * Each list entry can also have an ImageData file. This will correspond
+     * to the first image of the trip, if the latter has any attached to it.
+     *
+     */
     constructor(items: List<TripData>) : super() {
         Companion.items = items as MutableList<Pair<TripData, ImageData?>>
     }
@@ -48,10 +59,14 @@ class TripsAdapter : RecyclerView.Adapter<TripsAdapter.ViewHolder> {
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        //Getting tripdata and the thumbnail image
         val (tripdata, first_image) = items[position]
         if (items[position].first.thumbnail == null) {
             items[position].let {
                 scope.launch {
+                    //Decoding image to bitmap if available.
+                    //By default, a missing image resource is used in the xml file, so we only need to
+                    //Assign an image if present
                     if (first_image != null) {
                         val bitmap = decodeSampledBitmapFromResource(first_image.imageUri, 150, 150)
                         bitmap.let {
@@ -61,10 +76,10 @@ class TripsAdapter : RecyclerView.Adapter<TripsAdapter.ViewHolder> {
                     }
                 }
             }
-        }else { holder.thumbnail.setImageBitmap(items[position].first.thumbnail) }
+        }
 
 
-
+        //Each item in the trips list has a title on top of the image that's already added.
         items[position].let {
             scope.launch {
                 holder.title.text = tripdata.title
@@ -72,6 +87,8 @@ class TripsAdapter : RecyclerView.Adapter<TripsAdapter.ViewHolder> {
         }
 
 
+        //Each item has an onClickListener that will redirect it to the ViewTripDetailsFragment for that trip.
+        // The position argument is passed to be processed by the fragment
         holder.itemView.setOnClickListener{view: View ->
             val action = ViewPastTripsFragmentDirections.actionViewPastTripsFragmentToViewTripDetailsFragment(position, tripdata.id)
             view.findNavController().navigate(action)
