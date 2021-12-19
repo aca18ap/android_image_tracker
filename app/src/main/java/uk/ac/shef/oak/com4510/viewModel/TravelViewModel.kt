@@ -508,6 +508,16 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
         //Update observable liveData tracking all trips
         updateAllTripsObservable()
     }
+    /**
+     * Returns an entry with the given id if it exists in the database, null otherwise.
+     * Warning: This does block the UI thread
+     *
+     * @param entryId Id of the entry to be retrieved
+     * @return Entry with the id specified if it exists in the database, null otherwise
+     */
+    fun getEntry(entryId : Int) : EntryData? = runBlocking{
+        mRepository.getEntry(entryId)
+    }
 
     /**
      * Given a trip's id and sensor measurements, create and insert an Entry into the database
