@@ -61,7 +61,7 @@ class GalleryFragment : Fragment() {
         })
 
         //Observing searchResults object in the view model
-        viewModel!!.searchResults.observe(this, Observer<List<ImageData>>{ images ->
+        viewModel!!.searchResults.observe(this, { images ->
             ImagesAdapter.items = images as MutableList<ImageData>
             mAdapter.notifyDataSetChanged()
         })

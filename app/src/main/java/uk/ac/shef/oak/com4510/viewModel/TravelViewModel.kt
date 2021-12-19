@@ -37,7 +37,6 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
     /**
      * Observable list of images that contains the result of a search performed on a given query.
      *
-     * Functions that update this observable:
      * @see search
      */
     val searchResults : LiveData<MutableList<ImageData>>
@@ -46,7 +45,9 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
     /**
      * Given a query, it updates the _searchResults livedata with the all the
      * images whose description or title match the query.
-     * @param query Query string
+     *
+     * @param query Query string the search is made against. Any ImageData whose description
+     * or title match [query] would be returned by the search.
      */
     fun search(query: String?) {
         viewModelScope.launch {
@@ -70,7 +71,7 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
     {
         viewModelScope.launch(Dispatchers.IO){
             val allImages = mRepository.getAllImages() ?: ArrayList<ImageData>()
-            _searchResults.postValue(allImages as MutableList<ImageData>?)
+            _searchResults.postValue(allImages as MutableList<ImageData>)
         }
     }
 
@@ -84,7 +85,7 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
         get() = _allTripsObservable
 
     /**
-     * Updates allTripsObservable to contain all trips in the database, along with some image associated with each trip.
+     * Updates allTripsObservable to contain a pair containing all the trips in the database, along with a random single image associated with each trip.
      */
     fun updateAllTripsObservable()
     {
@@ -130,8 +131,8 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
 
     private val _entriesOfTrip = MutableLiveData<MutableList<Pair<EntryData,List<ImageData>>>>()
     /**
-     * Observable list of (EntryData,List<ImageData>) corresponding to a particular trip. The List<ImageData> represents the
-     * list of images associated with each entry.
+     * Observable list of all (EntryData,List<ImageData>) corresponding to a particular trip. The List<ImageData> represents a
+     * list of all images associated with each entry.
      *
      * @see updateEntriesOfTrip
      */
@@ -588,14 +589,6 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
         }
         return imageList
     }
-    //Given an tripId return a tripData
-    fun debug_returnTripDataOfId(tripId: Int) : TripData?
-    {
-        val returnTripData : TripData?
-        runBlocking(Dispatchers.IO){
-            returnTripData =  mRepository.getTrip(tripId)
-        }
-        return returnTripData
-    }
+
 }
 

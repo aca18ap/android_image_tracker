@@ -190,6 +190,15 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
                 Snackbar.make(binding.root, "WOAH DUDE! Wait a second, the trip needs to have at least one entry before you can add images to it.", Snackbar.LENGTH_LONG).show()
         }
 
+        viewModel.entriesOfTrip.observe(this,{ listOfEntryImagePair ->
+            // listOfEntryImagePair is a list of Pairs of (EntryData,List<ImageData>). It contains each entry and it's associated list of images.
+            // This is where perhaps, Dan, you could update the map on this fragment to display the image for each entry on the map
+
+        })
+
+        // Update the entriesOfTrip observable to contain all entries of this trip
+        viewModel.updateEntriesOfTrip(tripID)
+
         binding.tripEndBtn.setOnClickListener{
             stopLocationUpdates()
             this.findNavController().popBackStack() // New Trip page
@@ -339,7 +348,8 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
             object : DefaultCallback(){
                 override fun onMediaFilesPicked(imageFiles: Array<MediaFile>, source: MediaSource) {
                     Log.d("InsideDanFragment","TripID: $tripID, EntryID: $entryID, Loc: $mCurrentLocation")
-                        viewModel.insertArrayMediaFilesWithLastEntryById(imageFiles)
+                    viewModel.insertArrayMediaFilesWithLastEntryById(imageFiles)
+                    viewModel.updateEntriesOfTrip(tripID)
                 }
             })
     }
