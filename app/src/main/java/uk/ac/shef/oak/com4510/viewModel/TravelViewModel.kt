@@ -348,8 +348,8 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
      *
      * @param  imageData  imageData to update.
      * @param  title title of ImageData to update to
-     * @param  description title of ImageData to update to
-     * @param  entry_id title of ImageData to update to
+     * @param  description description of ImageData to update to
+     * @param  entry_id entry_id of ImageData to update to
      */
     fun updateImageInDatabase(imageData : ImageData, title : String? = null, description : String? = null,entry_id : Int? = null)
     {
@@ -507,6 +507,16 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
         }
         //Update observable liveData tracking all trips
         updateAllTripsObservable()
+    }
+    /**
+     * Returns an entry with the given id if it exists in the database, null otherwise.
+     * Warning: This does block the UI thread
+     *
+     * @param entryId Id of the entry to be retrieved
+     * @return Entry with the id specified if it exists in the database, null otherwise
+     */
+    fun getEntry(entryId : Int) : EntryData? = runBlocking{
+        mRepository.getEntry(entryId)
     }
 
     /**
