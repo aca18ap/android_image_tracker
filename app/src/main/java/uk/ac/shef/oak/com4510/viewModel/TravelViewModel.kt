@@ -348,8 +348,8 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
      *
      * @param  imageData  imageData to update.
      * @param  title title of ImageData to update to
-     * @param  description title of ImageData to update to
-     * @param  entry_id title of ImageData to update to
+     * @param  description description of ImageData to update to
+     * @param  entry_id entry_id of ImageData to update to
      */
     fun updateImageInDatabase(imageData : ImageData, title : String? = null, description : String? = null,entry_id : Int? = null)
     {
