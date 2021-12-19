@@ -6,6 +6,9 @@ import kotlinx.coroutines.*
 import uk.ac.shef.oak.com4510.model.data.database.*
 import uk.ac.shef.oak.com4510.viewModel.OrderBy
 
+/**
+ * Class used by the viewmodel to abstract accessing data from the database. Not to be used by any class outside the viewmodel
+ */
 class Repository(application: Application) {
     private var imageDataDao: ImageDataDao? = null
     private var entryDataDao : EntryDataDao? = null
@@ -55,7 +58,6 @@ class Repository(application: Application) {
             OrderBy.ASC -> imageDataDao?.searchOrderByTimeStampASC(query)
             else -> imageDataDao?.searchOrderByTimeStampDESC(query)
         }
-
         matchedImages
     }
 
@@ -108,7 +110,7 @@ class Repository(application: Application) {
 
     /**
      * Returns an entry with the given id
-     * @param entryDataId Id of the entry being retreived
+     * @param entryDataId Id of the entry being retrieved
      * @return Entry with the given id if it exists, null otherwise
      */
     suspend fun getEntry(entryDataId : Int) = withContext(Dispatchers.IO){
@@ -156,10 +158,6 @@ class Repository(application: Application) {
 
 
     // ---------TripData related --------------------------------------
-
-    /**
-     *
-     */
 
     /**
      * Return all trips in the database
