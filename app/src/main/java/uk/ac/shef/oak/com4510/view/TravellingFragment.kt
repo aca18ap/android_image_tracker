@@ -31,8 +31,6 @@ import com.google.android.material.snackbar.Snackbar
 import pl.aprilapps.easyphotopicker.*
 import uk.ac.shef.oak.com4510.R
 import uk.ac.shef.oak.com4510.databinding.FragmentTravellingBinding
-import uk.ac.shef.oak.com4510.model.data.database.EntryData
-import uk.ac.shef.oak.com4510.model.data.database.ImageData
 import uk.ac.shef.oak.com4510.service.LocationService
 import uk.ac.shef.oak.com4510.viewModel.TravelViewModel
 
@@ -166,7 +164,7 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-        ): View? {
+    ): View? {
         tripID = args.tripID
         Log.i("Current Trip ID", "$tripID")
 
@@ -192,10 +190,12 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
                 Snackbar.make(binding.root, "WOAH DUDE! Wait a second, the trip needs to have at least one entry before you can add images to it.", Snackbar.LENGTH_LONG).show()
         }
 
-        viewModel.entriesOfTrip.observe(this, { listOfEntryImagePair ->
+        viewModel.entriesOfTrip.observe(viewLifecycleOwner) { listOfEntryImagePair ->
             // listOfEntryImagePair is a list of Pairs of (EntryData,List<ImageData>). It contains each entry and it's associated list of images.
             // This is where perhaps, Dan, you could update the map on this fragment to display the image for each entry on the map
-        })
+            Log.i("EntryCallback", listOfEntryImagePair.toString())
+            // for each pair, add a marker...
+        }
 
         // Update the entriesOfTrip observable to contain all entries of this trip
         viewModel.updateEntriesOfTrip(tripID)
@@ -349,7 +349,8 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
             object : DefaultCallback(){
                 override fun onMediaFilesPicked(imageFiles: Array<MediaFile>, source: MediaSource) {
                     Log.d("InsideDanFragment","TripID: $tripID, EntryID: $entryID, Loc: $mCurrentLocation")
-                        viewModel.insertArrayMediaFilesWithLastEntryById(imageFiles)
+                    viewModel.insertArrayMediaFilesWithLastEntryById(imageFiles)
+                    viewModel.updateEntriesOfTrip(tripID)
                 }
             })
     }
