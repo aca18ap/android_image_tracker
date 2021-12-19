@@ -16,6 +16,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import uk.ac.shef.oak.com4510.viewModel.TravelViewModel
 
 /**
  * A simple [Fragment] subclass.
@@ -43,18 +44,11 @@ class ShowImageFragment : Fragment() {
     }
 
 
-
     private fun displayData(position: Int, binding: FragmentShowImageBinding){
         val imageView = binding.showImage
         val titleToolbar = binding.showToolbar
-        val sensorsTextView = binding.showSensors
-        val mapView = binding.showMap
         val descriptionTextView = binding.showImageDescription
-
-        val buttonShowDescription = binding.showDescriptionButton
         val buttonShowMap = binding.showMapButton
-        val buttonShowSensors = binding.showSensorsButton
-        val viewsList = listOf(mapView, descriptionTextView, sensorsTextView)
         if (position != -1) {
 
             val imageData = ImagesAdapter.items[position]
@@ -62,8 +56,8 @@ class ShowImageFragment : Fragment() {
             imageView.setImageBitmap(BitmapFactory.decodeFile(imageData.imageUri))
             titleToolbar.title = imageData.imageTitle
             descriptionTextView.text = imageData.imageDescription
-
-
+            val entry_id = imageData.entry_id
+            val entry = TravelViewModel.
 
             val fabEdit: FloatingActionButton = binding.fabEdit
             fabEdit.setOnClickListener(View.OnClickListener {
@@ -71,31 +65,10 @@ class ShowImageFragment : Fragment() {
                 it.findNavController().navigate(action)
             })
 
-            buttonShowDescription.setOnClickListener(View.OnClickListener {
-                toggleDescription(descriptionTextView, viewsList)
-            })
             buttonShowMap.setOnClickListener(View.OnClickListener {
-                toggleDescription(mapView, viewsList)
+                // val action = ShowImageFragmentDirections.actionShowImageFragmentToEditImageFragment(position)
+                // it.findNavController().navigate(action)
             })
-            buttonShowSensors.setOnClickListener(View.OnClickListener {
-                toggleDescription(sensorsTextView, viewsList)
-            })
-        }
-    }
-
-    /**
-     * Toggle the description views
-     */
-    private fun toggleDescription(elem : View, viewsList: List<View>){
-        for (view in viewsList){
-            if (view != elem) {
-                view.visibility = View.GONE
-            }
-        }
-        if (elem.visibility == View.VISIBLE){
-            elem.visibility = View.GONE
-        }else{
-            elem.visibility = View.VISIBLE
         }
     }
 }
