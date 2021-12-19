@@ -37,6 +37,11 @@ class ShowImageFragment : Fragment() {
             displayData(args.position, binding)
         }
 
+        binding.fullScreenButton.setOnClickListener{view: View ->
+            val action = ShowImageFragmentDirections.actionShowImageFragmentToFullScreenImageFragment(args.position)
+            view.findNavController().navigate(action)
+        }
+
         binding.lifecycleOwner = this
 
         return binding.root
@@ -80,6 +85,7 @@ class ShowImageFragment : Fragment() {
             buttonShowSensors.setOnClickListener(View.OnClickListener {
                 toggleDescription(sensorsTextView, viewsList)
             })
+
         }
     }
 

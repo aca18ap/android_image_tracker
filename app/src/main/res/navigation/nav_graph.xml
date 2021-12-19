@@ -58,6 +58,9 @@
             app:exitAnim="@android:anim/fade_out"
             app:popEnterAnim="@android:anim/fade_in"
             app:popExitAnim="@android:anim/fade_out" />
+        <action
+            android:id="@+id/action_showImageFragment_to_fullScreenImageFragment"
+            app:destination="@id/fullScreenImageFragment" />
     </fragment>
     <fragment
         android:id="@+id/editImageFragment"
@@ -120,4 +123,17 @@
         android:name="uk.ac.shef.oak.com4510.view.DebugFragment"
         android:label="fragment_debug"
         tools:layout="@layout/fragment_debug" />
+    <fragment
+        android:id="@+id/fullScreenImageFragment"
+        android:name="uk.ac.shef.oak.com4510.view.FullScreenImageFragment"
+        android:label="FullScreenImageFragment"
+        tools:layout="@layout/fragment_full_screen_image">
+        <argument
+            android:name="imagePosition"
+            app:argType="integer"
+            android:defaultValue="-1">
+
+        </argument>
+    </fragment>
+
 </navigation>
