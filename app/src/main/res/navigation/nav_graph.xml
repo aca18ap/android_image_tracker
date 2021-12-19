@@ -58,6 +58,13 @@
             app:exitAnim="@android:anim/fade_out"
             app:popEnterAnim="@android:anim/fade_in"
             app:popExitAnim="@android:anim/fade_out" />
+        <action
+            android:id="@+id/action_showImageFragment_to_existingTravelFragment"
+            app:destination="@id/existingTravelFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
     </fragment>
     <fragment
         android:id="@+id/editImageFragment"
@@ -88,7 +95,20 @@
             app:argType="integer"
             android:defaultValue="-1"/>
     </fragment>
-
+    <fragment
+        android:id="@+id/existingTravelFragment"
+        android:name="uk.ac.shef.oak.com4510.view.ExistingTravelFragment"
+        android:label="ExistingTravelFragment"
+        tools:layout="@layout/fragment_existing_travel">
+        <argument
+            android:name="tripID"
+            app:argType="integer"
+            android:defaultValue="-1"/>
+        <argument
+            android:name="entryID"
+            app:argType="integer"
+            android:defaultValue="-1"/>
+    </fragment>
     <fragment
         android:id="@+id/viewPastTripsFragment"
         android:name="uk.ac.shef.oak.com4510.view.ViewPastTripsFragment"
