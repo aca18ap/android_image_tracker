@@ -12,6 +12,7 @@ import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayoutMediator
 import uk.ac.shef.oak.com4510.R
 import uk.ac.shef.oak.com4510.databinding.FragmentViewTripDetailsBinding
+import uk.ac.shef.oak.com4510.model.data.database.ImageData
 import uk.ac.shef.oak.com4510.viewModel.TravelViewModel
 import uk.ac.shef.oak.com4510.viewModel.TripsAdapter
 import uk.ac.shef.oak.com4510.viewModel.ViewPagerAdapter
@@ -59,6 +60,14 @@ class ViewTripDetailsFragment : Fragment() {
             }
         }.attach()
 
+        //Have access to the observable in this fragment
+        viewModel.entriesOfTrip.observe(this, { listOfEntryImagePair ->
+            // listOfEntryImagePair is a list of Pairs of (EntryData,List<ImageData>). It contains each entry and it's associated list of images.
+            // This is where perhaps, Dan, you could update the map on this fragment to display the the image for each entry on the map
+        })
+
+        //TripsAdapter.items[position].first.id
+
         viewModel.updateEntriesOfTrip(args.tripID)
         viewModel.updateImagesOfTrip(args.tripID)
 
@@ -75,6 +84,7 @@ class ViewTripDetailsFragment : Fragment() {
         if (position != -1){
             val tripData = TripsAdapter.items[position].first
             val imageData = TripsAdapter.items[position].second
+
             title.text = tripData.title
             location.text = tripData.country
             date.text = tripData.trip_timestamp.toString()
