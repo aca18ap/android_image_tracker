@@ -265,7 +265,7 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
     private fun createLocationRequest() {
         locationRequest = LocationRequest.create().apply {
             interval = 20000
-            fastestInterval = 20000
+            fastestInterval = 10000
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         }
     }

@@ -121,13 +121,13 @@ class LocationService : Service() {
                                 ).id
                                 Log.i("ServiceEntryID", "ID: $currentEntryID")
                                 TravellingFragment.setEntryID(currentEntryID)
-                                TravellingFragment.getMap().addMarker(
-                                    MarkerOptions().position(newPoint)
-                                        .title("$mLastUpdateTime")
-                                        .snippet(
-                                        "Pressure: $mCurrentPressure mbar, Temperature: $mCurrentTemperature C"
-                                        )
-                                )
+//                                TravellingFragment.getMap().addMarker(
+//                                    MarkerOptions().position(newPoint)
+//                                        .title("$mLastUpdateTime")
+//                                        .snippet(
+//                                        "Pressure: $mCurrentPressure mbar, Temperature: $mCurrentTemperature C"
+//                                        )
+//                                )
                                 if (mLine == null) mLine = TravellingFragment.getMap()
                                     .addPolyline(PolylineOptions())
                                 val points = mLine!!.points
