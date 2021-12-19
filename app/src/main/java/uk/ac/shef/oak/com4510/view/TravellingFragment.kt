@@ -27,11 +27,15 @@ import com.google.android.gms.location.*
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.snackbar.Snackbar
 import pl.aprilapps.easyphotopicker.*
 import uk.ac.shef.oak.com4510.R
 import uk.ac.shef.oak.com4510.databinding.FragmentTravellingBinding
 import uk.ac.shef.oak.com4510.service.LocationService
+import uk.ac.shef.oak.com4510.viewModel.ImagesAdapter
 import uk.ac.shef.oak.com4510.viewModel.TravelViewModel
 
 /**
@@ -195,6 +199,24 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
             // This is where perhaps, Dan, you could update the map on this fragment to display the image for each entry on the map
             Log.i("EntryCallback", listOfEntryImagePair.toString())
             // for each pair, add a marker...
+            for (pair in listOfEntryImagePair) {
+                val entry = pair.first
+                val images = pair.second
+                val newPoint = LatLng(entry.lat, entry.lon)
+
+                if (images.isNotEmpty()) {
+                    Log.i("Images", images.toString())
+                    Log.i("Bitmap", images.first().thumbnail.toString())
+                    val bmp = ImagesAdapter.decodeSampledBitmapFromResource(images.first().imageUri, 150, 150)
+                    val bmpDescriptor = BitmapDescriptorFactory.fromBitmap(bmp)
+//                        val bmpDescriptor = BitmapDescriptorFactory.fromPath(images.first().imageUri)
+                    mMap.addMarker(
+                        MarkerOptions()
+                        .position(newPoint)
+                        .icon(bmpDescriptor)
+                    )
+                }
+            }
         }
 
         // Update the entriesOfTrip observable to contain all entries of this trip
