@@ -92,6 +92,15 @@ class Repository(application: Application) {
     // ---------EntryData related -------------------------------------
 
     /**
+     * Returns an entry with the given id
+     * @param entryDataId Id of the entry being retreived
+     * @return Entry with the given id if it exists, null otherwise
+     */
+    suspend fun getEntry(entryDataId : Int) = withContext(Dispatchers.IO){
+        entryDataDao?.getItem(entryDataId)
+    }
+
+    /**
      * Delete an entry from the database
      * @param entryData EntryData to delete
      */
