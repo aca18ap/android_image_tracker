@@ -57,7 +57,7 @@ class ShowImageFragment : Fragment() {
             titleToolbar.title = imageData.imageTitle
             descriptionTextView.text = imageData.imageDescription
             val entry_id = imageData.entry_id
-            val entry = TravelViewModel.
+            val entry = TravelViewModel.getEntry(entry_id)
 
             val fabEdit: FloatingActionButton = binding.fabEdit
             fabEdit.setOnClickListener(View.OnClickListener {

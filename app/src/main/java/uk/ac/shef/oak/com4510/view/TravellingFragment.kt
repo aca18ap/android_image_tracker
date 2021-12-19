@@ -187,7 +187,7 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
             if (viewModel.tripHasEntries(tripID))
                 easyImage.openChooser(this)
             else
-                Snackbar.make(binding.root, "WOAH DUDE! Wait a second, the trip needs to have at least one entry before you can add images to it.", Snackbar.LENGTH_LONG).show()
+                Snackbar.make(binding.root, "Please wait a moment for us to find your location.", Snackbar.LENGTH_LONG).show()
         }
 
         viewModel.entriesOfTrip.observe(viewLifecycleOwner) { listOfEntryImagePair ->
