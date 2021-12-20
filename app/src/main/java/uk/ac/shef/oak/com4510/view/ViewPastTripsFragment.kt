@@ -19,6 +19,7 @@ import uk.ac.shef.oak.com4510.R
 import uk.ac.shef.oak.com4510.databinding.FragmentViewPastTripsBinding
 import uk.ac.shef.oak.com4510.model.data.database.ImageData
 import uk.ac.shef.oak.com4510.model.data.database.TripData
+import uk.ac.shef.oak.com4510.viewModel.OrderBy
 import uk.ac.shef.oak.com4510.viewModel.TravelViewModel
 import uk.ac.shef.oak.com4510.viewModel.TripsAdapter
 
@@ -77,7 +78,7 @@ class ViewPastTripsFragment : Fragment() {
             }
 
             override fun onQueryTextChange(p0: String?): Boolean {
-                viewModel!!.search(p0)
+                viewModel!!.search(p0,OrderBy.NOPARTICULARORDER)
                 return false
             }
         })

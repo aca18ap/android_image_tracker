@@ -49,15 +49,15 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
      * @param query Query string the search is made against. Any ImageData whose description
      * or title match [query] would be returned by the search.
      */
-    fun search(query: String?) {
+    fun search(query: String?, order : OrderBy) {
         viewModelScope.launch {
             if (query.isNullOrBlank())
             {
-                _searchResults.value = mRepository.getAllImages() as MutableList<ImageData>
+                _searchResults.value = mRepository.getAllImages(order) as MutableList<ImageData>
             } else
             {
                 val sanitizedQuery = sanitizeSearchQuery(query)
-                mRepository.search(sanitizedQuery).let {
+                mRepository.search(sanitizedQuery,order).let {
                     _searchResults.value = it as MutableList<ImageData>
                 }
             }
@@ -70,7 +70,7 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
     private fun initSearchResults()
     {
         viewModelScope.launch(Dispatchers.IO){
-            val allImages = mRepository.getAllImages() ?: ArrayList<ImageData>()
+            val allImages = mRepository.getAllImages(OrderBy.NOPARTICULARORDER) ?: ArrayList<ImageData>()
             _searchResults.postValue(allImages as MutableList<ImageData>)
         }
     }
@@ -595,7 +595,7 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
     {
         var imageList : List<ImageData>?
         runBlocking {
-            imageList = mRepository.getAllImages()
+            imageList = mRepository.getAllImages(OrderBy.NOPARTICULARORDER)
         }
         return imageList
     }

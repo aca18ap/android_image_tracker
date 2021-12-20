@@ -27,17 +27,22 @@ import com.google.android.gms.location.*
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
+import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.snackbar.Snackbar
 import pl.aprilapps.easyphotopicker.*
 import uk.ac.shef.oak.com4510.R
 import uk.ac.shef.oak.com4510.databinding.FragmentTravellingBinding
 import uk.ac.shef.oak.com4510.service.LocationService
+import uk.ac.shef.oak.com4510.viewModel.ImagesAdapter
 import uk.ac.shef.oak.com4510.viewModel.TravelViewModel
 
 /**
  * A fragment containing the current visit
  */
-class TravellingFragment : Fragment(), OnMapReadyCallback {
+class TravellingFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
     private val args: TravellingFragmentArgs by navArgs()
     private lateinit var easyImage: EasyImage
     private lateinit var locationRequest: LocationRequest
@@ -164,7 +169,7 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-        ): View? {
+    ): View? {
         tripID = args.tripID
         Log.i("Current Trip ID", "$tripID")
 
@@ -187,14 +192,33 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
             if (viewModel.tripHasEntries(tripID))
                 easyImage.openChooser(this)
             else
-                Snackbar.make(binding.root, "WOAH DUDE! Wait a second, the trip needs to have at least one entry before you can add images to it.", Snackbar.LENGTH_LONG).show()
+                Snackbar.make(binding.root, "Please wait a moment for us to find your location.", Snackbar.LENGTH_LONG).show()
         }
 
-        viewModel.entriesOfTrip.observe(this,{ listOfEntryImagePair ->
+        viewModel.entriesOfTrip.observe(viewLifecycleOwner) { listOfEntryImagePair ->
             // listOfEntryImagePair is a list of Pairs of (EntryData,List<ImageData>). It contains each entry and it's associated list of images.
             // This is where perhaps, Dan, you could update the map on this fragment to display the image for each entry on the map
+            Log.i("EntryCallback", listOfEntryImagePair.toString())
+            // for each pair, add a marker...
+            for (pair in listOfEntryImagePair) {
+                val entry = pair.first
+                val images = pair.second
+                val newPoint = LatLng(entry.lat, entry.lon)
 
-        })
+                if (images.isNotEmpty()) {
+                    Log.i("Images", images.toString())
+                    Log.i("Bitmap", images.first().thumbnail.toString())
+                    val bmp = ImagesAdapter.decodeSampledBitmapFromResource(images.first().imageUri, 120, 120)
+                    val bmpDescriptor = BitmapDescriptorFactory.fromBitmap(bmp)
+                    mMap.addMarker(
+                        MarkerOptions()
+                        .position(newPoint)
+                        .icon(bmpDescriptor)
+                        .snippet(images.first().id.toString())
+                    )
+                }
+            }
+        }
 
         // Update the entriesOfTrip observable to contain all entries of this trip
         viewModel.updateEntriesOfTrip(tripID)
@@ -216,6 +240,7 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
     override fun onMapReady(googleMap: GoogleMap) {
         Log.i("TravellingFragment", "Created map")
         mMap = googleMap
+        mMap.setOnMarkerClickListener(this)
 
         if (ActivityCompat.checkSelfPermission(
                 requireActivity(),
@@ -247,6 +272,15 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
+    override fun onMarkerClick(m: Marker?): Boolean {
+        Log.i("MarkerClick", m.toString())
+        if (m == null) return false
+        val position = m.snippet.toInt()-1
+        val action = TravellingFragmentDirections.actionTravellingFragmentToShowImageFragment(position)
+        this.findNavController().navigate(action)
+        return true
+    }
+
     /**
      * Context setter
      * @param context the current context
@@ -264,7 +298,7 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
     private fun createLocationRequest() {
         locationRequest = LocationRequest.create().apply {
             interval = 20000
-            fastestInterval = 20000
+            fastestInterval = 10000
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         }
     }
