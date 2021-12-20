@@ -24,13 +24,11 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.location.*
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.Marker
-import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.*
 import com.google.android.material.snackbar.Snackbar
 import pl.aprilapps.easyphotopicker.*
 import uk.ac.shef.oak.com4510.R
@@ -49,6 +47,7 @@ class TravellingFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerCli
     private lateinit var ctx: Context
     private var service : LocationService? = null
     private var mLocationPendingIntent: PendingIntent? = null
+    private var mLine: Polyline? = null
 
     private var locationCallback: LocationCallback = object : LocationCallback() {
 
@@ -210,31 +209,41 @@ class TravellingFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerCli
     override fun onMapReady(googleMap: GoogleMap) {
         Log.i("TravellingFragment", "Created map")
         mMap = googleMap
+        mLine = mMap.addPolyline(PolylineOptions())
         mMap.setOnMarkerClickListener(this)
 
         viewModel.entriesOfTrip.observe(viewLifecycleOwner) { listOfEntryImagePair ->
             // listOfEntryImagePair is a list of Pairs of (EntryData,List<ImageData>). It contains each entry and it's associated list of images.
             // This is where perhaps, Dan, you could update the map on this fragment to display the image for each entry on the map
             Log.i("EntryCallback", listOfEntryImagePair.toString())
-            // for each pair, add a marker...
-            for (pair in listOfEntryImagePair) {
-                val entry = pair.first
-                val images = pair.second
-                val newPoint = LatLng(entry.lat, entry.lon)
+            try {
+                // for each pair, add a marker...
+                for (pair in listOfEntryImagePair) {
+                    val entry = pair.first
+                    val images = pair.second
+                    val newPoint = LatLng(entry.lat, entry.lon)
 
-                if (images.isNotEmpty()) {
-                    Log.i("Images", images.toString())
-                    Log.i("Bitmap", images.first().thumbnail.toString())
-                    val bmp = ImagesAdapter.decodeSampledBitmapFromResource(images.first().imageUri, 120, 120)
-                    val bmpDescriptor = BitmapDescriptorFactory.fromBitmap(bmp)
-                    mMap?.addMarker(
-                        MarkerOptions()
-                            .position(newPoint)
-                            .icon(bmpDescriptor)
-                            .snippet(images.first().id.toString())
-                    )
+                    val points = mLine!!.points
+                    points.add(newPoint)
+                    mLine!!.points = points
+
+                    if (images.isNotEmpty()) {
+                        Log.i("Images", images.toString())
+                        Log.i("Bitmap", images.first().thumbnail.toString())
+                        val bmp = ImagesAdapter.decodeSampledBitmapFromResource(images.first().imageUri, 120, 120)
+                        val bmpDescriptor = BitmapDescriptorFactory.fromBitmap(bmp)
+                        mMap?.addMarker(
+                            MarkerOptions()
+                                .position(newPoint)
+                                .icon(bmpDescriptor)
+                                .snippet(images.first().id.toString())
+                        )
+                    }
                 }
+            } catch (e: Exception) {
+                Log.e("TravellingFragment", "Could not write on map " + e.message)
             }
+
         }
 
         // Update the entriesOfTrip observable to contain all entries of this trip
