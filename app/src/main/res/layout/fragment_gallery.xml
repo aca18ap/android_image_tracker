@@ -20,27 +20,34 @@
                 android:background="?attr/colorPrimary"
                 app:popupTheme="@style/AppTheme.PopupOverlay" /-->
 
-            <androidx.appcompat.widget.SwitchCompat
-                android:id="@+id/OrderByTimeSwitch"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="OrderByTimeStamp"
-                android:textOff="DESC"
-                android:textOn="ASC"
-                app:showText="true" />
 
-            <SearchView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/search_bar_gallery">
-
-                <Button
+                android:orientation="horizontal">
+                <SearchView
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent">
+                    android:layout_height="wrap_content"
+                    android:id="@+id/search_bar_gallery">
 
-                </Button>
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
 
-            </SearchView>
+                    </Button>
+
+
+                </SearchView>
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/OrderByTimeSwitch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textOff="DESC"
+                    android:textOn="ASC"
+                    app:showText="true"/>
+            </LinearLayout>
+
+
 
         </com.google.android.material.appbar.AppBarLayout>
 

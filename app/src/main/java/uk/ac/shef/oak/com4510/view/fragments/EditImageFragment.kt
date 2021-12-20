@@ -1,6 +1,7 @@
 package uk.ac.shef.oak.com4510.view.fragments
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -14,6 +15,7 @@ import uk.ac.shef.oak.com4510.R
 import uk.ac.shef.oak.com4510.databinding.FragmentEditImageBinding
 import kotlinx.coroutines.*
 import uk.ac.shef.oak.com4510.model.data.database.ImageData
+import uk.ac.shef.oak.com4510.util.decodeSampledBitmapFromResource
 import uk.ac.shef.oak.com4510.viewModel.TravelViewModel
 
 /**
@@ -40,9 +42,12 @@ class EditImageFragment : Fragment() {
         if (args.imageID == -1){
             throw Exception("Somehow the EditImageFragment was navigated to it without being passed an imageID")
         }
-        val imageToEdit = viewmodel.getImage(args.imageID)!!
 
-        binding.editImage.setImageBitmap(imageToEdit.thumbnail)
+        Log.d("ImageData", args.imageID.toString() )
+        val imageToEdit: ImageData = viewmodel.getImage(args.imageID)!!
+        Log.d("database img", imageToEdit.imageTitle.toString())
+
+        binding.editImage.setImageBitmap(decodeSampledBitmapFromResource(imageToEdit.imageUri, 150, 150))
         binding.editorToolbar.title = imageToEdit.imageTitle
         binding.editImageTitle.setText(imageToEdit.imageTitle)
         binding.editImageDescription.setText(imageToEdit.imageDescription)

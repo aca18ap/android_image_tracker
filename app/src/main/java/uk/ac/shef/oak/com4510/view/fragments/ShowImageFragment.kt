@@ -56,7 +56,7 @@ class ShowImageFragment : Fragment() {
 
     private fun displayData(imageID: Int, binding: FragmentShowImageBinding){
         val imageView = binding.showImage
-        val titleToolbar = binding.showToolbar
+        //val titleToolbar = binding.showToolbar
         val timeTextView = binding.showImageTime
         val descriptionTextView = binding.showImageDescription
         val sensorsTextView = binding.showSensors
@@ -70,7 +70,7 @@ class ShowImageFragment : Fragment() {
             var sensorText = ""
             Log.d("ShowImageFragment",imageData.toString())
             imageView.setImageBitmap(BitmapFactory.decodeFile(imageData!!.imageUri))
-            titleToolbar.title = imageData.imageTitle
+            //titleToolbar.title = imageData.imageTitle
             descriptionTextView.text = imageData.imageDescription
 
             if (imageData.entry_id != null) {
