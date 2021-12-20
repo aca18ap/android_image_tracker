@@ -67,9 +67,9 @@ class ViewTripDetailsFragment : Fragment() {
         viewModel.updateEntriesOfTrip(args.tripID)
         viewModel.updateImagesOfTrip(args.tripID)
 
-        /*val ft : FragmentTransaction = childFragmentManager.beginTransaction()
-        ft.replace(R.id.map_container, ExistingTravelFragment())
-        ft.commit()*/
+        val ft : FragmentTransaction = childFragmentManager.beginTransaction()
+        ft.replace(R.id.map_container, ExistingTravelFragment(args.tripID))
+        ft.commit()
 
 
         return binding.root

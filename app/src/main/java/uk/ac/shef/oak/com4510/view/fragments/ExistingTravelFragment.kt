@@ -18,23 +18,27 @@ import com.google.android.gms.maps.SupportMapFragment
 import uk.ac.shef.oak.com4510.R
 import uk.ac.shef.oak.com4510.viewModel.TravelViewModel
 import com.google.android.gms.maps.model.*
+import uk.ac.shef.oak.com4510.util.decodeSampledBitmapFromResource
 import uk.ac.shef.oak.com4510.view.adapters.ImagesAdapter
 
-class ExistingTravelFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
+class ExistingTravelFragment(tid: Int = -1) : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
     private val args: ExistingTravelFragmentArgs by navArgs()
     private lateinit var viewModel: TravelViewModel
     private lateinit var mMap: GoogleMap
-    private var tripID = -1
+    private var tripID = tid
     private var entryID = -1
     private var mLine: Polyline? = null
     private var mLineLoc: Polyline? = null
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        tripID = args.tripID
+        if (this.tripID == -1){
+            tripID = args.tripID
+        }
         entryID = args.entryID
 
         viewModel = ViewModelProvider(requireActivity())[TravelViewModel::class.java]
@@ -86,7 +90,7 @@ class ExistingTravelFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarke
                     if (images.isNotEmpty()) {
                         Log.i("Images", images.toString())
                         Log.i("Bitmap", images.first().thumbnail.toString())
-                        val bmp = ImagesAdapter.decodeSampledBitmapFromResource(images.first().imageUri, 120, 120)
+                        val bmp = decodeSampledBitmapFromResource(images.first().imageUri, 120, 120)
                         val bmpDescriptor = BitmapDescriptorFactory.fromBitmap(bmp)
                         mMap.addMarker(MarkerOptions()
                             .position(newPoint)

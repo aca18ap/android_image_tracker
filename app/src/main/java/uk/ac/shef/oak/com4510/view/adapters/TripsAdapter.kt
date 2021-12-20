@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 import uk.ac.shef.oak.com4510.R
 import uk.ac.shef.oak.com4510.model.data.database.ImageData
 import uk.ac.shef.oak.com4510.model.data.database.TripData
-import uk.ac.shef.oak.com4510.view.adapters.ImagesAdapter.Companion.decodeSampledBitmapFromResource
+import uk.ac.shef.oak.com4510.util.decodeSampledBitmapFromResource
 import uk.ac.shef.oak.com4510.view.fragments.ViewPastTripsFragmentDirections
 
 /**

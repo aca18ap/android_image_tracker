@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import uk.ac.shef.oak.com4510.*
 import uk.ac.shef.oak.com4510.model.data.database.ImageData
 import kotlinx.coroutines.*
+import uk.ac.shef.oak.com4510.util.decodeSampledBitmapFromResource
 import uk.ac.shef.oak.com4510.view.fragments.GalleryFragmentDirections
 import uk.ac.shef.oak.com4510.view.fragments.ViewTripDetailsFragmentDirections
 import java.lang.IllegalArgumentException
@@ -49,13 +50,9 @@ class ImagesAdapter : RecyclerView.Adapter<ImagesAdapter.ViewHolder> {
         )
 
         val holder: ViewHolder = ViewHolder(v)
-        /*
-        context = parent.context
-        holder.itemView.setOnClickListener(View.OnClickListener {
-            //setting onclicklistener for each image
-            it.findNavController().navigate(R.id.action_galleryFragment_to_showImageFragment)
 
-        })*/
+        holder.progressBar.visibility = View.VISIBLE
+
         return holder
     }
 
@@ -69,7 +66,6 @@ class ImagesAdapter : RecyclerView.Adapter<ImagesAdapter.ViewHolder> {
      */
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
-        holder.progressBar.visibility = View.VISIBLE
 
         //Use the provided View Holder on the onCreateViewHolder method to populate the
         // current row on the RecyclerView
@@ -104,7 +100,6 @@ class ImagesAdapter : RecyclerView.Adapter<ImagesAdapter.ViewHolder> {
                 view.findNavController().navigate(action)
             }
         }
-
     }
 
 
@@ -121,59 +116,6 @@ class ImagesAdapter : RecyclerView.Adapter<ImagesAdapter.ViewHolder> {
     companion object {
         lateinit var items: MutableList<ImageData>
         private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
-
-        /**
-         * helper function to generate a bitmap object of a given size from an image's file path.
-         */
-        fun decodeSampledBitmapFromResource(
-            filePath: String,
-            reqWidth: Int,
-            reqHeight: Int
-        ): Bitmap {
-            // First decode with inJustDecodeBounds=true to check dimensions
-            val options = BitmapFactory.Options()
-
-            options.inJustDecodeBounds = true
-            BitmapFactory.decodeFile(filePath, options);
-
-            // Calculate inSampleSize
-            options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
-
-            // Decode bitmap with inSampleSize set
-            options.inJustDecodeBounds = false
-            return BitmapFactory.decodeFile(filePath, options);
-        }
-
-        /**
-         * helper function to calculate an inSampleSize for resampling to achieve the right picture
-         * density for a smaller size file.
-         * See inSampleFile: https://developer.android.com/reference/android/graphics/BitmapFactory.Options#inSampleSize
-         */
-        private fun calculateInSampleSize(
-            options: BitmapFactory.Options,
-            reqWidth: Int,
-            reqHeight: Int
-        ): Int {
-            // Raw height and width of image
-            val height = options.outHeight;
-            val width = options.outWidth
-            var inSampleSize = 1
-
-            if (height > reqHeight || width > reqWidth) {
-                val halfHeight = (height / 2).toInt()
-                val halfWidth = (width / 2).toInt()
-
-                // Calculate the largest inSampleSize value that is a power of 2 and keeps both
-                // height and width larger than the requested height and width.
-                while ((halfHeight / inSampleSize) >= reqHeight
-                    && (halfWidth / inSampleSize) >= reqWidth
-                ) {
-                    inSampleSize *= 2;
-                }
-            }
-
-            return inSampleSize.toInt();
-        }
     }
 
 
