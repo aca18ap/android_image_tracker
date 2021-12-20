@@ -109,7 +109,6 @@ class LocationService : Service() {
                                 CameraUpdateFactory.newLatLng(newPoint)
                             )
                             TravellingFragment.getMap().animateCamera(zoom)
-                            TravellingFragment.setData(getLastLocation()!!, getLastPressure(), getLastTemperature(), System.currentTimeMillis())
                             if (doneFirstReading) {
                                 currentEntryID = TravellingFragment.getViewModel().create_insert_entry_returnEntry(
                                     TravellingFragment.getTripId(),

@@ -125,15 +125,6 @@ class TravellingFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerCli
          * @param time a timestamp in milliseconds
          * @return activity the parent activity
          */
-        fun setData(location: Location?, pressure: Float?, temperature: Float?, time: Long) {
-//            mCurrentLocation = location
-//            binding.latitudeText.text = "Latitude: ${location!!.latitude}"
-//            binding.longitudeText.text = "Longitude: ${location!!.longitude}"
-//            mCurrentPressure = pressure
-//            if (pressure != null) binding.pressureText.text = "Pressure: $pressure mbar"
-//            mCurrentTemperature = temperature
-//            if (temperature != null) binding.temperatureText.text =  "Temperature: $temperature C"
-        }
 
         /**
          * Trip ID getter
