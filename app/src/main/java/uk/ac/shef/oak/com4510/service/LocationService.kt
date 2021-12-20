@@ -104,11 +104,11 @@ class LocationService : Service() {
                 if (TravellingFragment.getActivity() != null) {
                     TravellingFragment.getActivity()?.runOnUiThread(Runnable {
                         try {
-                            val zoom = CameraUpdateFactory.zoomTo(15f)
-                            TravellingFragment.getMap().moveCamera(
-                                CameraUpdateFactory.newLatLng(newPoint)
-                            )
-                            TravellingFragment.getMap().animateCamera(zoom)
+//                            val zoom = CameraUpdateFactory.zoomTo(15f)
+//                            TravellingFragment.getMap().moveCamera(
+//                                CameraUpdateFactory.newLatLng(newPoint)
+//                            )
+//                            TravellingFragment.getMap().animateCamera(zoom)
                             if (doneFirstReading) {
                                 currentEntryID = TravellingFragment.getViewModel().create_insert_entry_returnEntry(
                                     TravellingFragment.getTripId(),

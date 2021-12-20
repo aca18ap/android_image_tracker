@@ -238,6 +238,16 @@ class TravellingFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerCli
                 binding.longitudeText.text = "Longitude: ${lastEntry.lon}"
                 if (lastEntry.entry_pressure != null) binding.pressureText.text = "Pressure: ${lastEntry.entry_pressure} mbar"
                 if (lastEntry.entry_temperature != null) binding.temperatureText.text =  "Temperature: ${lastEntry.entry_temperature} C"
+                try {
+                    mMap.moveCamera(
+                        CameraUpdateFactory.newLatLngZoom(LatLng(
+                            lastEntry.lat,
+                            lastEntry.lon
+                        ), 15f)
+                    )
+                } catch (e: Exception) {
+                    Log.e("TravellingFragment", "Could not move camera " + e.message)
+                }
             }
 
         }
