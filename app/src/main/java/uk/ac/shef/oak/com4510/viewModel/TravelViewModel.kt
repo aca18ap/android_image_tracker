@@ -226,7 +226,7 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
         }
     }
 
-    /*
+
     private val _onGoingTrip = MutableLiveData<Int>(-1)
     /**
      * Observable liveData representing the id of the currently ongoing trip. Default value = -1
@@ -245,7 +245,6 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
     {
         return _onGoingTrip.value!!
     }
-     */
 
     /**
      * Returns an ImageData object with the given id

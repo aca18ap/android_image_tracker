@@ -82,14 +82,6 @@ class LocationService : Service() {
                     mLastUpdateTime = DateFormat.getTimeInstance().format(Date())
                     if (TravellingFragment.getActivity() != null) {
                         TravellingFragment.getActivity()?.runOnUiThread(Runnable {
-//                            TravellingFragment.getViewModel().create_insert_entry_returnEntry(
-//                                TravellingFragment.getTripId(),
-//                                getLastTemperature(), // Nullable if phone has no ambient temperature sensor
-//                                getLastPressure(), // Nullable if phone has no barometer
-//                                getLastLocation()!!.latitude,
-//                                getLastLocation()!!.longitude,
-//                                System.currentTimeMillis()
-//                            )
                             mRepository.create_insert_entry_returnEntry(
                                 TravellingFragment.getTripId(),
                                 getLastTemperature(), // Nullable if phone has no ambient temperature sensor

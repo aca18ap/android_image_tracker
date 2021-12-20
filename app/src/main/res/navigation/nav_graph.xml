@@ -21,6 +21,9 @@
             android:id="@+id/action_homeFragment_to_newTripFragment"
             app:destination="@id/newTripFragment" />
         <action
+            android:id="@+id/action_homeFragment_to_travellingFragment"
+            app:destination="@id/travellingFragment" />
+        <action
             android:id="@+id/action_homeFragment_to_viewPastTripsFragment"
             app:destination="@id/viewPastTripsFragment" />
         <action
