@@ -48,6 +48,20 @@ class ExistingTravelFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarke
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
         mapFragment?.getMapAsync(this)
 
+    }
+
+    override fun onMapReady(googleMap: GoogleMap) {
+        mMap = googleMap
+        if (mLine == null) mLine = mMap
+            .addPolyline(PolylineOptions())
+        if (mLineLoc == null) mLineLoc = mMap
+            .addPolyline(PolylineOptions()
+                .color(4282549748.toInt()) // Google blue
+                .zIndex(1f)// Over the top of the entire trip
+                .width(20f)
+            )
+        mMap.setOnMarkerClickListener(this)
+
         viewModel.entriesOfTrip.observe(viewLifecycleOwner) { listOfEntryImagePair ->
             // listOfEntryImagePair is a list of Pairs of (EntryData,List<ImageData>). It contains each entry and it's associated list of images.
             // This is where perhaps, Dan, you could update the map on this fragment to display the image for each entry on the map
@@ -94,22 +108,8 @@ class ExistingTravelFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarke
             } catch (e: Exception) {
                 Log.e("ExistingTravelFragment", "Could not write on map " + e.message)
             }
-
         }
         viewModel.updateEntriesOfTrip(tripID)
-    }
-
-    override fun onMapReady(googleMap: GoogleMap) {
-        mMap = googleMap
-        if (mLine == null) mLine = mMap
-            .addPolyline(PolylineOptions())
-        if (mLineLoc == null) mLineLoc = mMap
-            .addPolyline(PolylineOptions()
-                .color(4282549748.toInt()) // Google blue
-                .zIndex(1f)// Over the top of the entire trip
-                .width(20f)
-            )
-        mMap.setOnMarkerClickListener(this)
     }
 
     override fun onMarkerClick(m: Marker?): Boolean {

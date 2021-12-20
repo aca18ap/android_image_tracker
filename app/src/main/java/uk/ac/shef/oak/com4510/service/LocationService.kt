@@ -122,11 +122,6 @@ class LocationService : Service() {
                                 Log.i("ServiceEntryID", "ID: $currentEntryID")
                                 TravellingFragment.setEntryID(currentEntryID)
                                 TravellingFragment.getViewModel().updateEntriesOfTrip(TravellingFragment.getTripId())
-                                //if (mLine == null) mLine = TravellingFragment.getMap()
-                                //    .addPolyline(PolylineOptions())
-                                //val points = mLine!!.points
-                                //points.add(newPoint)
-                                //mLine!!.points = points
                             }
                         } catch (e: Exception) {
                             Log.e("LocationService", "Could not write on map " + e.message)
