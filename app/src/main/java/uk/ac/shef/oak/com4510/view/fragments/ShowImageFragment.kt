@@ -2,6 +2,7 @@ package uk.ac.shef.oak.com4510.view.fragments
 
 import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -67,7 +68,7 @@ class ShowImageFragment : Fragment() {
             val imageData = viewModel.getImage(imageID)
 
             var sensorText = ""
-
+            Log.d("ShowImageFragment",imageData.toString())
             imageView.setImageBitmap(BitmapFactory.decodeFile(imageData!!.imageUri))
             titleToolbar.title = imageData.imageTitle
             descriptionTextView.text = imageData.imageDescription

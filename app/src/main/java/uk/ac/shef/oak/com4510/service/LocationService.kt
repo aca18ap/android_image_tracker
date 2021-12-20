@@ -11,12 +11,15 @@ import android.location.Location
 import android.os.Binder
 import android.os.IBinder
 import android.util.Log
+import androidx.fragment.app.activityViewModels
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Polyline
 import com.google.android.gms.maps.model.PolylineOptions
+import uk.ac.shef.oak.com4510.model.data.Repository
 import uk.ac.shef.oak.com4510.view.fragments.TravellingFragment
+import uk.ac.shef.oak.com4510.viewModel.TravelViewModel
 import java.text.DateFormat
 import java.util.*
 
@@ -36,6 +39,8 @@ class LocationService : Service() {
     private var thermometer: Sensor? = null
     private var doneFirstReading: Boolean = false // First reading often has inaccurate location
     private val mBinder: IBinder = LocalBinder()
+
+    private lateinit var mRepository: Repository
 
     private var barometerEventListener  = object : SensorEventListener {
         override fun onSensorChanged(event: SensorEvent) {
@@ -71,6 +76,7 @@ class LocationService : Service() {
     override fun onCreate() {
         Log.i("LocationService", "onCreate")
         super.onCreate()
+        mRepository = Repository(application)
     }
 
     /**
@@ -110,7 +116,8 @@ class LocationService : Service() {
                             TravellingFragment.getMap().animateCamera(zoom)
                             TravellingFragment.setData(getLastLocation()!!, getLastPressure(), getLastTemperature(), System.currentTimeMillis())
                             if (doneFirstReading) {
-                                currentEntryID = TravellingFragment.getViewModel().create_insert_entry_returnEntry(
+
+                                currentEntryID = mRepository.create_insert_entry_returnEntry(
                                     TravellingFragment.getTripId(),
                                     getLastTemperature(), // Nullable if phone has no ambient temperature sensor
                                     getLastPressure(), // Nullable if phone has no barometer

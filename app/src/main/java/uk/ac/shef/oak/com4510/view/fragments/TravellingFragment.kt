@@ -68,7 +68,6 @@ class TravellingFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerCli
             service = null
         }
     }
-
     companion object {
         private const val REQUEST_ACCESS_FINE_LOCATION = 1122 // Used in section 1.1.2 of brief
         private lateinit var mMap: GoogleMap
