@@ -25,6 +25,7 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
         initSearchResults()
         //Initializes the allTrips observable to contain all the trips in the database
         updateAllTripsObservable()
+        initializeOnGoingTrip()
     }
 
     //Separate constructor to allow passing a different repository. For testing
@@ -226,26 +227,38 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
         }
     }
 
-    /*
-    private val _onGoingTrip = MutableLiveData<Int>(-1)
+
+    private val _onGoingTrip = MutableLiveData<List<Int>>()
     /**
-     * Observable liveData representing the id of the currently ongoing trip. Default value = -1
+     * Observable liveData representing the id of the currently ongoing trip. Default value = -1.
+     * META COMMENT: This was added 1 hr and 14 minutes before the deadline. I don't understand why I would
+     * need to use a coroutine to initialize the LiveDat
      *
      * @see setOnGoingTrip
      * @see getOnGoingTrip
      */
-    val onGoingTrip : LiveData<Int>
+    val onGoingTrip : LiveData<List<Int>>
         get() = _onGoingTrip
 
     fun setOnGoingTrip(tripID: Int)
     {
-        _onGoingTrip.value = tripID
+        val updatedOnGoingTrip = ArrayList<Int>()
+        updatedOnGoingTrip.add(0,tripID)
+        _onGoingTrip.value = updatedOnGoingTrip
     }
-    fun getOnGoingTrip() : Int
+    fun getOnGoingTrip() : List<Int>
     {
         return _onGoingTrip.value!!
     }
-     */
+    fun initializeOnGoingTrip()
+    {
+        viewModelScope.launch(Dispatchers.IO) {
+            val initalOnGoingTrip = ArrayList<Int>()
+            initalOnGoingTrip.add(0, -1)
+            _onGoingTrip.postValue(initalOnGoingTrip)
+        }
+    }
+
 
     /**
      * Returns an ImageData object with the given id

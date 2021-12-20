@@ -78,12 +78,13 @@ class GalleryFragment : Fragment() {
             ImagesAdapter.items = images as MutableList<ImageData>
             mAdapter.notifyDataSetChanged()
         })
-        /*
+
         viewModel!!.onGoingTrip.observe(this,{
             Log.d("GalleryFragment"," The ongoing trip $it")
             Snackbar.make(binding.root, "The ongoing trip is:$it", Snackbar.LENGTH_LONG).show()
         })
-        */
+
+        viewModel!!.setOnGoingTrip(3)
 
         return binding.root
     }
@@ -96,6 +97,7 @@ class GalleryFragment : Fragment() {
                 viewModel!!.debug_insertArrayMediaFiles(imageFiles)
             }
         })
+
     }
 
     private fun initEasyImage() {
