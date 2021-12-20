@@ -29,6 +29,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.snackbar.Snackbar
 import pl.aprilapps.easyphotopicker.*
@@ -41,7 +42,7 @@ import uk.ac.shef.oak.com4510.viewModel.TravelViewModel
 /**
  * A fragment containing the current visit
  */
-class TravellingFragment : Fragment(), OnMapReadyCallback {
+class TravellingFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
     private val args: TravellingFragmentArgs by navArgs()
     private lateinit var easyImage: EasyImage
     private lateinit var locationRequest: LocationRequest
@@ -213,6 +214,7 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
                         MarkerOptions()
                         .position(newPoint)
                         .icon(bmpDescriptor)
+                        .snippet(images.first().id.toString())
                     )
                 }
             }
@@ -267,6 +269,14 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
             this.findNavController().popBackStack()
             this.findNavController().popBackStack()
         }
+    }
+
+    override fun onMarkerClick(m: Marker?): Boolean {
+        if (m == null) return false
+        val position = m.snippet.toInt()-1
+        val action = TravellingFragmentDirections.actionTravellingFragmentToShowImageFragment(position)
+        this.findNavController().navigate(action)
+        return true
     }
 
     /**
