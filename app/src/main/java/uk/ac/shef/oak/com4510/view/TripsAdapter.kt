@@ -1,9 +1,6 @@
-package uk.ac.shef.oak.com4510.viewModel
+package uk.ac.shef.oak.com4510.view
 
 import android.content.Context
-import android.content.res.Resources
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,8 +15,7 @@ import kotlinx.coroutines.launch
 import uk.ac.shef.oak.com4510.R
 import uk.ac.shef.oak.com4510.model.data.database.ImageData
 import uk.ac.shef.oak.com4510.model.data.database.TripData
-import uk.ac.shef.oak.com4510.view.ViewPastTripsFragmentDirections
-import uk.ac.shef.oak.com4510.viewModel.ImagesAdapter.Companion.decodeSampledBitmapFromResource
+import uk.ac.shef.oak.com4510.view.ImagesAdapter.Companion.decodeSampledBitmapFromResource
 
 /**
  * Class TripsAdapter, used by the recyclerview responsible for showing

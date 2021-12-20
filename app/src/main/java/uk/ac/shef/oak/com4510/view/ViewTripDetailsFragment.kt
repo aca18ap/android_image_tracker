@@ -12,10 +12,7 @@ import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayoutMediator
 import uk.ac.shef.oak.com4510.R
 import uk.ac.shef.oak.com4510.databinding.FragmentViewTripDetailsBinding
-import uk.ac.shef.oak.com4510.model.data.database.ImageData
 import uk.ac.shef.oak.com4510.viewModel.TravelViewModel
-import uk.ac.shef.oak.com4510.viewModel.TripsAdapter
-import uk.ac.shef.oak.com4510.viewModel.ViewPagerAdapter
 
 private const val NUM_PAGES = 2
 

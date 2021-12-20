@@ -18,9 +18,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import uk.ac.shef.oak.com4510.R
 import uk.ac.shef.oak.com4510.viewModel.TravelViewModel
-import androidx.navigation.fragment.navArgs
 import com.google.android.gms.maps.model.*
-import uk.ac.shef.oak.com4510.viewModel.ImagesAdapter
 
 class ExistingTravelFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
     private val args: ExistingTravelFragmentArgs by navArgs()
@@ -93,7 +91,7 @@ class ExistingTravelFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarke
                         mMap.addMarker(MarkerOptions()
                             .position(newPoint)
                             .icon(bmpDescriptor)
-                            .snippet(images.first().id.toString()) // For the listener. Invisible without a set title
+                            .snippet(images.first().id.toString()) // To pass ID to the listener. Invisible without a set title
                         )
                     }
                 }

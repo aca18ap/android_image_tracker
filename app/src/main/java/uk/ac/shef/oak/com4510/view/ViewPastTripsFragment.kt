@@ -21,8 +21,6 @@ import uk.ac.shef.oak.com4510.model.data.database.ImageData
 import uk.ac.shef.oak.com4510.model.data.database.TripData
 import uk.ac.shef.oak.com4510.viewModel.OrderBy
 import uk.ac.shef.oak.com4510.viewModel.TravelViewModel
-import uk.ac.shef.oak.com4510.viewModel.TripsAdapter
-
 
 
 class ViewPastTripsFragment : Fragment() {

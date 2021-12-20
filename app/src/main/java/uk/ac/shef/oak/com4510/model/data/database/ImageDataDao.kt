@@ -62,7 +62,6 @@ interface ImageDataDao {
     WHERE image_fts MATCH :query
     ORDER BY Entry.timestamp ASC
   """)
-    @RewriteQueriesToDropUnusedColumns
     suspend fun searchOrderByTimeStampASC(query: String): List<ImageData>
 
     /**

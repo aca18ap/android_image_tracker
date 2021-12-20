@@ -1,4 +1,4 @@
-package uk.ac.shef.oak.com4510.viewModel
+package uk.ac.shef.oak.com4510.view
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity

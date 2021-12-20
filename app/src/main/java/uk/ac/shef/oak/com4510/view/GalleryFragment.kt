@@ -3,7 +3,6 @@ package uk.ac.shef.oak.com4510.view
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.widget.CompoundButton
 import android.widget.SearchView
@@ -12,12 +11,10 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.room.FtsOptions
 import uk.ac.shef.oak.com4510.viewModel.TravelViewModel
 import uk.ac.shef.oak.com4510.R
 import uk.ac.shef.oak.com4510.databinding.FragmentGalleryBinding
 import uk.ac.shef.oak.com4510.model.data.database.ImageData
-import uk.ac.shef.oak.com4510.viewModel.ImagesAdapter
 import pl.aprilapps.easyphotopicker.*
 import uk.ac.shef.oak.com4510.viewModel.OrderBy
 
