@@ -207,7 +207,7 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
                 if (images.isNotEmpty()) {
                     Log.i("Images", images.toString())
                     Log.i("Bitmap", images.first().thumbnail.toString())
-                    val bmp = ImagesAdapter.decodeSampledBitmapFromResource(images.first().imageUri, 150, 150)
+                    val bmp = ImagesAdapter.decodeSampledBitmapFromResource(images.first().imageUri, 120, 120)
                     val bmpDescriptor = BitmapDescriptorFactory.fromBitmap(bmp)
                     mMap.addMarker(
                         MarkerOptions()
