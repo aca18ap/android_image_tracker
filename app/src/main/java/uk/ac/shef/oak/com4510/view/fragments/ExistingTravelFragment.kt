@@ -1,4 +1,4 @@
-package uk.ac.shef.oak.com4510.view
+package uk.ac.shef.oak.com4510.view.fragments
 
 import androidx.fragment.app.Fragment
 
@@ -8,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 
@@ -19,6 +18,7 @@ import com.google.android.gms.maps.SupportMapFragment
 import uk.ac.shef.oak.com4510.R
 import uk.ac.shef.oak.com4510.viewModel.TravelViewModel
 import com.google.android.gms.maps.model.*
+import uk.ac.shef.oak.com4510.view.adapters.ImagesAdapter
 
 class ExistingTravelFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
     private val args: ExistingTravelFragmentArgs by navArgs()

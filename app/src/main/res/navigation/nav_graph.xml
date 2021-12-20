@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="uk.ac.shef.oak.com4510.view.HomeFragment"
+        android:name="uk.ac.shef.oak.com4510.view.fragments.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home">
         <action
@@ -29,7 +29,7 @@
     </fragment>
     <fragment
         android:id="@+id/galleryFragment"
-        android:name="uk.ac.shef.oak.com4510.view.GalleryFragment"
+        android:name="uk.ac.shef.oak.com4510.view.fragments.GalleryFragment"
         android:label="fragment_gallery"
         tools:layout="@layout/fragment_gallery" >
         <action
@@ -44,7 +44,7 @@
 
     <fragment
         android:id="@+id/showImageFragment"
-        android:name="uk.ac.shef.oak.com4510.view.ShowImageFragment"
+        android:name="uk.ac.shef.oak.com4510.view.fragments.ShowImageFragment"
         android:label="ShowImageFragment"
         tools:layout="@layout/fragment_show_image" >
         <argument
@@ -65,10 +65,13 @@
             app:exitAnim="@android:anim/fade_out"
             app:popEnterAnim="@android:anim/fade_in"
             app:popExitAnim="@android:anim/fade_out" />
+        <action
+            android:id="@+id/action_showImageFragment_to_fullScreenImageFragment"
+            app:destination="@id/fullScreenImageFragment" />
     </fragment>
     <fragment
         android:id="@+id/editImageFragment"
-        android:name="uk.ac.shef.oak.com4510.view.EditImageFragment"
+        android:name="uk.ac.shef.oak.com4510.view.fragments.EditImageFragment"
         android:label="EditImageFragment"
         tools:layout="@layout/fragment_edit_image">
         <argument
@@ -78,7 +81,7 @@
     </fragment>
     <fragment
         android:id="@+id/newTripFragment"
-        android:name="uk.ac.shef.oak.com4510.view.NewTripFragment"
+        android:name="uk.ac.shef.oak.com4510.view.fragments.NewTripFragment"
         android:label="NewTripFragment"
         tools:layout="@layout/fragment_new_trip">
         <action
@@ -87,7 +90,7 @@
     </fragment>
     <fragment
         android:id="@+id/travellingFragment"
-        android:name="uk.ac.shef.oak.com4510.view.TravellingFragment"
+        android:name="uk.ac.shef.oak.com4510.view.fragments.TravellingFragment"
         android:label="TravellingFragment"
         tools:layout="@layout/fragment_travelling">
         <argument
@@ -104,7 +107,7 @@
     </fragment>
     <fragment
         android:id="@+id/existingTravelFragment"
-        android:name="uk.ac.shef.oak.com4510.view.ExistingTravelFragment"
+        android:name="uk.ac.shef.oak.com4510.view.fragments.ExistingTravelFragment"
         android:label="ExistingTravelFragment"
         tools:layout="@layout/fragment_existing_travel">
         <argument
@@ -123,9 +126,10 @@
             app:popEnterAnim="@android:anim/fade_in"
             app:popExitAnim="@android:anim/fade_out" />
     </fragment>
+
     <fragment
         android:id="@+id/viewPastTripsFragment"
-        android:name="uk.ac.shef.oak.com4510.view.ViewPastTripsFragment"
+        android:name="uk.ac.shef.oak.com4510.view.fragments.ViewPastTripsFragment"
         android:label="ViewPastTripsFragment"
         tools:layout="@layout/fragment_view_past_trips">
         <action
@@ -134,7 +138,7 @@
     </fragment>
     <fragment
         android:id="@+id/viewTripDetailsFragment"
-        android:name="uk.ac.shef.oak.com4510.view.ViewTripDetailsFragment"
+        android:name="uk.ac.shef.oak.com4510.view.fragments.ViewTripDetailsFragment"
         android:label="ViewTripDetailsFragment"
         tools:layout="@layout/fragment_view_trip_details">
         <argument
@@ -151,7 +155,19 @@
     </fragment>
     <fragment
         android:id="@+id/debugFragment"
-        android:name="uk.ac.shef.oak.com4510.view.DebugFragment"
+        android:name="uk.ac.shef.oak.com4510.view.fragments.DebugFragment"
         android:label="fragment_debug"
         tools:layout="@layout/fragment_debug" />
+    <fragment
+        android:id="@+id/fullScreenImageFragment"
+        android:name="uk.ac.shef.oak.com4510.view.fragments.FullScreenImageFragment"
+        android:label="FullScreenImageFragment"
+        tools:layout="@layout/fragment_full_screen_image">
+        <argument
+            android:name="imageID"
+            app:argType="integer"
+            android:defaultValue="-1">
+        </argument>
+    </fragment>
+
 </navigation>

@@ -1,4 +1,4 @@
-package uk.ac.shef.oak.com4510.view
+package uk.ac.shef.oak.com4510.view.fragments
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
@@ -13,6 +14,7 @@ import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayoutMediator
 import uk.ac.shef.oak.com4510.R
 import uk.ac.shef.oak.com4510.databinding.FragmentViewTripDetailsBinding
+import uk.ac.shef.oak.com4510.view.adapters.ViewPagerAdapter
 import uk.ac.shef.oak.com4510.viewModel.TravelViewModel
 
 private const val NUM_PAGES = 2
@@ -65,6 +67,11 @@ class ViewTripDetailsFragment : Fragment() {
         viewModel.updateEntriesOfTrip(args.tripID)
         viewModel.updateImagesOfTrip(args.tripID)
 
+        /*val ft : FragmentTransaction = childFragmentManager.beginTransaction()
+        ft.replace(R.id.map_container, ExistingTravelFragment())
+        ft.commit()*/
+
+
         return binding.root
 
     }
@@ -74,7 +81,8 @@ class ViewTripDetailsFragment : Fragment() {
         val title = binding.tripTitle
         val location = binding.tripLocation
         val date = binding.tripDate
-        val thumbnail = binding.tripThumbnail
+        //val thumbnail = binding.tripThumbnail
+
         if (imageID != -1){
             val tripData = viewModel.getTrip(tripID) //TripsAdapter.items[position].first
             //val imageData = viewModel.getImage(imageID)// TripsAdapter.items[position].second

@@ -1,4 +1,4 @@
-package uk.ac.shef.oak.com4510.view
+package uk.ac.shef.oak.com4510.view.fragments
 
 import android.app.Activity
 import android.os.Bundle
@@ -19,6 +19,7 @@ import uk.ac.shef.oak.com4510.R
 import uk.ac.shef.oak.com4510.databinding.FragmentViewPastTripsBinding
 import uk.ac.shef.oak.com4510.model.data.database.ImageData
 import uk.ac.shef.oak.com4510.model.data.database.TripData
+import uk.ac.shef.oak.com4510.view.adapters.TripsAdapter
 import uk.ac.shef.oak.com4510.viewModel.OrderBy
 import uk.ac.shef.oak.com4510.viewModel.TravelViewModel
 
