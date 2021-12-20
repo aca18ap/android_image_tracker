@@ -105,7 +105,7 @@ class LocationService : Service() {
                                 getLastLocation()!!.latitude,
                                 getLastLocation()!!.longitude,
                                 System.currentTimeMillis()
-                            ).id
+                            )
                             Log.i("ServiceLocation", "Successfully added entry")
                             TravellingFragment.getViewModel().updateEntriesOfTrip(TravellingFragment.getTripId())
                         }
