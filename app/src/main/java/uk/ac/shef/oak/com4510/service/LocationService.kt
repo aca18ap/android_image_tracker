@@ -12,10 +12,7 @@ import android.os.Binder
 import android.os.IBinder
 import android.util.Log
 import com.google.android.gms.location.LocationResult
-import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.Polyline
-import com.google.android.gms.maps.model.PolylineOptions
 import uk.ac.shef.oak.com4510.view.fragments.TravellingFragment
 import java.text.DateFormat
 import java.util.*
@@ -30,8 +27,6 @@ class LocationService : Service() {
     private var mCurrentPressure: Float? = null
     private var mCurrentTemperature: Float? = null
     private var mLastUpdateTime: String? = null
-    private var mLine: Polyline? = null
-    private var currentEntryID: Int = -1
     private var barometer: Sensor? = null
     private var thermometer: Sensor? = null
     private var doneFirstReading: Boolean = false // First reading often has inaccurate location
@@ -102,39 +97,17 @@ class LocationService : Service() {
                 Log.i("This is in service, MAP", "New location " + mCurrentLocation.toString())
                 if (TravellingFragment.getActivity() != null) {
                     TravellingFragment.getActivity()?.runOnUiThread(Runnable {
-                        try {
-                            val zoom = CameraUpdateFactory.zoomTo(15f)
-                            TravellingFragment.getMap().moveCamera(
-                                CameraUpdateFactory.newLatLng(newPoint)
+                        if (doneFirstReading) {
+                            TravellingFragment.getViewModel().create_insert_entry_returnEntry(
+                                TravellingFragment.getTripId(),
+                                getLastTemperature(), // Nullable if phone has no ambient temperature sensor
+                                getLastPressure(), // Nullable if phone has no barometer
+                                getLastLocation()!!.latitude,
+                                getLastLocation()!!.longitude,
+                                System.currentTimeMillis()
                             )
-                            TravellingFragment.getMap().animateCamera(zoom)
-                            TravellingFragment.setData(getLastLocation()!!, getLastPressure(), getLastTemperature(), System.currentTimeMillis())
-                            if (doneFirstReading) {
-                                currentEntryID = TravellingFragment.getViewModel().create_insert_entry_returnEntry(
-                                    TravellingFragment.getTripId(),
-                                    getLastTemperature(), // Nullable if phone has no ambient temperature sensor
-                                    getLastPressure(), // Nullable if phone has no barometer
-                                    getLastLocation()!!.latitude,
-                                    getLastLocation()!!.longitude,
-                                    System.currentTimeMillis()
-                                ).id
-                                Log.i("ServiceEntryID", "ID: $currentEntryID")
-                                TravellingFragment.setEntryID(currentEntryID)
-//                                TravellingFragment.getMap().addMarker(
-//                                    MarkerOptions().position(newPoint)
-//                                        .title("$mLastUpdateTime")
-//                                        .snippet(
-//                                        "Pressure: $mCurrentPressure mbar, Temperature: $mCurrentTemperature C"
-//                                        )
-//                                )
-                                if (mLine == null) mLine = TravellingFragment.getMap()
-                                    .addPolyline(PolylineOptions())
-                                val points = mLine!!.points
-                                points.add(newPoint)
-                                mLine!!.points = points
-                            }
-                        } catch (e: Exception) {
-                            Log.e("LocationService", "Could not write on map " + e.message)
+                            Log.i("ServiceLocation", "Successfully added entry")
+                            TravellingFragment.getViewModel().updateEntriesOfTrip(TravellingFragment.getTripId())
                         }
                     })
                 }
