@@ -1,11 +1,6 @@
 package uk.ac.shef.oak.com4510.model.data.database
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
-import androidx.room.Update
+import androidx.room.*
 
 /**
  * Database access object to access the Inventory database
@@ -23,7 +18,7 @@ interface ImageDataDao {
      * Get all images ordered ascending by timestamp of their associated entries
      */
     @Query("""
-        SELECT *
+        SELECT image.id,image.uri,image.title,image.description,image.thumbnailUri,image.entry_id
         FROM image
         LEFT JOIN Entry ON image.entry_id = Entry.id
         ORDER BY Entry.timestamp ASC
@@ -34,7 +29,7 @@ interface ImageDataDao {
      * Get all images ordered descending by timestamp of their associated entries
      */
     @Query("""
-        SELECT *
+        SELECT image.id,image.uri,image.title,image.description,image.thumbnailUri,image.entry_id
         FROM image
         LEFT JOIN Entry ON image.entry_id = Entry.id
         ORDER BY Entry.timestamp DESC
@@ -60,13 +55,14 @@ interface ImageDataDao {
      * But also sorts them by timestamp ascending
      */
     @Query("""
-    SELECT *
+    SELECT image.id,image.uri,image.title,image.description,image.thumbnailUri,image.entry_id
     FROM image
     JOIN image_fts ON image.title = image_fts.title
     LEFT JOIN Entry ON image.entry_id = Entry.id
     WHERE image_fts MATCH :query
     ORDER BY Entry.timestamp ASC
   """)
+    @RewriteQueriesToDropUnusedColumns
     suspend fun searchOrderByTimeStampASC(query: String): List<ImageData>
 
     /**
@@ -75,13 +71,14 @@ interface ImageDataDao {
      * @param query Query string
      */
     @Query("""
-    SELECT *
+    SELECT image.id,image.uri,image.title,image.description,image.thumbnailUri,image.entry_id
     FROM image
     JOIN image_fts ON image.title = image_fts.title
     LEFT JOIN Entry ON image.entry_id = Entry.id
     WHERE image_fts MATCH :query
     ORDER BY Entry.timestamp DESC
   """)
+    @RewriteQueriesToDropUnusedColumns
     suspend fun searchOrderByTimeStampDESC(query: String): List<ImageData>
 
     @Query("SELECT * from image WHERE id = :id")
