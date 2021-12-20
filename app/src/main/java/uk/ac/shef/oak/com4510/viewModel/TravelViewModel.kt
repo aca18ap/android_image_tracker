@@ -70,7 +70,9 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
     private fun initSearchResults()
     {
         viewModelScope.launch(Dispatchers.IO){
-            val allImages = mRepository.getAllImages(OrderBy.NOPARTICULARORDER) ?: ArrayList<ImageData>()
+
+            var allImages = mRepository.getAllImages(OrderBy.NOPARTICULARORDER) ?: ArrayList<ImageData>()
+            Log.d("TravelViewModel","This is what is in allImages:" + allImages.toString())
             _searchResults.postValue(allImages as MutableList<ImageData>)
         }
     }
@@ -219,6 +221,14 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
             //Otherwise update _imageOfTrip with an empty list
             _imagesOfTrip.postValue(allImages)
         }
+    }
+
+    /**
+     * Returns an ImageData object with the given id
+     * @param
+     */
+    fun getImage(imageID : Int) : ImageData? = runBlocking(Dispatchers.IO) {
+        mRepository.getImage(imageID)
     }
 
     /**
@@ -405,6 +415,14 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
     }
 
     //----------------------- Trip related functionality----------------------------
+
+    /**
+     * Returns a trip given its id
+     * @param tripID Id of tripData to return
+     */
+    fun getTrip(tripID : Int) = runBlocking{
+        mRepository.getTrip(tripID)
+    }
 
     /**
      * If a trip has entries associated with it return true otherwise false.

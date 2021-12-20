@@ -84,13 +84,13 @@ class ImagesAdapter : RecyclerView.Adapter<ImagesAdapter.ViewHolder> {
         holder.itemView.setOnClickListener{view: View ->
             //This will throw an exception if the action is done from the wrong fragment
             try{
-                val action = GalleryFragmentDirections.actionGalleryFragmentToShowImageFragment(position)
+                val action = GalleryFragmentDirections.actionGalleryFragmentToShowImageFragment(items[position].id)
                 view.findNavController().navigate(action)
 
             //As the action can only be called from two fragments, the app will check first if the action
             // is called from the GalleryFragment, if unsuccessful the call must have been dine from the ViewTripDetailsFragment.
             }catch(e: IllegalArgumentException){
-                val action = ViewTripDetailsFragmentDirections.actionViewTripDetailsFragmentToShowImageFragment(position)
+                val action = ViewTripDetailsFragmentDirections.actionViewTripDetailsFragmentToShowImageFragment(items[position].id)
                 view.findNavController().navigate(action)
             }
         }
@@ -101,7 +101,6 @@ class ImagesAdapter : RecyclerView.Adapter<ImagesAdapter.ViewHolder> {
     override fun getItemCount(): Int {
         return items.size
     }
-
 
     class ViewHolder constructor(itemView: View) : RecyclerView.ViewHolder(itemView){
         var imageView: ImageView = itemView.findViewById<View>(R.id.image_item) as ImageView
@@ -114,13 +113,7 @@ class ImagesAdapter : RecyclerView.Adapter<ImagesAdapter.ViewHolder> {
         private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 
         /**
-         * This function is used to convert full sized images into thumbnails of a given sizw
-         *
-         * @param filePath: relative filepath of the image to be decoded
-         * @param reqHeight: height the image is to be resized into
-         * @param reqWidth: width the image is to be resized into
-         *
-         * @return resized bitmap object
+         * helper function to generate a bitmap object of a given size from an image's file path.
          */
         fun decodeSampledBitmapFromResource(
             filePath: String,
