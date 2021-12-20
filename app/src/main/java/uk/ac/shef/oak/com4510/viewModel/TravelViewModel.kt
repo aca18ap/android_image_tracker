@@ -53,12 +53,12 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
         viewModelScope.launch {
             if (query.isNullOrBlank())
             {
-                _searchResults.value = mRepository.getAllImages(order) as MutableList<ImageData>
+                _searchResults.postValue(mRepository.getAllImages(order) as MutableList<ImageData>)
             } else
             {
                 val sanitizedQuery = sanitizeSearchQuery(query)
                 mRepository.search(sanitizedQuery,order).let {
-                    _searchResults.value = it as MutableList<ImageData>
+                    _searchResults.postValue(it as MutableList<ImageData>)
                 }
             }
         }
@@ -71,8 +71,9 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
     {
         viewModelScope.launch(Dispatchers.IO){
 
-            var allImages = mRepository.getAllImages(OrderBy.NOPARTICULARORDER) ?: ArrayList<ImageData>()
-            Log.d("TravelViewModel","This is what is in allImages:" + allImages.toString())
+            val allImages = mRepository.getAllImages(OrderBy.NOPARTICULARORDER) ?: ArrayList<ImageData>()
+            Log.d("TravelViewModel", "This is what is in allImages:${allImages.toString()}")
+            Log.d("TravelViewModel", "SearchResults variable:${_searchResults.toString()}")
             _searchResults.postValue(allImages as MutableList<ImageData>)
         }
     }

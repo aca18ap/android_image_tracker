@@ -72,7 +72,7 @@
         android:label="EditImageFragment"
         tools:layout="@layout/fragment_edit_image">
         <argument
-            android:name="position"
+            android:name="imageID"
             app:argType="integer"
             android:defaultValue="-1"/>
     </fragment>
