@@ -240,6 +240,7 @@ class TravellingFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerCli
     override fun onMapReady(googleMap: GoogleMap) {
         Log.i("TravellingFragment", "Created map")
         mMap = googleMap
+        mMap.setOnMarkerClickListener(this)
 
         if (ActivityCompat.checkSelfPermission(
                 requireActivity(),
@@ -272,6 +273,7 @@ class TravellingFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerCli
     }
 
     override fun onMarkerClick(m: Marker?): Boolean {
+        Log.i("MarkerClick", m.toString())
         if (m == null) return false
         val position = m.snippet.toInt()-1
         val action = TravellingFragmentDirections.actionTravellingFragmentToShowImageFragment(position)

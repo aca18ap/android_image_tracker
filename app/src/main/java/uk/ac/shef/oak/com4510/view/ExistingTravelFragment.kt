@@ -119,7 +119,6 @@ class ExistingTravelFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarke
     }
 
     override fun onMarkerClick(m: Marker?): Boolean {
-        Log.i("MarkerClick", m.toString())
         if (m == null) return false
         val position = m.snippet.toInt()-1
         val action = ExistingTravelFragmentDirections.actionExistingTravelFragmentToShowImageFragment(position)
