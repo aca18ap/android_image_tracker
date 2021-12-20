@@ -222,6 +222,14 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
     }
 
     /**
+     * Returns an ImageData object with the given id
+     * @param
+     */
+    fun getImage(imageID : Int) : ImageData? = runBlocking(Dispatchers.IO) {
+        mRepository.getImage(imageID)
+    }
+
+    /**
      * Inserts an imageData into the database and returns the id it was associated with.
      * Warning: This does block the UI thread, it is meant to be used sparingly, if at all.
      *

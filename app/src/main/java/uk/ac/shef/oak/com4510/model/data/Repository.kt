@@ -30,6 +30,16 @@ class Repository(application: Application) {
     }
 
     // ---------ImageData related -------------------------------------
+
+    /**
+     * Returns an image given an id
+     * @param
+     */
+    suspend fun getImage(imageId : Int) = withContext(Dispatchers.IO)
+    {
+        imageDataDao?.getItem(imageId)
+    }
+
     /**
      * Returns every image in the databases
      * @param order Order to return the images in
