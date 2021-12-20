@@ -13,6 +13,7 @@ import androidx.navigation.fragment.navArgs
 import uk.ac.shef.oak.com4510.R
 import uk.ac.shef.oak.com4510.databinding.FragmentEditImageBinding
 import kotlinx.coroutines.*
+import uk.ac.shef.oak.com4510.model.data.database.ImageData
 import uk.ac.shef.oak.com4510.viewModel.TravelViewModel
 
 /**
@@ -23,7 +24,7 @@ import uk.ac.shef.oak.com4510.viewModel.TravelViewModel
 class EditImageFragment : Fragment() {
     private val args: EditImageFragmentArgs by navArgs()
     lateinit var binding : FragmentEditImageBinding
-    private val model: TravelViewModel by activityViewModels()
+    private val viewmodel: TravelViewModel by activityViewModels()
 
 
 
@@ -36,15 +37,17 @@ class EditImageFragment : Fragment() {
             R.layout.fragment_edit_image, container, false )
 
         //Assigning view texts
-        if (args.position != -1){
-            ImagesAdapter.items[args.position].let{
-                binding.editImage.setImageBitmap(it.thumbnail)
-                binding.editorToolbar.title = it.imageTitle
-                binding.editImageTitle.setText(it.imageTitle)
-                binding.editImageDescription.setText(it.imageDescription)
-            }
+        if (args.imageID == -1){
+            throw Exception("Somehow the EditImageFragment was navigated to it without being passed an imageID")
         }
-        makeButtonListeners(args.position)
+        val imageToEdit = viewmodel.getImage(args.imageID)!!
+
+        binding.editImage.setImageBitmap(imageToEdit.thumbnail)
+        binding.editorToolbar.title = imageToEdit.imageTitle
+        binding.editImageTitle.setText(imageToEdit.imageTitle)
+        binding.editImageDescription.setText(imageToEdit.imageDescription)
+
+        makeButtonListeners(imageToEdit)
 
         return binding.root
     }
@@ -53,7 +56,7 @@ class EditImageFragment : Fragment() {
     /**
      * Connects button listeners to the three buttons in the view
      */
-    private fun makeButtonListeners(position: Int) {
+    private fun makeButtonListeners(imageData: ImageData) {
         val cancelButton: Button = binding.cancelButton
         cancelButton.setOnClickListener {
             it.findNavController().popBackStack()
@@ -62,7 +65,7 @@ class EditImageFragment : Fragment() {
         // Delete button listener
         val deleteButton: Button = binding.deleteButton
         deleteButton.setOnClickListener {
-            model.deleteImageFromDatabase(ImagesAdapter.items[position])
+            viewmodel.deleteImageFromDatabase(imageData)
             // Pop back stack twice to get back to the gallery
             it.findNavController().popBackStack()
             it.findNavController().popBackStack()
@@ -74,8 +77,8 @@ class EditImageFragment : Fragment() {
             val descriptionTextInput = binding.editImageDescription
             val titleTextInput = binding.editImageTitle
 
-            model.updateImageInDatabase(
-                ImagesAdapter.items[position],titleTextInput.text.toString(),
+            viewmodel.updateImageInDatabase(
+                imageData,titleTextInput.text.toString(),
                 descriptionTextInput.text.toString())
             it.findNavController().popBackStack()
         }
