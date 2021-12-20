@@ -91,7 +91,7 @@ class ExistingTravelFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarke
                         mMap.addMarker(MarkerOptions()
                             .position(newPoint)
                             .icon(bmpDescriptor)
-                            .snippet(images.first().id.toString()) // For the listener. Invisible without a set title
+                            .snippet(images.first().id.toString()) // To pass ID to the listener. Invisible without a set title
                         )
                     }
                 }
