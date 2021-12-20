@@ -210,7 +210,7 @@ class TravellingFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerCli
                     Log.i("Bitmap", images.first().thumbnail.toString())
                     val bmp = ImagesAdapter.decodeSampledBitmapFromResource(images.first().imageUri, 120, 120)
                     val bmpDescriptor = BitmapDescriptorFactory.fromBitmap(bmp)
-                    mMap.addMarker(
+                    mMap?.addMarker(
                         MarkerOptions()
                         .position(newPoint)
                         .icon(bmpDescriptor)
