@@ -217,15 +217,14 @@ class TravellingFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerCli
             // This is where perhaps, Dan, you could update the map on this fragment to display the image for each entry on the map
             Log.i("EntryCallback", listOfEntryImagePair.toString())
             try {
+                val points : MutableList<LatLng> = mutableListOf()
                 // for each pair, add a marker...
                 for (pair in listOfEntryImagePair) {
                     val entry = pair.first
                     val images = pair.second
                     val newPoint = LatLng(entry.lat, entry.lon)
 
-                    val points = mLine!!.points
                     points.add(newPoint)
-                    mLine!!.points = points
 
                     if (images.isNotEmpty()) {
                         Log.i("Images", images.toString())
@@ -240,6 +239,7 @@ class TravellingFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerCli
                         )
                     }
                 }
+                mLine!!.points = points
             } catch (e: Exception) {
                 Log.e("TravellingFragment", "Could not write on map " + e.message)
             }
