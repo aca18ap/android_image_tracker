@@ -85,7 +85,7 @@ class ViewPastTripsFragment : Fragment() {
 
 
         viewModel!!.allTripsObservable.observe(this, Observer<List<Pair<TripData,ImageData?>>>{ trips ->
-            Log.d("ObserverTrips",trips.toString())
+            Log.d("ViewTripsFragment",trips.toString())
             TripsAdapter.items = trips as MutableList<Pair<TripData,ImageData?>>
             mAdapter.notifyDataSetChanged()
         })

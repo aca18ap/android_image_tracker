@@ -69,7 +69,8 @@ class TripsAdapter : RecyclerView.Adapter<TripsAdapter.ViewHolder> {
 
 
         holder.itemView.setOnClickListener{view: View ->
-            val action = ViewPastTripsFragmentDirections.actionViewPastTripsFragmentToViewTripDetailsFragment(position, tripdata.id)
+            val action = ViewPastTripsFragmentDirections.actionViewPastTripsFragmentToViewTripDetailsFragment(
+                items[position].second?.id ?: -1,items[position].first.id)
             view.findNavController().navigate(action)
         }
     }

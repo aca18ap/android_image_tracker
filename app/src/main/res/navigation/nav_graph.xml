@@ -48,7 +48,7 @@
         android:label="ShowImageFragment"
         tools:layout="@layout/fragment_show_image" >
         <argument
-            android:name="position"
+            android:name="imageID"
             app:argType="integer"
             android:defaultValue="-1"/>
         <action
@@ -138,7 +138,7 @@
         android:label="ViewTripDetailsFragment"
         tools:layout="@layout/fragment_view_trip_details">
         <argument
-            android:name="position"
+            android:name="imageID"
             app:argType="integer"
             android:defaultValue="-1"/>
         <argument

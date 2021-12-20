@@ -38,8 +38,8 @@ class ShowImageFragment : Fragment() {
         val binding = DataBindingUtil.inflate<FragmentShowImageBinding>(inflater,
             R.layout.fragment_show_image, container, false)
         viewModel = ViewModelProvider(requireActivity())[TravelViewModel::class.java]
-        if (args.position != -1){
-            displayData(args.position, binding)
+        if (args.imageID != -1){
+            displayData(args.imageID, binding)
         }
 
         binding.lifecycleOwner = this
@@ -47,7 +47,7 @@ class ShowImageFragment : Fragment() {
         return binding.root
     }
 
-    private fun displayData(position: Int, binding: FragmentShowImageBinding){
+    private fun displayData(imageID: Int, binding: FragmentShowImageBinding){
         val imageView = binding.showImage
         val titleToolbar = binding.showToolbar
         val timeTextView = binding.showImageTime
@@ -56,13 +56,13 @@ class ShowImageFragment : Fragment() {
         val buttonShowMap = binding.showMapButton
         var entryID = -1
         var tripID = -1
-        if (position != -1) {
+        if (imageID != -1) {
 
-            val imageData = ImagesAdapter.items[position]
+            val imageData = viewModel.getImage(imageID)
 
             var sensorText = ""
 
-            imageView.setImageBitmap(BitmapFactory.decodeFile(imageData.imageUri))
+            imageView.setImageBitmap(BitmapFactory.decodeFile(imageData!!.imageUri))
             titleToolbar.title = imageData.imageTitle
             descriptionTextView.text = imageData.imageDescription
 
@@ -90,7 +90,7 @@ class ShowImageFragment : Fragment() {
 
             val fabEdit: FloatingActionButton = binding.fabEdit
             fabEdit.setOnClickListener(View.OnClickListener {
-                val action = ShowImageFragmentDirections.actionShowImageFragmentToEditImageFragment(position)
+                val action = ShowImageFragmentDirections.actionShowImageFragmentToEditImageFragment(imageID)
                 it.findNavController().navigate(action)
             })
 

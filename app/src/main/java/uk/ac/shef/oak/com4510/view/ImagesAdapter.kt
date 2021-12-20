@@ -64,15 +64,13 @@ class ImagesAdapter : RecyclerView.Adapter<ImagesAdapter.ViewHolder> {
         else {holder.imageView.setImageBitmap(items[position].thumbnail)}
         holder.itemView.setOnClickListener{view: View ->
             try{
-                val action = GalleryFragmentDirections.actionGalleryFragmentToShowImageFragment(position)
+                val action = GalleryFragmentDirections.actionGalleryFragmentToShowImageFragment(items[position].id)
                 view.findNavController().navigate(action)
-
             }catch(e: IllegalArgumentException){
-                val action = ViewTripDetailsFragmentDirections.actionViewTripDetailsFragmentToShowImageFragment(position)
+                val action = ViewTripDetailsFragmentDirections.actionViewTripDetailsFragmentToShowImageFragment(items[position].id)
                 view.findNavController().navigate(action)
             }
         }
-
     }
 
 

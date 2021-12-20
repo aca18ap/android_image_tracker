@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import androidx.viewpager.widget.ViewPager
@@ -21,6 +22,7 @@ class ViewTripDetailsFragment : Fragment() {
     private lateinit var mPager: ViewPager
     private lateinit var binding: FragmentViewTripDetailsBinding
     private val args: ViewTripDetailsFragmentArgs by navArgs()
+    private val viewModel: TravelViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -30,7 +32,7 @@ class ViewTripDetailsFragment : Fragment() {
         binding = DataBindingUtil.inflate<FragmentViewTripDetailsBinding>(inflater,
             R.layout.fragment_view_trip_details, container, false)
         if (args.tripID != -1){
-            displayData(args.position)
+            displayData(args.imageID,args.tripID)
         }
 
 
@@ -57,11 +59,6 @@ class ViewTripDetailsFragment : Fragment() {
             }
         }.attach()
 
-        //Have access to the observable in this fragment
-        viewModel.entriesOfTrip.observe(this, { listOfEntryImagePair ->
-            // listOfEntryImagePair is a list of Pairs of (EntryData,List<ImageData>). It contains each entry and it's associated list of images.
-            // This is where perhaps, Dan, you could update the map on this fragment to display the the image for each entry on the map
-        })
 
         //TripsAdapter.items[position].first.id
 
@@ -73,18 +70,18 @@ class ViewTripDetailsFragment : Fragment() {
     }
 
 
-    private fun displayData(position: Int){
+    private fun displayData(imageID: Int,tripID : Int){
         val title = binding.tripTitle
         val location = binding.tripLocation
         val date = binding.tripDate
         val thumbnail = binding.tripThumbnail
-        if (position != -1){
-            val tripData = TripsAdapter.items[position].first
-            val imageData = TripsAdapter.items[position].second
+        if (imageID != -1){
+            val tripData = viewModel.getTrip(tripID) //TripsAdapter.items[position].first
+            //val imageData = viewModel.getImage(imageID)// TripsAdapter.items[position].second
 
-            title.text = tripData.title
-            location.text = tripData.country
-            date.text = tripData.trip_timestamp.toString()
+            title.text = tripData?.title
+            location.text = tripData?.country
+            date.text = tripData?.trip_timestamp.toString()
             //if (imageData != null){
                // thumbnail.setImageBitmap((TripsAdapter.items[position].second?.thumbnail))
             //}
