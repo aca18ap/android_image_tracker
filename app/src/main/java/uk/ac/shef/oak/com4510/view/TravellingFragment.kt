@@ -194,34 +194,6 @@ class TravellingFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerCli
                 Snackbar.make(binding.root, "Please wait a moment for us to find your location.", Snackbar.LENGTH_LONG).show()
         }
 
-        viewModel.entriesOfTrip.observe(viewLifecycleOwner) { listOfEntryImagePair ->
-            // listOfEntryImagePair is a list of Pairs of (EntryData,List<ImageData>). It contains each entry and it's associated list of images.
-            // This is where perhaps, Dan, you could update the map on this fragment to display the image for each entry on the map
-            Log.i("EntryCallback", listOfEntryImagePair.toString())
-            // for each pair, add a marker...
-            for (pair in listOfEntryImagePair) {
-                val entry = pair.first
-                val images = pair.second
-                val newPoint = LatLng(entry.lat, entry.lon)
-
-                if (images.isNotEmpty()) {
-                    Log.i("Images", images.toString())
-                    Log.i("Bitmap", images.first().thumbnail.toString())
-                    val bmp = ImagesAdapter.decodeSampledBitmapFromResource(images.first().imageUri, 120, 120)
-                    val bmpDescriptor = BitmapDescriptorFactory.fromBitmap(bmp)
-                    mMap?.addMarker(
-                        MarkerOptions()
-                        .position(newPoint)
-                        .icon(bmpDescriptor)
-                        .snippet(images.first().id.toString())
-                    )
-                }
-            }
-        }
-
-        // Update the entriesOfTrip observable to contain all entries of this trip
-        viewModel.updateEntriesOfTrip(tripID)
-
         binding.tripEndBtn.setOnClickListener{
             stopLocationUpdates()
             this.findNavController().popBackStack() // New Trip page
@@ -269,6 +241,34 @@ class TravellingFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerCli
             this.findNavController().popBackStack()
             this.findNavController().popBackStack()
         }
+
+        viewModel.entriesOfTrip.observe(viewLifecycleOwner) { listOfEntryImagePair ->
+            // listOfEntryImagePair is a list of Pairs of (EntryData,List<ImageData>). It contains each entry and it's associated list of images.
+            // This is where perhaps, Dan, you could update the map on this fragment to display the image for each entry on the map
+            Log.i("EntryCallback", listOfEntryImagePair.toString())
+            // for each pair, add a marker...
+            for (pair in listOfEntryImagePair) {
+                val entry = pair.first
+                val images = pair.second
+                val newPoint = LatLng(entry.lat, entry.lon)
+
+                if (images.isNotEmpty()) {
+                    Log.i("Images", images.toString())
+                    Log.i("Bitmap", images.first().thumbnail.toString())
+                    val bmp = ImagesAdapter.decodeSampledBitmapFromResource(images.first().imageUri, 120, 120)
+                    val bmpDescriptor = BitmapDescriptorFactory.fromBitmap(bmp)
+                    mMap?.addMarker(
+                        MarkerOptions()
+                            .position(newPoint)
+                            .icon(bmpDescriptor)
+                            .snippet(images.first().id.toString())
+                    )
+                }
+            }
+        }
+
+        // Update the entriesOfTrip observable to contain all entries of this trip
+        viewModel.updateEntriesOfTrip(tripID)
     }
 
     override fun onMarkerClick(m: Marker?): Boolean {
