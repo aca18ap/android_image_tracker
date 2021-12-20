@@ -26,6 +26,7 @@ import pl.aprilapps.easyphotopicker.*
 import uk.ac.shef.oak.com4510.R
 import uk.ac.shef.oak.com4510.databinding.FragmentTravellingBinding
 import uk.ac.shef.oak.com4510.service.LocationService
+import uk.ac.shef.oak.com4510.util.decodeSampledBitmapFromResource
 import uk.ac.shef.oak.com4510.view.adapters.ImagesAdapter
 import uk.ac.shef.oak.com4510.viewModel.TravelViewModel
 
@@ -159,7 +160,7 @@ class TravellingFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerCli
                     if (images.isNotEmpty()) {
                         Log.i("Images", images.toString())
                         Log.i("Bitmap", images.first().thumbnail.toString())
-                        val bmp = ImagesAdapter.decodeSampledBitmapFromResource(images.first().imageUri, 120, 120)
+                        val bmp = decodeSampledBitmapFromResource(images.first().imageUri, 120, 120)
                         val bmpDescriptor = BitmapDescriptorFactory.fromBitmap(bmp)
                         mMap.addMarker(
                             MarkerOptions()

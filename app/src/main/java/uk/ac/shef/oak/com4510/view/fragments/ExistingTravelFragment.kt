@@ -15,6 +15,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import uk.ac.shef.oak.com4510.R
+import uk.ac.shef.oak.com4510.util.decodeSampledBitmapFromResource
 import uk.ac.shef.oak.com4510.viewModel.TravelViewModel
 import uk.ac.shef.oak.com4510.view.adapters.ImagesAdapter
 
@@ -92,7 +93,7 @@ class ExistingTravelFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarke
                     if (images.isNotEmpty()) {
                         Log.i("Images", images.toString())
                         Log.i("Bitmap", images.first().thumbnail.toString())
-                        val bmp = ImagesAdapter.decodeSampledBitmapFromResource(images.first().imageUri, 120, 120)
+                        val bmp = decodeSampledBitmapFromResource(images.first().imageUri, 120, 120)
                         val bmpDescriptor = BitmapDescriptorFactory.fromBitmap(bmp)
                         mMap.addMarker(MarkerOptions()
                             .position(newPoint)

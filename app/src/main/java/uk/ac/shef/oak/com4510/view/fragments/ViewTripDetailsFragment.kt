@@ -1,5 +1,7 @@
 package uk.ac.shef.oak.com4510.view.fragments
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -14,8 +16,11 @@ import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayoutMediator
 import uk.ac.shef.oak.com4510.R
 import uk.ac.shef.oak.com4510.databinding.FragmentViewTripDetailsBinding
+import uk.ac.shef.oak.com4510.util.decodeSampledBitmapFromResource
 import uk.ac.shef.oak.com4510.view.adapters.ViewPagerAdapter
 import uk.ac.shef.oak.com4510.viewModel.TravelViewModel
+import java.text.SimpleDateFormat
+import java.util.*
 
 private const val NUM_PAGES = 2
 
@@ -62,14 +67,10 @@ class ViewTripDetailsFragment : Fragment() {
         }.attach()
 
 
-        //TripsAdapter.items[position].first.id
-
         viewModel.updateEntriesOfTrip(args.tripID)
         viewModel.updateImagesOfTrip(args.tripID)
 
-        val ft : FragmentTransaction = childFragmentManager.beginTransaction()
-        ft.replace(R.id.map_container, ExistingTravelFragment(args.tripID))
-        ft.commit()
+
 
 
         return binding.root
@@ -79,24 +80,20 @@ class ViewTripDetailsFragment : Fragment() {
 
     private fun displayData(imageID: Int,tripID : Int){
         val title = binding.tripTitle
-        val location = binding.tripLocation
+        //val location = binding.tripLocation
         val date = binding.tripDate
-        //val thumbnail = binding.tripThumbnail
+        val thumbnail = binding.tripThumbnail
+        val tripData = viewModel.getTrip(tripID) //TripsAdapter.items[position].first
 
         if (imageID != -1){
-            val tripData = viewModel.getTrip(tripID) //TripsAdapter.items[position].first
-            //val imageData = viewModel.getImage(imageID)// TripsAdapter.items[position].second
-
-            title.text = tripData?.title
-            location.text = tripData?.country
-            date.text = tripData?.trip_timestamp.toString()
-            //if (imageData != null){
-               // thumbnail.setImageBitmap((TripsAdapter.items[position].second?.thumbnail))
-            //}
-
-
-
+            thumbnail.setImageBitmap(decodeSampledBitmapFromResource(viewModel.getImage(imageID)!!.imageUri, 150,150))
         }
+        title.text = tripData?.title
+        //location.text = tripData?.country
+        val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+        val dateTime = formatter.format(Date(tripData?.trip_timestamp!!.toLong()))
+        date.text = dateTime
+
     }
 
 }

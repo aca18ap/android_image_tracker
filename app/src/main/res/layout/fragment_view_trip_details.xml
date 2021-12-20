@@ -26,7 +26,7 @@
                 android:layout_height="?attr/actionBarSize"
                 android:background="?attr/colorPrimary"
                 app:popupTheme="@style/AppTheme.PopupOverlay"
-                app:title="Title"
+                app:title="Trip Details"
                 app:titleTextColor="@color/white" />
         </com.google.android.material.appbar.AppBarLayout>
 
@@ -41,46 +41,51 @@
                 android:layout_weight="1"
                 android:id="@+id/trip_info"
                 android:gravity="center"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:paddingVertical="30dp">
 
                 <TextView
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
                     android:id="@+id/trip_title"
-                    android:text="Trip Title">
+                    android:text="Trip Title"
+                    android:textSize="20sp">
 
                 </TextView>
-                <TextView
+                <!--TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/trip_location"
                     android:text="Location">
 
-                </TextView>
+                </TextView-->
                 <TextView
                     android:layout_width="wrap_content"
                     android:id="@+id/trip_date"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
                     android:text="Date and Time">
                 </TextView>
             </LinearLayout>
 
-            <!--ImageView
+            <ImageView
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:id="@+id/trip_thumbnail"
-                android:src="@drawable/missing">
+                android:src="@drawable/missing"
+                android:paddingTop="20dp">
 
 
-            </ImageView-->
-            <FrameLayout
+            </ImageView>
+            <!--FrameLayout
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:id="@+id/map_container">
 
-            </FrameLayout>
+            </FrameLayout-->
         </LinearLayout>
 
         <com.google.android.material.tabs.TabLayout
