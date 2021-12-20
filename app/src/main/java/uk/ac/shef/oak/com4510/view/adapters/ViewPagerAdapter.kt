@@ -1,14 +1,8 @@
-package uk.ac.shef.oak.com4510.view
+package uk.ac.shef.oak.com4510.view.adapters
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentPagerAdapter
-import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import uk.ac.shef.oak.com4510.model.data.database.TripData
-import uk.ac.shef.oak.com4510.view.TripEntriesTabFragment
-import uk.ac.shef.oak.com4510.view.TripImagesTabFragment
 
 /**
  * Class ViewPagerAdapter

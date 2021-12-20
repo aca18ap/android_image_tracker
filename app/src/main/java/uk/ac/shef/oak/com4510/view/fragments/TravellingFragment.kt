@@ -1,4 +1,4 @@
-package uk.ac.shef.oak.com4510.view
+package uk.ac.shef.oak.com4510.view.fragments
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -15,6 +15,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -36,6 +37,7 @@ import pl.aprilapps.easyphotopicker.*
 import uk.ac.shef.oak.com4510.R
 import uk.ac.shef.oak.com4510.databinding.FragmentTravellingBinding
 import uk.ac.shef.oak.com4510.service.LocationService
+import uk.ac.shef.oak.com4510.view.adapters.ImagesAdapter
 import uk.ac.shef.oak.com4510.viewModel.TravelViewModel
 
 /**
@@ -226,6 +228,7 @@ class TravellingFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerCli
             stopLocationUpdates()
             this.findNavController().popBackStack() // New Trip page
             this.findNavController().popBackStack() // Welcome page
+            Toast.makeText(activity, "Trip Over!", Toast.LENGTH_SHORT).show()
         }
         return binding.root
     }

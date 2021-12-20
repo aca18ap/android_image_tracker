@@ -1,10 +1,11 @@
-package uk.ac.shef.oak.com4510.view
+package uk.ac.shef.oak.com4510.view.adapters
 
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
@@ -15,7 +16,8 @@ import kotlinx.coroutines.launch
 import uk.ac.shef.oak.com4510.R
 import uk.ac.shef.oak.com4510.model.data.database.ImageData
 import uk.ac.shef.oak.com4510.model.data.database.TripData
-import uk.ac.shef.oak.com4510.view.ImagesAdapter.Companion.decodeSampledBitmapFromResource
+import uk.ac.shef.oak.com4510.view.adapters.ImagesAdapter.Companion.decodeSampledBitmapFromResource
+import uk.ac.shef.oak.com4510.view.fragments.ViewPastTripsFragmentDirections
 
 /**
  * Class TripsAdapter, used by the recyclerview responsible for showing
@@ -46,33 +48,40 @@ class TripsAdapter : RecyclerView.Adapter<TripsAdapter.ViewHolder> {
 
         var holder: ViewHolder = ViewHolder(v)
         context = parent.context
-        holder.itemView.setOnClickListener(View.OnClickListener {
-            it.findNavController().navigate(R.id.action_viewPastTripsFragment_to_viewTripDetailsFragment)
-        })
 
         return holder
 
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+
+
         //Getting tripdata and the thumbnail image
         val (tripdata, first_image) = items[position]
-        if (items[position].first.thumbnail == null) {
-            items[position].let {
-                scope.launch {
-                    //Decoding image to bitmap if available.
-                    //By default, a missing image resource is used in the xml file, so we only need to
-                    //Assign an image if present
-                    if (first_image != null) {
-                        val bitmap = decodeSampledBitmapFromResource(first_image.imageUri, 150, 150)
-                        bitmap.let {
-                            items[position].first.thumbnail = it
-                            holder.thumbnail.setImageBitmap(tripdata.thumbnail)
+        if (first_image != null){
+            holder.progressBar.visibility = View.VISIBLE
+            if (items[position].first.thumbnail == null) {
+                items[position].let {
+                    scope.launch {
+                        //Decoding image to bitmap if available.
+                        //By default, a missing image resource is used in the xml file, so we only need to
+                        //Assign an image if present
+                        if (first_image != null) {
+                            val bitmap = decodeSampledBitmapFromResource(first_image.imageUri, 150, 150)
+                            bitmap.let {
+                                items[position].first.thumbnail = it
+                                holder.thumbnail.setImageBitmap(tripdata.thumbnail)
+                                holder.progressBar.visibility = View.INVISIBLE
+                            }
                         }
                     }
                 }
+            }else{
+                holder.thumbnail.setImageBitmap(tripdata.thumbnail)
+                holder.progressBar.visibility = View.INVISIBLE
             }
         }
+
 
 
         //Each item in the trips list has a title on top of the image that's already added.
@@ -96,6 +105,7 @@ class TripsAdapter : RecyclerView.Adapter<TripsAdapter.ViewHolder> {
     class ViewHolder constructor(itemView: View) : RecyclerView.ViewHolder(itemView){
         var thumbnail: ImageView = itemView.findViewById<View>(R.id.trip_item_thumbnail) as ImageView
         var title: TextView = itemView.findViewById<View>(R.id.trip_item_title) as TextView
+        var progressBar: ProgressBar = itemView.findViewById(R.id.progress_circle) as ProgressBar
     }
 
 

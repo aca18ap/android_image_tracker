@@ -1,4 +1,4 @@
-package uk.ac.shef.oak.com4510.view
+package uk.ac.shef.oak.com4510.view.adapters
 
 import android.content.Context
 import android.os.Build
@@ -64,6 +64,7 @@ class EntriesAdapter : RecyclerView.Adapter<EntriesAdapter.ViewHolder> {
         return items.size
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val (entryData, imageList : List<uk.ac.shef.oak.com4510.model.data.database.ImageData>) =
             items[position]
@@ -78,15 +79,13 @@ class EntriesAdapter : RecyclerView.Adapter<EntriesAdapter.ViewHolder> {
     }
 
     fun convertCoordinates(lon: Double, lat: Double): String{
-        val lonS: String
-        val latS: String
-        if (lon >= 0){
-            lonS = "E"
-        }else{
-            lonS = "W"
-        }
+        
+        val lonDirection = if (lon >= 0 ) "E" else "W"
+        val latDirection = if (lat >= 0 ) "N" else "S"
+        val lonRounded = "%.4f".format(lon)
+        val latRounded = "%.4f".format(lat)
 
-        return "$latRounded$latS, $lonRounded$lonS/"
+        return "$latRounded$latDirection, $lonRounded$lonDirection"
     }
 
     /**
@@ -96,12 +95,12 @@ class EntriesAdapter : RecyclerView.Adapter<EntriesAdapter.ViewHolder> {
      */
     @RequiresApi(Build.VERSION_CODES.O)
     private fun getDateTime(timestamp: Long): String{
-        try {
+        return try {
             val sdf = SimpleDateFormat("dd/MM/yyyy")
             val netDate = Date(timestamp)
-            return sdf.format(netDate).toString()
+            sdf.format(netDate).toString()
         }catch (e: Exception){
-            return e.toString()
+            e.toString()
         }
     }
 

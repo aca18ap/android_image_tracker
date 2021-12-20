@@ -1,4 +1,4 @@
-package uk.ac.shef.oak.com4510.view
+package uk.ac.shef.oak.com4510.view.adapters
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -7,11 +7,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.ProgressBar
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import uk.ac.shef.oak.com4510.*
 import uk.ac.shef.oak.com4510.model.data.database.ImageData
 import kotlinx.coroutines.*
+import uk.ac.shef.oak.com4510.view.fragments.GalleryFragmentDirections
+import uk.ac.shef.oak.com4510.view.fragments.ViewTripDetailsFragmentDirections
 import java.lang.IllegalArgumentException
 
 /**
@@ -65,9 +68,11 @@ class ImagesAdapter : RecyclerView.Adapter<ImagesAdapter.ViewHolder> {
      *
      */
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+
+        holder.progressBar.visibility = View.VISIBLE
+
         //Use the provided View Holder on the onCreateViewHolder method to populate the
         // current row on the RecyclerView
-
         if (items[position].thumbnail == null) {
             items[position].let {
                 scope.launch {
@@ -76,11 +81,16 @@ class ImagesAdapter : RecyclerView.Adapter<ImagesAdapter.ViewHolder> {
                     bitmap.let {
                         items[position].thumbnail = it
                         holder.imageView.setImageBitmap(items[position].thumbnail)
+                        holder.progressBar.visibility = View.INVISIBLE
                     }
                 }
             }
         }
-        else {holder.imageView.setImageBitmap(items[position].thumbnail)}
+        else {
+            holder.imageView.setImageBitmap(items[position].thumbnail)
+            holder.progressBar.visibility = View.INVISIBLE
+        }
+
         holder.itemView.setOnClickListener{view: View ->
             //This will throw an exception if the action is done from the wrong fragment
             try{
@@ -104,7 +114,7 @@ class ImagesAdapter : RecyclerView.Adapter<ImagesAdapter.ViewHolder> {
 
     class ViewHolder constructor(itemView: View) : RecyclerView.ViewHolder(itemView){
         var imageView: ImageView = itemView.findViewById<View>(R.id.image_item) as ImageView
-
+        var progressBar: ProgressBar = itemView.findViewById(R.id.progress_circle) as ProgressBar
 
     }
 

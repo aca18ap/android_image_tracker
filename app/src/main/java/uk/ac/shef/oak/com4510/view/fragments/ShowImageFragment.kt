@@ -1,4 +1,4 @@
-package uk.ac.shef.oak.com4510.view
+package uk.ac.shef.oak.com4510.view.fragments
 
 import android.graphics.BitmapFactory
 import android.os.Bundle
@@ -16,6 +16,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import uk.ac.shef.oak.com4510.R
 import uk.ac.shef.oak.com4510.databinding.FragmentShowImageBinding
+import uk.ac.shef.oak.com4510.view.adapters.ImagesAdapter
 import uk.ac.shef.oak.com4510.viewModel.TravelViewModel
 import java.text.SimpleDateFormat
 import java.util.*
@@ -43,7 +44,7 @@ class ShowImageFragment : Fragment() {
         }
 
         binding.fullScreenButton.setOnClickListener{view: View ->
-            val action = ShowImageFragmentDirections.actionShowImageFragmentToFullScreenImageFragment(args.position)
+            val action = ShowImageFragmentDirections.actionShowImageFragmentToFullScreenImageFragment(args.imageID)
             view.findNavController().navigate(action)
         }
 
@@ -75,8 +76,8 @@ class ShowImageFragment : Fragment() {
                 entryID = imageData.entry_id!!
                 val entry = viewModel.getEntry(entryID)
                 val timestamp = entry!!.entry_timestamp
-                val pressure = entry!!.entry_pressure
-                val temperature = entry!!.entry_temperature
+                val pressure = entry.entry_pressure
+                val temperature = entry.entry_temperature
                 tripID = entry.trip_id
 
                 val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())

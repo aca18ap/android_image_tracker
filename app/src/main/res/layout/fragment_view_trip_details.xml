@@ -65,14 +65,22 @@
                 </TextView>
             </LinearLayout>
 
-            <ImageView
+            <!--ImageView
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:id="@+id/trip_thumbnail"
                 android:src="@drawable/missing">
 
-            </ImageView>
+
+            </ImageView-->
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:id="@+id/map_container">
+
+            </FrameLayout>
         </LinearLayout>
 
         <com.google.android.material.tabs.TabLayout

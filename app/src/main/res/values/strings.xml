@@ -24,4 +24,7 @@
     <string name="more_info">More info?</string>
     <string name="coordinates">Coordinates: %1$s</string>
     <string name="description_label">Description: </string>
+    <string name="trip_tracker">Trip Tracker</string>
+    <string name="start_new_trip">Start new trip</string>
+    <string name="view_previous_trips">View Previous Trips</string>
 </resources>

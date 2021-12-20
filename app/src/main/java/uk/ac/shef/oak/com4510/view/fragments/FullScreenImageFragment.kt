@@ -1,4 +1,4 @@
-package uk.ac.shef.oak.com4510.view
+package uk.ac.shef.oak.com4510.view.fragments
 
 import android.graphics.BitmapFactory
 import android.os.Bundle
@@ -7,10 +7,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import uk.ac.shef.oak.com4510.R
 import uk.ac.shef.oak.com4510.databinding.FragmentFullScreenImageBinding
-import uk.ac.shef.oak.com4510.viewModel.ImagesAdapter
+import uk.ac.shef.oak.com4510.view.adapters.ImagesAdapter
+import uk.ac.shef.oak.com4510.viewModel.TravelViewModel
 
 /**
  * A simple [Fragment] subclass.
@@ -28,9 +30,10 @@ class FullScreenImageFragment : Fragment() {
         val binding = DataBindingUtil.inflate<FragmentFullScreenImageBinding>(inflater,
             R.layout.fragment_full_screen_image, container, false)
 
-        if (args.imagePosition != -1){
-            val img = ImagesAdapter.items[args.imagePosition]
-            binding.fullScreenImage.setImageBitmap(BitmapFactory.decodeFile(img.imageUri))
+        val viewModel = ViewModelProvider(requireActivity())[TravelViewModel::class.java]
+        if (args.imageID != -1){
+            val img = viewModel.getImage(args.imageID)
+            binding.fullScreenImage.setImageBitmap(BitmapFactory.decodeFile(img!!.imageUri))
 
         }
 
