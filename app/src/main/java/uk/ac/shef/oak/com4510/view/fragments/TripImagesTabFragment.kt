@@ -1,4 +1,4 @@
-package uk.ac.shef.oak.com4510.view
+package uk.ac.shef.oak.com4510.view.fragments
 
 import android.os.Bundle
 import android.util.Log
@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import uk.ac.shef.oak.com4510.R
 import uk.ac.shef.oak.com4510.databinding.FragmentTripImagesTabBinding
 import uk.ac.shef.oak.com4510.model.data.database.ImageData
+import uk.ac.shef.oak.com4510.view.adapters.ImagesAdapter
 import uk.ac.shef.oak.com4510.viewModel.TravelViewModel
 
 class TripImagesTabFragment(tripID: Int) : Fragment() {

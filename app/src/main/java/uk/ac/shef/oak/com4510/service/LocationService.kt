@@ -13,7 +13,7 @@ import android.os.IBinder
 import android.util.Log
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.maps.model.LatLng
-import uk.ac.shef.oak.com4510.view.TravellingFragment
+import uk.ac.shef.oak.com4510.view.fragments.TravellingFragment
 import java.text.DateFormat
 import java.util.*
 
