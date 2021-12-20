@@ -91,8 +91,6 @@ class ViewPastTripsFragment : Fragment() {
         })
 
 
-        viewModel!!.updateAllTripsObservable()
-
         return binding.root
     }
 
