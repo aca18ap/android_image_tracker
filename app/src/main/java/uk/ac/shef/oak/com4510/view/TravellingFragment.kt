@@ -74,7 +74,6 @@ class TravellingFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerCli
         private var mCurrentLocation: Location? = null
         private var mCurrentPressure: Float? = null
         private var mCurrentTemperature: Float? = null
-        private var mLastTimestamp: Long = 0
         private var tripID: Int = -1
         private var entryID: Int = -1
 
@@ -127,14 +126,13 @@ class TravellingFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerCli
          * @return activity the parent activity
          */
         fun setData(location: Location?, pressure: Float?, temperature: Float?, time: Long) {
-            mCurrentLocation = location
-            binding.latitudeText.text = "Latitude: ${location!!.latitude}"
-            binding.longitudeText.text = "Longitude: ${location!!.longitude}"
-            mCurrentPressure = pressure
-            if (pressure != null) binding.pressureText.text = "Pressure: $pressure mbar"
-            mCurrentTemperature = temperature
-            if (temperature != null) binding.temperatureText.text =  "Temperature: $temperature C"
-            mLastTimestamp = time
+//            mCurrentLocation = location
+//            binding.latitudeText.text = "Latitude: ${location!!.latitude}"
+//            binding.longitudeText.text = "Longitude: ${location!!.longitude}"
+//            mCurrentPressure = pressure
+//            if (pressure != null) binding.pressureText.text = "Pressure: $pressure mbar"
+//            mCurrentTemperature = temperature
+//            if (temperature != null) binding.temperatureText.text =  "Temperature: $temperature C"
         }
 
         /**
@@ -242,6 +240,13 @@ class TravellingFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerCli
                 mLine!!.points = points
             } catch (e: Exception) {
                 Log.e("TravellingFragment", "Could not write on map " + e.message)
+            }
+            if (listOfEntryImagePair.isNotEmpty()) {
+                val lastEntry = listOfEntryImagePair.last().first
+                binding.latitudeText.text = "Latitude: ${lastEntry.lat}"
+                binding.longitudeText.text = "Longitude: ${lastEntry.lon}"
+                if (lastEntry.entry_pressure != null) binding.pressureText.text = "Pressure: ${lastEntry.entry_pressure} mbar"
+                if (lastEntry.entry_temperature != null) binding.temperatureText.text =  "Temperature: ${lastEntry.entry_temperature} C"
             }
 
         }
