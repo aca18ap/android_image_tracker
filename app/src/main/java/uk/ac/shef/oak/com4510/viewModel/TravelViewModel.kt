@@ -17,6 +17,7 @@ import uk.ac.shef.oak.com4510.model.data.database.ImageData
 import uk.ac.shef.oak.com4510.model.data.database.TripData
 import uk.ac.shef.oak.com4510.util.convertToImageDataWithoutId
 import uk.ac.shef.oak.com4510.util.sanitizeSearchQuery
+import java.security.KeyStore
 
 class TravelViewModel (application: Application) : AndroidViewModel(application) {
     private var mRepository: Repository = Repository(application)
@@ -141,6 +142,9 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
      */
     val entriesOfTrip : LiveData<MutableList<Pair<EntryData,List<ImageData>>>>
         get() = _entriesOfTrip
+    // This value holds the last entry that entriesOfTrip was used with. This is so that it is possible to update
+    // the entriesOfTrip observable whenever any updates regarding trips happens in the database.
+    private lateinit var currentEntryForEntriesOfTrip : EntryData
 
     /**
      * Updates the entriesOfTrip observable with all (DataEntry,List<ImageData>) for a given trip.
