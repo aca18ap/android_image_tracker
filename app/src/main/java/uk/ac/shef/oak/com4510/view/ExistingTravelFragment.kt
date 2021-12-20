@@ -67,16 +67,14 @@ class ExistingTravelFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarke
             // This is where perhaps, Dan, you could update the map on this fragment to display the image for each entry on the map
             Log.i("EntryCallback", listOfEntryImagePair.toString())
             try{
-
+                val points : MutableList<LatLng> = mutableListOf()
                 // for each pair, add a marker...
                 for (pair in listOfEntryImagePair) {
                     val entry = pair.first
                     val images = pair.second
                     val newPoint = LatLng(entry.lat, entry.lon)
 
-                    val points = mLine!!.points
                     points.add(newPoint)
-                    mLine!!.points = points
 
                     if (arrayOf(-1, 0, 1).contains(entry.id - entryID)) { // Highlight the selected location
                         Log.i("HighlightEntry", "Match found: $entry")
@@ -105,6 +103,7 @@ class ExistingTravelFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarke
                         )
                     }
                 }
+                mLine!!.points = points
             } catch (e: Exception) {
                 Log.e("ExistingTravelFragment", "Could not write on map " + e.message)
             }
