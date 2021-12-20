@@ -68,7 +68,6 @@ class TravellingFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerCli
     }
 
     companion object {
-        private const val REQUEST_ACCESS_FINE_LOCATION = 1122 // Used in section 1.1.2 of brief
         private lateinit var mMap: GoogleMap
         private lateinit var viewModel: TravelViewModel
         private lateinit var binding : FragmentTravellingBinding
@@ -212,35 +211,6 @@ class TravellingFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerCli
         Log.i("TravellingFragment", "Created map")
         mMap = googleMap
         mMap.setOnMarkerClickListener(this)
-
-        if (ActivityCompat.checkSelfPermission(
-                requireActivity(),
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(
-                requireActivity(),
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            Log.i("TravellingFragment", "Asking for location permissions...")
-            ActivityCompat.requestPermissions(
-                requireActivity(),
-                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION),
-                REQUEST_ACCESS_FINE_LOCATION
-            )
-        } else {
-            Log.i("TravellingFragment", "Already have location permissions!")
-        }
-        if (ActivityCompat.checkSelfPermission(
-                requireActivity(),
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                requireActivity(),
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            this.findNavController().popBackStack()
-            this.findNavController().popBackStack()
-        }
 
         viewModel.entriesOfTrip.observe(viewLifecycleOwner) { listOfEntryImagePair ->
             // listOfEntryImagePair is a list of Pairs of (EntryData,List<ImageData>). It contains each entry and it's associated list of images.

@@ -54,10 +54,6 @@ class ExistingTravelFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarke
             Log.i("EntryCallback", listOfEntryImagePair.toString())
             try{
 
-
-//                mLine!!.points.clear() // Reset the lines
-//                mLineLoc!!.points.clear()
-
                 // for each pair, add a marker...
                 for (pair in listOfEntryImagePair) {
                     val entry = pair.first
