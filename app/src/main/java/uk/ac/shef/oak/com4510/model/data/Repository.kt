@@ -2,6 +2,7 @@ package uk.ac.shef.oak.com4510.model.data
 
 import android.app.Application
 import android.media.Image
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.*
 import uk.ac.shef.oak.com4510.model.data.database.*
 import uk.ac.shef.oak.com4510.viewModel.OrderBy
@@ -118,6 +119,8 @@ class Repository(application: Application) {
     }
     // ---------EntryData related -------------------------------------
 
+
+
     /**
      * Returns an entry with the given id
      * @param entryDataId Id of the entry being retrieved
@@ -164,8 +167,45 @@ class Repository(application: Application) {
         entryDataDao?.getLastEntryById()
     }
 
+    /**
+     * Given a tripData ID and entry measurements, creates and inserts an Entry into the database.
+     * WARNING: This does block the UI thread, to be used sparingly.
+     *
+     * @param tripDataID Id of the trip this entry is to be linked with
+     * @param temperature Temperature taken at the entry position and time
+     * @param pressure Pressure measurement taken at the entry position and time
+     * @param lat Latitude coordinate of the entry
+     * @param lon Longitude coordinate of the entry
+     * @return The entry that was inserted into the database
+     * @see create_insert_entry for a function that creates and inserts and entry but does not block the UI thread
+     */
+    fun create_insert_entry_returnEntry(tripDataID: Int, temperature:Float?, pressure:Float?, lat:Double, lon:Double, timestamp:Long) : EntryData = runBlocking{
+        val createdEntry = EntryData(
+            lat = lat, lon = lon,
+            entry_timestamp = timestamp, entry_temperature = temperature,
+            entry_pressure = pressure, trip_id = tripDataID)
 
-
+        val id = insertEntryReturnId(createdEntry)
+        createdEntry.id = id
+        createdEntry
+    }
+    /**
+     * Given a trip's id and sensor measurements, create and insert an Entry into the database
+     *
+     * @param tripDataID Id of the trip this entry is to be linked with
+     * @param temperature Temperature taken at the entry position and time
+     * @param pressure Pressure measurement taken at the entry position and time
+     * @param lat Latitude coordinate of the entry
+     * @param lon Longitude coordinate of the entry
+     * @param timestamp time at which the entry was captured
+     */
+    suspend fun create_insert_entry(tripDataID: Int, temperature:Float?, pressure:Float?, lat:Double, lon:Double, timestamp:Long)= withContext(Dispatchers.IO){
+            val createdEntry = EntryData(
+                lat = lat, lon = lon,
+                entry_timestamp = timestamp, entry_temperature = temperature,
+                entry_pressure = pressure, trip_id = tripDataID)
+            insertEntryReturnId(createdEntry)
+    }
 
     // ---------TripData related --------------------------------------
     /**

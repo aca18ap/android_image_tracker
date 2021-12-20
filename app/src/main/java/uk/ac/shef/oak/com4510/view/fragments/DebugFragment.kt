@@ -46,26 +46,26 @@ class DebugFragment : Fragment() {
                 // Each trip would have some entries
                 // Some of those entries would have images
                 // At least one trip will have every entry have no image
-                model.insertTripReturnId(TripData(1, title = "My day around Sheffield", country = "UK",trip_timestamp =  1639698825f))
+                //model.insertTripReturnId(TripData(1, title = "My day around Sheffield", country = "UK",trip_timestamp =  1639698825f))
                 //Add entries
-                model.insertEntryReturnId(EntryData(1,100.0,102.0,1639698825,20f,30f,1))
-                model.insertEntryReturnId(EntryData(2,150.0,150.0,1639698825,25f,35f,1))
-                model.insertEntryReturnId(EntryData(3,200.0,200.0,1639698825,23f,43f,1))
+                //model.insertEntryReturnId(EntryData(1,100.0,102.0,1639698825,20f,30f,1))
+                //model.insertEntryReturnId(EntryData(2,150.0,150.0,1639698825,25f,35f,1))
+                //model.insertEntryReturnId(EntryData(3,200.0,200.0,1639698825,23f,43f,1))
                 // Attach the 2nd entry with an image
-                model.updateImageInDatabase(imageList[0], entry_id = 2)
+                //model.updateImageInDatabase(imageList[0], entry_id = 2)
 
-                model.insertTripReturnId(TripData(2,"Dic","Bonanza",1639698825f))
-                model.insertEntryReturnId(EntryData(4,300.0,300.0,1639698825,20f,30f,2))
-                model.insertEntryReturnId(EntryData(5,350.0,350.0,1639698825,25f,35f,2))
-                model.insertEntryReturnId(EntryData(6,400.0,400.0,1639698825,23f,43f,2))
+                //model.insertTripReturnId(TripData(2,"Dic","Bonanza",1639698825f))
+                //model.insertEntryReturnId(EntryData(4,300.0,300.0,1639698825,20f,30f,2))
+                //model.insertEntryReturnId(EntryData(5,350.0,350.0,1639698825,25f,35f,2))
+                //model.insertEntryReturnId(EntryData(6,400.0,400.0,1639698825,23f,43f,2))
                 //Attach the 1st entry here with an image
-                model.updateImageInDatabase(imageList[1], entry_id = 4)
+                //model.updateImageInDatabase(imageList[1], entry_id = 4)
 
                 // This trip's entries will have no images attached to it
-                model.insertTripReturnId(TripData(3,"At home","Stardew valley",1639698825f))
-                model.insertEntryReturnId(EntryData(7,600.0,600.0,1639698825,20f,30f,3))
-                model.insertEntryReturnId(EntryData(8,650.0,650.0,1639698825,25f,35f,3))
-                model.insertEntryReturnId(EntryData(9,700.0,700.0,1639698825,23f,43f,3))
+                //model.insertTripReturnId(TripData(3,"At home","Stardew valley",1639698825f))
+                //model.insertEntryReturnId(EntryData(7,600.0,600.0,1639698825,20f,30f,3))
+                //model.insertEntryReturnId(EntryData(8,650.0,650.0,1639698825,25f,35f,3))
+                //model.insertEntryReturnId(EntryData(9,700.0,700.0,1639698825,23f,43f,3))
 
 
             }
@@ -80,7 +80,7 @@ class DebugFragment : Fragment() {
 
         binding.DebugButton1.setOnClickListener {
 
-            model.create_insert_entry(1,12f,13f,100.0,1234.0,1639698825)
+            //model.create_insert_entry(1,12f,13f,100.0,1234.0,1639698825)
         }
 
         binding.DebugButton2.setOnClickListener {

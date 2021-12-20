@@ -1,13 +1,8 @@
 package uk.ac.shef.oak.com4510.view.fragments
 
-import android.annotation.SuppressLint
-import android.app.PendingIntent
-import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import android.content.ServiceConnection
 import android.os.Bundle
-import android.os.IBinder
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -19,10 +14,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationCallback
-import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -44,29 +36,10 @@ class TravellingFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerCli
     private val args: TravellingFragmentArgs by navArgs()
     private lateinit var mMap: GoogleMap
     private lateinit var easyImage: EasyImage
-    private lateinit var locationRequest: LocationRequest
     private lateinit var locationClient: FusedLocationProviderClient
     private lateinit var ctx: Context
-    private var service : LocationService? = null
-    private var mLocationPendingIntent: PendingIntent? = null
+    private lateinit var intent: Intent
     private var mLine: Polyline? = null
-
-    private var locationCallback: LocationCallback = object : LocationCallback() {
-
-    }
-
-    private var mConnection: ServiceConnection = object: ServiceConnection {
-        override fun onServiceConnected(className: ComponentName, binder: IBinder) {
-            Log.i("ServiceConnection", "onServiceConnected")
-            service = (binder as LocationService.LocalBinder).getService()
-            Log.i("ServiceConnection", "Service: $service")
-        }
-
-        override fun onServiceDisconnected(name: ComponentName?) {
-            Log.i("ServiceConnection", "onServiceDisconnected")
-            service = null
-        }
-    }
 
     companion object {
         private lateinit var viewModel: TravelViewModel
@@ -132,6 +105,7 @@ class TravellingFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerCli
             R.layout.fragment_travelling, container, false)
         viewModel = ViewModelProvider(requireActivity())[TravelViewModel::class.java]
         locationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
+        startLocationUpdates()
 
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
@@ -241,20 +215,6 @@ class TravellingFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerCli
     }
 
     /**
-     * Create a location request
-     *
-     * Generates a location request with an interval of 20s
-     * Requests maximum accuracy
-     */
-    private fun createLocationRequest() {
-        locationRequest = LocationRequest.create().apply {
-            interval = 20000
-            fastestInterval = 10000
-            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-        }
-    }
-
-    /**
      * Called on resume
      *
      * Creates a location request
@@ -264,9 +224,6 @@ class TravellingFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerCli
     override fun onResume() {
         Log.i("TravellingFragment", "onResume")
         super.onResume()
-        createLocationRequest()
-        locationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
-        startLocationUpdates()
     }
 
     /**
@@ -275,31 +232,10 @@ class TravellingFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerCli
      * Starts the location service
      * Requests location updates for the location service
      */
-    @SuppressLint("MissingPermission")
     private fun startLocationUpdates() {
         Log.e("Location update", "Starting...")
-        val intent = Intent(ctx, LocationService::class.java)
-        ctx.bindService(intent, mConnection, Context.BIND_AUTO_CREATE)
-        mLocationPendingIntent =
-            PendingIntent.getService(ctx,
-                1,
-                intent,
-                PendingIntent.FLAG_UPDATE_CURRENT
-            )
-        val locationTask = locationClient.requestLocationUpdates(
-            locationRequest,
-            mLocationPendingIntent!!
-        )
-        locationTask.addOnFailureListener { e ->
-            if (e is ApiException) {
-                e.message?.let { Log.w("TravellingFragment", it) }
-            } else {
-                Log.w("Travelling", e.message!!)
-            }
-        }
-        locationTask.addOnCompleteListener {
-            Log.d("Travelling", "Started gps")
-        }
+        intent = Intent(ctx, LocationService::class.java)
+        ctx.startService(intent)
     }
 
     /**
@@ -309,7 +245,6 @@ class TravellingFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerCli
      */
     override fun onPause() {
         super.onPause()
-        stopLocationUpdates()
     }
 
     /**
@@ -318,7 +253,7 @@ class TravellingFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerCli
      * Removes the callback from the location client
      */
     private fun stopLocationUpdates() {
-        locationClient.removeLocationUpdates(locationCallback)
+        ctx.stopService(intent)
     }
 
     //Handle easyImage

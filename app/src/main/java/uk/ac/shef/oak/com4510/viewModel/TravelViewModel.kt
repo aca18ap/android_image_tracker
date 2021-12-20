@@ -70,7 +70,6 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
     private fun initSearchResults()
     {
         viewModelScope.launch(Dispatchers.IO){
-
             val allImages = mRepository.getAllImages(OrderBy.NOPARTICULARORDER) ?: ArrayList<ImageData>()
             Log.d("TravelViewModel", "This is what is in allImages:${allImages.toString()}")
             Log.d("TravelViewModel", "SearchResults variable:${_searchResults.toString()}")
@@ -141,6 +140,9 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
      */
     val entriesOfTrip : LiveData<MutableList<Pair<EntryData,List<ImageData>>>>
         get() = _entriesOfTrip
+    // This value holds the last entry that entriesOfTrip was used with. This is so that it is possible to update
+    // the entriesOfTrip observable whenever any updates regarding trips happens in the database.
+    private lateinit var currentEntryForEntriesOfTrip : EntryData
 
     /**
      * Updates the entriesOfTrip observable with all (DataEntry,List<ImageData>) for a given trip.
@@ -223,6 +225,27 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
             _imagesOfTrip.postValue(allImages)
         }
     }
+
+    /*
+    private val _onGoingTrip = MutableLiveData<Int>(-1)
+    /**
+     * Observable liveData representing the id of the currently ongoing trip. Default value = -1
+     *
+     * @see setOnGoingTrip
+     * @see getOnGoingTrip
+     */
+    val onGoingTrip : LiveData<Int>
+        get() = _onGoingTrip
+
+    fun setOnGoingTrip(tripID: Int)
+    {
+        _onGoingTrip.value = tripID
+    }
+    fun getOnGoingTrip() : Int
+    {
+        return _onGoingTrip.value!!
+    }
+     */
 
     /**
      * Returns an ImageData object with the given id
@@ -536,77 +559,6 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
      */
     fun getEntry(entryId : Int) : EntryData? = runBlocking{
         mRepository.getEntry(entryId)
-    }
-
-    /**
-     * Given a trip's id and sensor measurements, create and insert an Entry into the database
-     *
-     * @param tripDataID Id of the trip this entry is to be linked with
-     * @param temperature Temperature taken at the entry position and time
-     * @param pressure Pressure measurement taken at the entry position and time
-     * @param lat Latitude coordinate of the entry
-     * @param lon Longitude coordinate of the entry
-     * @param timestamp time at which the entry was captured
-     */
-    fun create_insert_entry(tripDataID: Int, temperature:Float?, pressure:Float?, lat:Double, lon:Double, timestamp:Long)
-    {
-        viewModelScope.launch(Dispatchers.IO)
-        {
-            val createdEntry = EntryData(
-                lat = lat, lon = lon,
-                entry_timestamp = timestamp, entry_temperature = temperature,
-                entry_pressure = pressure, trip_id = tripDataID)
-            mRepository.insertEntryReturnId(createdEntry)
-        }
-
-    }
-    /**
-     * Given a tripData ID and entry measurements, creates and inserts an Entry into the database.
-     * WARNING: This does block the UI thread, to be used sparingly.
-     *
-     * @param tripDataID Id of the trip this entry is to be linked with
-     * @param temperature Temperature taken at the entry position and time
-     * @param pressure Pressure measurement taken at the entry position and time
-     * @param lat Latitude coordinate of the entry
-     * @param lon Longitude coordinate of the entry
-     * @return The entry that was inserted into the database
-     * @see create_insert_entry for a function that creates and inserts and entry but does not block the UI thread
-     */
-    fun create_insert_entry_returnEntry(tripDataID: Int, temperature:Float?, pressure:Float?, lat:Double, lon:Double, timestamp:Long) : EntryData
-    {
-        val createdEntry = EntryData(
-            lat = lat, lon = lon,
-            entry_timestamp = timestamp, entry_temperature = temperature,
-            entry_pressure = pressure, trip_id = tripDataID)
-
-        val id = insertEntryReturnId(createdEntry)
-        createdEntry.id = id
-        return createdEntry
-    }
-
-    /**
-     * Inserts an entry into the database.
-     * @param entryData Entry to be inserted into the database
-     */
-    fun insertEntry(entryData: EntryData)
-    {
-        viewModelScope.launch()
-        {
-            mRepository.insertEntryReturnId(entryData)
-        }
-    }
-
-    /**
-     * Inserts an entry into the database and returns the id of the entry.
-     * WARNING:This does block the main thread. To be used sparingly.
-     *
-     * @param entryData EntryData to insert into the database
-     * @return id of the inserted EntryData
-     * @see insertEntry for a function that inserts entries without blocking the UI thread
-     */
-    fun insertEntryReturnId(entryData: EntryData): Int = runBlocking{
-        val deferredId = async { mRepository.insertEntryReturnId(entryData) }
-        deferredId.await()
     }
 
     // -------------------------- DEBUG FUNCTIONS
