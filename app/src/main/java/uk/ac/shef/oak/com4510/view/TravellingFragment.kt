@@ -1,21 +1,17 @@
 package uk.ac.shef.oak.com4510.view
 
-import android.Manifest
 import android.annotation.SuppressLint
 import android.app.PendingIntent
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
-import android.content.pm.PackageManager
-import android.location.Location
 import android.os.Bundle
 import android.os.IBinder
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -23,7 +19,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.gms.common.api.ApiException
-import com.google.android.gms.location.*
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -41,6 +40,7 @@ import uk.ac.shef.oak.com4510.viewModel.TravelViewModel
  */
 class TravellingFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
     private val args: TravellingFragmentArgs by navArgs()
+    private lateinit var mMap: GoogleMap
     private lateinit var easyImage: EasyImage
     private lateinit var locationRequest: LocationRequest
     private lateinit var locationClient: FusedLocationProviderClient
@@ -67,15 +67,10 @@ class TravellingFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerCli
     }
 
     companion object {
-        private lateinit var mMap: GoogleMap
         private lateinit var viewModel: TravelViewModel
         private lateinit var binding : FragmentTravellingBinding
         private var activity: FragmentActivity? = null
-        private var mCurrentLocation: Location? = null
-        private var mCurrentPressure: Float? = null
-        private var mCurrentTemperature: Float? = null
         private var tripID: Int = -1
-        private var entryID: Int = -1
 
         /**
          * Activity getter
@@ -96,15 +91,6 @@ class TravellingFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerCli
         }
 
         /**
-         * GoogleMap getter
-         *
-         * @return mMap the GoogleMap instance
-         */
-        fun getMap(): GoogleMap {
-            return mMap
-        }
-
-        /**
          * ViewModel getter
          *
          * @return viewModel the associated TravelViewModel
@@ -114,34 +100,12 @@ class TravellingFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerCli
         }
 
         /**
-         * LocationService callback
-         *
-         * Sets location and sensor values
-         * Updates text boxes
-         *
-         * @param location the location object containing latitude and longitude values
-         * @param pressure the air pressure in millibars
-         * @param temperature the ambient temperature in degrees C
-         * @param time a timestamp in milliseconds
-         * @return activity the parent activity
-         */
-
-        /**
          * Trip ID getter
          *
          * @return tripID the ID of the active trip
          */
         fun getTripId(): Int {
             return tripID
-        }
-
-        /**
-         * Entry ID getter
-         *
-         * @return entryID the ID of the most recent entry
-         */
-        fun setEntryID(id: Int) {
-            entryID = id
         }
     }
 
@@ -220,7 +184,7 @@ class TravellingFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerCli
                         Log.i("Bitmap", images.first().thumbnail.toString())
                         val bmp = ImagesAdapter.decodeSampledBitmapFromResource(images.first().imageUri, 120, 120)
                         val bmpDescriptor = BitmapDescriptorFactory.fromBitmap(bmp)
-                        mMap?.addMarker(
+                        mMap.addMarker(
                             MarkerOptions()
                                 .position(newPoint)
                                 .icon(bmpDescriptor)
@@ -365,7 +329,7 @@ class TravellingFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerCli
         easyImage.handleActivityResult(requestCode, resultCode, data, requireActivity(),
             object : DefaultCallback(){
                 override fun onMediaFilesPicked(imageFiles: Array<MediaFile>, source: MediaSource) {
-                    Log.d("InsideDanFragment","TripID: $tripID, EntryID: $entryID, Loc: $mCurrentLocation")
+                    Log.d("InsideDanFragment","TripID: $tripID")
                     viewModel.insertArrayMediaFilesWithLastEntryById(imageFiles)
                     viewModel.updateEntriesOfTrip(tripID)
                 }
