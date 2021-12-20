@@ -1,23 +1,21 @@
 package uk.ac.shef.oak.com4510.view.fragments
 
-import androidx.fragment.app.Fragment
-
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.*
 import uk.ac.shef.oak.com4510.R
 import uk.ac.shef.oak.com4510.viewModel.TravelViewModel
-import com.google.android.gms.maps.model.*
 import uk.ac.shef.oak.com4510.view.adapters.ImagesAdapter
 
 class ExistingTravelFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
@@ -48,25 +46,33 @@ class ExistingTravelFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarke
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
         mapFragment?.getMapAsync(this)
 
+    }
+
+    override fun onMapReady(googleMap: GoogleMap) {
+        mMap = googleMap
+        if (mLine == null) mLine = mMap
+            .addPolyline(PolylineOptions())
+        if (mLineLoc == null) mLineLoc = mMap
+            .addPolyline(PolylineOptions()
+                .color(4282549748.toInt()) // Google blue
+                .zIndex(1f)// Over the top of the entire trip
+                .width(20f)
+            )
+        mMap.setOnMarkerClickListener(this)
+
         viewModel.entriesOfTrip.observe(viewLifecycleOwner) { listOfEntryImagePair ->
             // listOfEntryImagePair is a list of Pairs of (EntryData,List<ImageData>). It contains each entry and it's associated list of images.
             // This is where perhaps, Dan, you could update the map on this fragment to display the image for each entry on the map
             Log.i("EntryCallback", listOfEntryImagePair.toString())
             try{
-
-
-//                mLine!!.points.clear() // Reset the lines
-//                mLineLoc!!.points.clear()
-
+                val points : MutableList<LatLng> = mutableListOf()
                 // for each pair, add a marker...
                 for (pair in listOfEntryImagePair) {
                     val entry = pair.first
                     val images = pair.second
                     val newPoint = LatLng(entry.lat, entry.lon)
 
-                    val points = mLine!!.points
                     points.add(newPoint)
-                    mLine!!.points = points
 
                     if (arrayOf(-1, 0, 1).contains(entry.id - entryID)) { // Highlight the selected location
                         Log.i("HighlightEntry", "Match found: $entry")
@@ -95,25 +101,12 @@ class ExistingTravelFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarke
                         )
                     }
                 }
+                mLine!!.points = points
             } catch (e: Exception) {
                 Log.e("ExistingTravelFragment", "Could not write on map " + e.message)
             }
-
         }
         viewModel.updateEntriesOfTrip(tripID)
-    }
-
-    override fun onMapReady(googleMap: GoogleMap) {
-        mMap = googleMap
-        if (mLine == null) mLine = mMap
-            .addPolyline(PolylineOptions())
-        if (mLineLoc == null) mLineLoc = mMap
-            .addPolyline(PolylineOptions()
-                .color(4282549748.toInt()) // Google blue
-                .zIndex(1f)// Over the top of the entire trip
-                .width(20f)
-            )
-        mMap.setOnMarkerClickListener(this)
     }
 
     override fun onMarkerClick(m: Marker?): Boolean {
