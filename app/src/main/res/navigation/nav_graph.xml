@@ -94,6 +94,13 @@
             android:name="tripID"
             app:argType="integer"
             android:defaultValue="-1"/>
+        <action
+            android:id="@+id/action_travellingFragment_to_showImageFragment"
+            app:destination="@id/showImageFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
     </fragment>
     <fragment
         android:id="@+id/existingTravelFragment"
@@ -108,6 +115,13 @@
             android:name="entryID"
             app:argType="integer"
             android:defaultValue="-1"/>
+        <action
+            android:id="@+id/action_existingTravelFragment_to_showImageFragment"
+            app:destination="@id/showImageFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
     </fragment>
     <fragment
         android:id="@+id/viewPastTripsFragment"

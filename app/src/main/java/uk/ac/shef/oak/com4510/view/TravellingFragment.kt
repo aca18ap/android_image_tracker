@@ -29,6 +29,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.snackbar.Snackbar
 import pl.aprilapps.easyphotopicker.*
@@ -40,7 +41,7 @@ import uk.ac.shef.oak.com4510.viewModel.TravelViewModel
 /**
  * A fragment containing the current visit
  */
-class TravellingFragment : Fragment(), OnMapReadyCallback {
+class TravellingFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
     private val args: TravellingFragmentArgs by navArgs()
     private lateinit var easyImage: EasyImage
     private lateinit var locationRequest: LocationRequest
@@ -206,12 +207,13 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
                 if (images.isNotEmpty()) {
                     Log.i("Images", images.toString())
                     Log.i("Bitmap", images.first().thumbnail.toString())
-                    val bmp = ImagesAdapter.decodeSampledBitmapFromResource(images.first().imageUri, 150, 150)
+                    val bmp = ImagesAdapter.decodeSampledBitmapFromResource(images.first().imageUri, 120, 120)
                     val bmpDescriptor = BitmapDescriptorFactory.fromBitmap(bmp)
-                    mMap.addMarker(
+                    mMap?.addMarker(
                         MarkerOptions()
                         .position(newPoint)
                         .icon(bmpDescriptor)
+                        .snippet(images.first().id.toString())
                     )
                 }
             }
@@ -237,6 +239,7 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
     override fun onMapReady(googleMap: GoogleMap) {
         Log.i("TravellingFragment", "Created map")
         mMap = googleMap
+        mMap.setOnMarkerClickListener(this)
 
         if (ActivityCompat.checkSelfPermission(
                 requireActivity(),
@@ -266,6 +269,15 @@ class TravellingFragment : Fragment(), OnMapReadyCallback {
             this.findNavController().popBackStack()
             this.findNavController().popBackStack()
         }
+    }
+
+    override fun onMarkerClick(m: Marker?): Boolean {
+        Log.i("MarkerClick", m.toString())
+        if (m == null) return false
+        val position = m.snippet.toInt()-1
+        val action = TravellingFragmentDirections.actionTravellingFragmentToShowImageFragment(position)
+        this.findNavController().navigate(action)
+        return true
     }
 
     /**

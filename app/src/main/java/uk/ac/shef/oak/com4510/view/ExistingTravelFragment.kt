@@ -8,6 +8,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -18,7 +20,7 @@ import uk.ac.shef.oak.com4510.R
 import uk.ac.shef.oak.com4510.viewModel.TravelViewModel
 import com.google.android.gms.maps.model.*
 
-class ExistingTravelFragment : Fragment(), OnMapReadyCallback {
+class ExistingTravelFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
     private val args: ExistingTravelFragmentArgs by navArgs()
     private lateinit var viewModel: TravelViewModel
     private lateinit var mMap: GoogleMap
@@ -84,12 +86,12 @@ class ExistingTravelFragment : Fragment(), OnMapReadyCallback {
                     if (images.isNotEmpty()) {
                         Log.i("Images", images.toString())
                         Log.i("Bitmap", images.first().thumbnail.toString())
-                        val bmp = ImagesAdapter.decodeSampledBitmapFromResource(images.first().imageUri, 150, 150)
+                        val bmp = ImagesAdapter.decodeSampledBitmapFromResource(images.first().imageUri, 120, 120)
                         val bmpDescriptor = BitmapDescriptorFactory.fromBitmap(bmp)
-//                        val bmpDescriptor = BitmapDescriptorFactory.fromPath(images.first().imageUri)
                         mMap.addMarker(MarkerOptions()
                             .position(newPoint)
                             .icon(bmpDescriptor)
+                            .snippet(images.first().id.toString()) // For the listener. Invisible without a set title
                         )
                     }
                 }
@@ -111,5 +113,14 @@ class ExistingTravelFragment : Fragment(), OnMapReadyCallback {
                 .zIndex(1f)// Over the top of the entire trip
                 .width(20f)
             )
+        mMap.setOnMarkerClickListener(this)
+    }
+
+    override fun onMarkerClick(m: Marker?): Boolean {
+        if (m == null) return false
+        val position = m.snippet.toInt()-1
+        val action = ExistingTravelFragmentDirections.actionExistingTravelFragmentToShowImageFragment(position)
+        this.findNavController().navigate(action)
+        return true
     }
 }
