@@ -1,7 +1,6 @@
 package uk.ac.shef.oak.com4510.service
 
 import android.annotation.SuppressLint
-import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
 import android.content.Intent
@@ -10,11 +9,11 @@ import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.location.Location
-import android.os.Binder
 import android.os.IBinder
 import android.os.Looper
 import android.util.Log
 import com.google.android.gms.location.*
+import uk.ac.shef.oak.com4510.model.data.Repository
 import uk.ac.shef.oak.com4510.view.fragments.TravellingFragment
 import java.text.DateFormat
 import java.util.*
@@ -31,9 +30,10 @@ class LocationService : Service() {
     private var mLastUpdateTime: String? = null
     private var barometer: Sensor? = null
     private var thermometer: Sensor? = null
-    private val mBinder: IBinder = LocalBinder()
     private lateinit var locationRequest: LocationRequest
     private lateinit var locationClient: FusedLocationProviderClient
+
+    private lateinit var mRepository: Repository
 
     private var barometerEventListener  = object : SensorEventListener {
         override fun onSensorChanged(event: SensorEvent) {
@@ -50,20 +50,6 @@ class LocationService : Service() {
     }
 
     /**
-     * A binder class to expose this service to TravellingFragment
-     */
-    class LocalBinder : Binder() {
-        /**
-         * Service getter
-         *
-         * @return LocationService an instance of the service
-         */
-        fun getService() : LocationService {
-            return LocationService()
-        }
-    }
-
-    /**
      * Called when the service is instantiated
      */
     override fun onCreate() {
@@ -71,6 +57,7 @@ class LocationService : Service() {
         super.onCreate()
         createLocationRequest()
         locationClient = LocationServices.getFusedLocationProviderClient(this)
+        mRepository = Repository(application)
     }
 
     /**
@@ -95,7 +82,15 @@ class LocationService : Service() {
                     mLastUpdateTime = DateFormat.getTimeInstance().format(Date())
                     if (TravellingFragment.getActivity() != null) {
                         TravellingFragment.getActivity()?.runOnUiThread(Runnable {
-                            TravellingFragment.getViewModel().create_insert_entry_returnEntry(
+//                            TravellingFragment.getViewModel().create_insert_entry_returnEntry(
+//                                TravellingFragment.getTripId(),
+//                                getLastTemperature(), // Nullable if phone has no ambient temperature sensor
+//                                getLastPressure(), // Nullable if phone has no barometer
+//                                getLastLocation()!!.latitude,
+//                                getLastLocation()!!.longitude,
+//                                System.currentTimeMillis()
+//                            )
+                            mRepository.create_insert_entry_returnEntry(
                                 TravellingFragment.getTripId(),
                                 getLastTemperature(), // Nullable if phone has no ambient temperature sensor
                                 getLastPressure(), // Nullable if phone has no barometer
@@ -137,7 +132,7 @@ class LocationService : Service() {
      * @return mBinder the LocalBinder object
      */
     override fun onBind(intent: Intent): IBinder? {
-        return mBinder
+        return null
     }
 
     /**

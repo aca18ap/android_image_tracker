@@ -3,6 +3,7 @@ package uk.ac.shef.oak.com4510.view.fragments
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.widget.CompoundButton
 import android.widget.SearchView
@@ -11,6 +12,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import uk.ac.shef.oak.com4510.viewModel.TravelViewModel
 import uk.ac.shef.oak.com4510.R
 import uk.ac.shef.oak.com4510.databinding.FragmentGalleryBinding
@@ -76,6 +78,12 @@ class GalleryFragment : Fragment() {
             ImagesAdapter.items = images as MutableList<ImageData>
             mAdapter.notifyDataSetChanged()
         })
+        /*
+        viewModel!!.onGoingTrip.observe(this,{
+            Log.d("GalleryFragment"," The ongoing trip $it")
+            Snackbar.make(binding.root, "The ongoing trip is:$it", Snackbar.LENGTH_LONG).show()
+        })
+        */
 
         return binding.root
     }
