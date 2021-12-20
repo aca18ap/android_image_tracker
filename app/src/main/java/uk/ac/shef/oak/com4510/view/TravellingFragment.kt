@@ -35,7 +35,6 @@ import pl.aprilapps.easyphotopicker.*
 import uk.ac.shef.oak.com4510.R
 import uk.ac.shef.oak.com4510.databinding.FragmentTravellingBinding
 import uk.ac.shef.oak.com4510.service.LocationService
-import uk.ac.shef.oak.com4510.viewModel.ImagesAdapter
 import uk.ac.shef.oak.com4510.viewModel.TravelViewModel
 
 /**

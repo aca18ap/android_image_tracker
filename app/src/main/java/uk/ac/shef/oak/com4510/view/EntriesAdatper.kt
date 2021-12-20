@@ -1,4 +1,4 @@
-package uk.ac.shef.oak.com4510.viewModel
+package uk.ac.shef.oak.com4510.view
 
 import android.content.Context
 import android.os.Build
@@ -16,7 +16,6 @@ import uk.ac.shef.oak.com4510.R
 import uk.ac.shef.oak.com4510.model.data.database.EntryData
 import uk.ac.shef.oak.com4510.model.data.database.ImageData
 import java.text.SimpleDateFormat
-import java.time.*
 import java.util.*
 
 class EntriesAdapter : RecyclerView.Adapter<EntriesAdapter.ViewHolder> {

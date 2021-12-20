@@ -1,4 +1,4 @@
-package uk.ac.shef.oak.com4510.viewModel
+package uk.ac.shef.oak.com4510.view
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -7,16 +7,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import uk.ac.shef.oak.com4510.*
 import uk.ac.shef.oak.com4510.model.data.database.ImageData
-import uk.ac.shef.oak.com4510.view.GalleryFragmentDirections
 import kotlinx.coroutines.*
-import uk.ac.shef.oak.com4510.view.TripImagesTabFragment
-import uk.ac.shef.oak.com4510.view.ViewTripDetailsFragment
-import uk.ac.shef.oak.com4510.view.ViewTripDetailsFragmentDirections
 import java.lang.IllegalArgumentException
 
 class ImagesAdapter : RecyclerView.Adapter<ImagesAdapter.ViewHolder> {

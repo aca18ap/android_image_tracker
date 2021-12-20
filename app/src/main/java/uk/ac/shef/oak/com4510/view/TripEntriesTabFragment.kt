@@ -14,7 +14,6 @@ import uk.ac.shef.oak.com4510.R
 import uk.ac.shef.oak.com4510.databinding.FragmentTripEntriesTabBinding
 import uk.ac.shef.oak.com4510.model.data.database.EntryData
 import uk.ac.shef.oak.com4510.model.data.database.ImageData
-import uk.ac.shef.oak.com4510.viewModel.EntriesAdapter
 import uk.ac.shef.oak.com4510.viewModel.TravelViewModel
 
 

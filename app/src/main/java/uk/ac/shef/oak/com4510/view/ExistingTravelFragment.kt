@@ -16,9 +16,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import uk.ac.shef.oak.com4510.R
 import uk.ac.shef.oak.com4510.viewModel.TravelViewModel
-import androidx.navigation.fragment.navArgs
 import com.google.android.gms.maps.model.*
-import uk.ac.shef.oak.com4510.viewModel.ImagesAdapter
 
 class ExistingTravelFragment : Fragment(), OnMapReadyCallback {
     private val args: ExistingTravelFragmentArgs by navArgs()

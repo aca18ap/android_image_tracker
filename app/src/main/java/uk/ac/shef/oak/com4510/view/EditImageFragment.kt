@@ -12,7 +12,6 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import uk.ac.shef.oak.com4510.R
 import uk.ac.shef.oak.com4510.databinding.FragmentEditImageBinding
-import uk.ac.shef.oak.com4510.viewModel.ImagesAdapter
 import kotlinx.coroutines.*
 import uk.ac.shef.oak.com4510.viewModel.TravelViewModel
 
