@@ -1,6 +1,9 @@
 package uk.ac.shef.oak.com4510.service
 
 import android.annotation.SuppressLint
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.app.Service
 import android.content.Context
 import android.content.Intent
@@ -9,6 +12,7 @@ import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.location.Location
+import android.os.Build
 import android.os.IBinder
 import android.os.Looper
 import android.util.Log
@@ -17,6 +21,7 @@ import uk.ac.shef.oak.com4510.model.data.Repository
 import uk.ac.shef.oak.com4510.view.fragments.TravellingFragment
 import java.text.DateFormat
 import java.util.*
+
 
 /**
  * A service to periodically gather location and sensor information, and pass it back to the current visit
@@ -68,6 +73,22 @@ class LocationService : Service() {
      */
     @SuppressLint("MissingPermission")
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        if (Build.VERSION.SDK_INT >= 26) { // Start in foreground
+            val channel = NotificationChannel(
+                "team01_channel",
+                "Tracking your current visit.",
+                NotificationManager.IMPORTANCE_DEFAULT
+            )
+            (getSystemService(NOTIFICATION_SERVICE) as NotificationManager).createNotificationChannel(
+                channel
+            )
+            val notification: Notification = Notification.Builder(this, "team01_channel")
+                .setContentTitle("Team01 Travel App")
+                .setContentText("Tracking your current visit.")
+                .setOngoing(true).build()
+            startForeground(1, notification)
+        }
+
         sensorManager = applicationContext.getSystemService(Context.SENSOR_SERVICE) as SensorManager
         barometer = sensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE)
         thermometer = sensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE)
@@ -76,12 +97,11 @@ class LocationService : Service() {
         Log.i("LocationService", "onStartCommand")
         locationCallback = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult) {
+                super.onLocationResult(locationResult)
                 for (location in locationResult.locations) {
                     Log.i("LocationCallback", location.toString())
                     mCurrentLocation = location
                     mLastUpdateTime = DateFormat.getTimeInstance().format(Date())
-                    if (TravellingFragment.getActivity() != null) {
-                        TravellingFragment.getActivity()?.runOnUiThread(Runnable {
                             mRepository.create_insert_entry_returnEntry(
                                 TravellingFragment.getTripId(),
                                 getLastTemperature(), // Nullable if phone has no ambient temperature sensor
@@ -91,8 +111,8 @@ class LocationService : Service() {
                                 System.currentTimeMillis()
                             )
                             Log.i("ServiceLocation", "Successfully added entry")
+                    if (TravellingFragment.getActivity() != null) {
                             TravellingFragment.getViewModel().updateEntriesOfTrip(TravellingFragment.getTripId())
-                        })
                     }
                 }
             }

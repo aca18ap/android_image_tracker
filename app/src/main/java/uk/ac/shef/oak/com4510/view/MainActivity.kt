@@ -29,6 +29,7 @@ class MainActivity : AppCompatActivity() {
         private const val REQUEST_WRITE_EXTERNAL_STORAGE = 7829
         private const val REQUEST_CAMERA_CODE = 100
         private const val REQUEST_LOCATION_CODE = 1122
+        private const val REQUEST_FOREGROUND_SERVICE_CODE = 1123
 
     }
 
@@ -129,7 +130,7 @@ class MainActivity : AppCompatActivity() {
                     REQUEST_CAMERA_CODE
                 )
             }
-            if (ActivityCompat.checkSelfPermission(
+            if (ContextCompat.checkSelfPermission(
                     this,
                     Manifest.permission.ACCESS_FINE_LOCATION
                 ) != PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(
@@ -143,7 +144,19 @@ class MainActivity : AppCompatActivity() {
                     REQUEST_LOCATION_CODE
                 )
             }
-
+            if (currentAPIVersion >= Build.VERSION_CODES.M) {
+                if (ContextCompat.checkSelfPermission(
+                        context,
+                        Manifest.permission.FOREGROUND_SERVICE
+                    ) != PackageManager.PERMISSION_GRANTED
+                ) {
+                    ActivityCompat.requestPermissions(
+                        this,
+                        arrayOf(Manifest.permission.FOREGROUND_SERVICE),
+                        REQUEST_FOREGROUND_SERVICE_CODE
+                    )
+                }
+            }
         }
     }
 }

@@ -1,7 +1,11 @@
 package uk.ac.shef.oak.com4510.view.fragments
 
+import android.annotation.SuppressLint
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.location.Location
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -15,6 +19,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -34,11 +39,12 @@ import uk.ac.shef.oak.com4510.viewModel.TravelViewModel
  * A fragment containing the current visit
  */
 class TravellingFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
+    private var mFusedLocationClient : FusedLocationProviderClient? = null
+    private var mLocationPendingIntent: PendingIntent? = null
     private val args: TravellingFragmentArgs by navArgs()
     private lateinit var mMap: GoogleMap
     private lateinit var easyImage: EasyImage
     private lateinit var locationClient: FusedLocationProviderClient
-    private lateinit var ctx: Context
     private lateinit var intent: Intent
     private var mLine: Polyline? = null
 
@@ -100,7 +106,6 @@ class TravellingFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerCli
         Log.i("Current Trip ID", "$tripID")
 
         setActivity(requireActivity())
-        setContext(requireActivity())
 
         binding = DataBindingUtil.inflate(inflater,
             R.layout.fragment_travelling, container, false)
@@ -207,14 +212,6 @@ class TravellingFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerCli
     }
 
     /**
-     * Context setter
-     * @param context the current context
-     */
-    private fun setContext(context: Context) {
-        ctx = context
-    }
-
-    /**
      * Called on resume
      *
      * Creates a location request
@@ -229,13 +226,16 @@ class TravellingFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerCli
     /**
      * Starts location updates
      *
-     * Starts the location service
+     * Starts the location service as a foreground service (Oreo and later)
+     * Otherwise starts as a background service and will not work when the screen is off,
+     * or while the app is swiped away.
      * Requests location updates for the location service
      */
     private fun startLocationUpdates() {
         Log.e("Location update", "Starting...")
-        intent = Intent(ctx, LocationService::class.java)
-        ctx.startService(intent)
+        intent = Intent(requireActivity(), LocationService::class.java)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) requireActivity().startForegroundService(intent)
+        else  requireActivity().startService(intent)
     }
 
     /**
@@ -253,7 +253,7 @@ class TravellingFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerCli
      * Removes the callback from the location client
      */
     private fun stopLocationUpdates() {
-        ctx.stopService(intent)
+        requireActivity().stopService(intent)
         viewModel.setOnGoingTrip(-1)
     }
 
