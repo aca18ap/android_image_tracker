@@ -36,6 +36,43 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
 
     val someRandomINTHALL = 5
 
+    private val _onGoingTrip  = MutableLiveData(-1)
+    /**
+     * Observable int that contains the ID of an ongoing trip.
+     *
+     * @see setOnGoingTrip
+     * @see getOnGoingTrip
+     */
+    val onGoingTrip : LiveData<Int>
+        get() = _onGoingTrip
+
+    fun setOnGoingTrip(tripID: Int)
+    {
+        _onGoingTrip.value = tripID
+        Log.d("TravelViewModel", "onGoingTrip variable:${_onGoingTrip.value}")
+    }
+
+    fun getOnGoingTrip() : Int
+    {
+        return _onGoingTrip.value!!
+    }
+
+//    fun initOnGoingTrip()
+//    {
+//        _onGoingTrip.value!! = -1
+//    }
+
+//    private fun initOnGoingTrip()
+//    {
+//        viewModelScope.launch(Dispatchers.IO){
+//            val tripID = -1
+//            Log.d("TravelViewModel", "onGoingTrip init: ${_onGoingTrip.value}")
+//            if(isActive) {
+//                _onGoingTrip.postValue(tripID)
+//            }
+//        }
+//    }
+
     private val _searchResults  = MutableLiveData<MutableList<ImageData>>()
     /**
      * Observable list of images that contains the result of a search performed on a given query.
@@ -169,21 +206,6 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
             _entriesOfTrip.postValue(updatedList)
         }
     }
-
-    private val _onGoingTrip = MutableLiveData<Int>()
-    /**
-     * Observable list of images that contains images for a particular entry.
-     *
-     * @see updateImagesOfEntry
-     */
-    val onGoingTrip : LiveData<Int>
-        get() = _onGoingTrip
-
-    fun initOnGoingTrip()
-    {
-        _onGoingTrip.value = -1
-    }
-
 
     private val _imagesOfEntry = MutableLiveData<MutableList<ImageData>>()
     /**

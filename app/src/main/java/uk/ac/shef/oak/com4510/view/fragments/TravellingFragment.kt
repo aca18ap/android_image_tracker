@@ -124,8 +124,7 @@ class TravellingFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerCli
 
         binding.tripEndBtn.setOnClickListener{
             stopLocationUpdates()
-            this.findNavController().popBackStack() // New Trip page
-            this.findNavController().popBackStack() // Welcome page
+            this.findNavController().popBackStack()
             Toast.makeText(activity, "Trip Over!", Toast.LENGTH_SHORT).show()
         }
         return binding.root
@@ -255,6 +254,7 @@ class TravellingFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerCli
      */
     private fun stopLocationUpdates() {
         ctx.stopService(intent)
+        viewModel.setOnGoingTrip(-1)
     }
 
     //Handle easyImage
