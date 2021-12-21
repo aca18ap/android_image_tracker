@@ -43,9 +43,9 @@ class HomeFragment : Fragment() {
         binding.newTripButton.setOnClickListener{view : View ->
             val tripID = viewModel.getOnGoingTrip()
             Log.d("HomeFragment", "onGoingTrip: $tripID")
-            if (tripID == -1) { // No ongoing trip
+            if (tripID == -1) { // No ongoing trip, make new trip
                 view.findNavController().navigate(R.id.action_homeFragment_to_newTripFragment)
-            } else { // Ongoing trip
+            } else { // Ongoing trip, go to that trip
                 val action : NavDirections = HomeFragmentDirections.actionHomeFragmentToTravellingFragment(tripID)
                 view.findNavController().navigate(action)
             }

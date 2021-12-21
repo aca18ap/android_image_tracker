@@ -32,7 +32,6 @@ class LocationService : Service() {
     private var mCurrentLocation: Location? = null
     private var mCurrentPressure: Float? = null
     private var mCurrentTemperature: Float? = null
-    private var mLastUpdateTime: String? = null
     private var barometer: Sensor? = null
     private var thermometer: Sensor? = null
     private lateinit var locationRequest: LocationRequest
@@ -56,6 +55,8 @@ class LocationService : Service() {
 
     /**
      * Called when the service is instantiated
+     *
+     * Sets up location client and data repository
      */
     override fun onCreate() {
         Log.i("LocationService", "onCreate")
@@ -69,7 +70,7 @@ class LocationService : Service() {
      * Called to begin location tracking
      *
      * Sets up location and sensors
-     * Passes data to the current visit every 20s
+     * Adds a callback to save the data every ~20s
      */
     @SuppressLint("MissingPermission")
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -101,7 +102,6 @@ class LocationService : Service() {
                 for (location in locationResult.locations) {
                     Log.i("LocationCallback", location.toString())
                     mCurrentLocation = location
-                    mLastUpdateTime = DateFormat.getTimeInstance().format(Date())
                             mRepository.create_insert_entry_returnEntry(
                                 TravellingFragment.getTripId(),
                                 getLastTemperature(), // Nullable if phone has no ambient temperature sensor
