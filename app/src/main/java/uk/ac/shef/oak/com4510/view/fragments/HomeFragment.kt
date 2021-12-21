@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.navigation.NavDirections
 import androidx.navigation.findNavController
 import uk.ac.shef.oak.com4510.R
 import uk.ac.shef.oak.com4510.databinding.FragmentHomeBinding
@@ -33,7 +34,14 @@ class HomeFragment : Fragment() {
 
         //Navigating to new trip
         binding.newTripButton.setOnClickListener{view : View ->
-            view.findNavController().navigate(R.id.action_homeFragment_to_newTripFragment)
+            if (true) { // No ongoing trip
+                view.findNavController().navigate(R.id.action_homeFragment_to_newTripFragment)
+            } else { // Ongoing trip
+//                val tripID = ...
+//                val action : NavDirections = HomeFragmentDirections.actionHomeFragmentToTravellingFragment(tripID)
+//                view.findNavController().navigate(action)
+            }
+
         }
         //Navigating to pastTrips
         binding.viewTripsButton.setOnClickListener{view : View ->

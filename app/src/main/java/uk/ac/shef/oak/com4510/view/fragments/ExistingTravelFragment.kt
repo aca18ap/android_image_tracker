@@ -67,6 +67,7 @@ class ExistingTravelFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarke
             Log.i("EntryCallback", listOfEntryImagePair.toString())
             try{
                 val points : MutableList<LatLng> = mutableListOf()
+                val highlightPoints : MutableList<LatLng> = mutableListOf()
                 // for each pair, add a marker...
                 for (pair in listOfEntryImagePair) {
                     val entry = pair.first
@@ -77,7 +78,6 @@ class ExistingTravelFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarke
 
                     if (arrayOf(-1, 0, 1).contains(entry.id - entryID)) { // Highlight the selected location
                         Log.i("HighlightEntry", "Match found: $entry")
-                        val highlightPoints = mLineLoc!!.points
                         highlightPoints.add(LatLng(entry.lat, entry.lon))
                         mLineLoc!!.points = highlightPoints
 
