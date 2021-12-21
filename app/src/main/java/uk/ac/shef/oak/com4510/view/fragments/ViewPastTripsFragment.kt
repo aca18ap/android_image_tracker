@@ -62,7 +62,7 @@ class ViewPastTripsFragment : Fragment() {
         val binding : FragmentViewPastTripsBinding = DataBindingUtil.inflate(inflater,
             R.layout.fragment_view_past_trips, container, false)
 
-        viewModel = ViewModelProvider(this)[TravelViewModel::class.java]
+        viewModel = ViewModelProvider(requireActivity())[TravelViewModel::class.java]
 
         mRecyclerView = binding.contentTrips.tripGridRecyclerView
         val numberOfColumns = 2

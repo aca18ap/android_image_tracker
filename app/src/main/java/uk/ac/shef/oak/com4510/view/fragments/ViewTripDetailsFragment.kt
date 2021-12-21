@@ -50,7 +50,7 @@ class ViewTripDetailsFragment : Fragment() {
         val viewpager = binding.viewpager
         val pagerAdapter = ViewPagerAdapter(activity!!)
 
-        val viewModel = ViewModelProvider(this)[TravelViewModel::class.java]
+        val viewModel = ViewModelProvider(requireActivity())[TravelViewModel::class.java]
 
         pagerAdapter.addFragment(TripImagesTabFragment(args.tripID))
         pagerAdapter.addFragment(TripEntriesTabFragment(args.tripID))

@@ -28,7 +28,7 @@ class TripImagesTabFragment(tripID: Int) : Fragment() {
 
         val binding = DataBindingUtil.inflate<FragmentTripImagesTabBinding>(inflater,
             R.layout.fragment_trip_images_tab, container, false)
-        viewModel = ViewModelProvider(this)[TravelViewModel::class.java]
+        viewModel = ViewModelProvider(requireActivity())[TravelViewModel::class.java]
         val numberOfColumns = 4
         val mRecyclerView = binding.contentCamera.gridRecyclerView
         mRecyclerView.layoutManager = GridLayoutManager(activity, numberOfColumns)

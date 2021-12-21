@@ -25,6 +25,8 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
         initSearchResults()
         //Initializes the allTrips observable to contain all the trips in the database
         updateAllTripsObservable()
+
+        //initOnGoingTrip()
     }
 
     //Separate constructor to allow passing a different repository. For testing
@@ -32,6 +34,7 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
         mRepository = repository
     }
 
+    val someRandomINTHALL = 5
 
     private val _searchResults  = MutableLiveData<MutableList<ImageData>>()
     /**
@@ -69,11 +72,14 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
      */
     private fun initSearchResults()
     {
+        Log.d("TravelViewModel", "LastGuyWhoLaunched the coroutine in initSearchResults",Exception("ShowMeStackTrace"))
         viewModelScope.launch(Dispatchers.IO){
             val allImages = mRepository.getAllImages(OrderBy.NOPARTICULARORDER) ?: ArrayList<ImageData>()
             Log.d("TravelViewModel", "This is what is in allImages:${allImages.toString()}")
             Log.d("TravelViewModel", "SearchResults variable:${_searchResults.toString()}")
-            _searchResults.postValue(allImages as MutableList<ImageData>)
+            if(isActive) {
+                _searchResults.postValue(allImages as MutableList<ImageData>)
+            }
         }
     }
 
@@ -162,6 +168,20 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
             }
             _entriesOfTrip.postValue(updatedList)
         }
+    }
+
+    private val _onGoingTrip = MutableLiveData<Int>()
+    /**
+     * Observable list of images that contains images for a particular entry.
+     *
+     * @see updateImagesOfEntry
+     */
+    val onGoingTrip : LiveData<Int>
+        get() = _onGoingTrip
+
+    fun initOnGoingTrip()
+    {
+        _onGoingTrip.value = -1
     }
 
 

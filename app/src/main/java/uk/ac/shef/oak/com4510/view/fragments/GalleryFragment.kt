@@ -28,6 +28,7 @@ class GalleryFragment : Fragment() {
     private var orderSwitchToggleValue : Boolean = false
     private var viewModel: TravelViewModel? = null
 
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -37,7 +38,7 @@ class GalleryFragment : Fragment() {
             R.layout.fragment_gallery, container, false)
 
 
-        viewModel = ViewModelProvider(this)[TravelViewModel::class.java]
+        viewModel = ViewModelProvider(requireActivity())[TravelViewModel::class.java]
 
         //Binding recycler view to adapter
         val mRecyclerView = binding.contentCamera.gridRecyclerView
@@ -74,11 +75,11 @@ class GalleryFragment : Fragment() {
         })
 
         //Observing searchResults object in the view model
-        viewModel!!.searchResults.observe(this, { images ->
+        viewModel!!.searchResults.observe(viewLifecycleOwner, { images ->
+            Log.d("GalleryFragment","HowManyObservers")
             ImagesAdapter.items = images as MutableList<ImageData>
             mAdapter.notifyDataSetChanged()
         })
-
 
         return binding.root
     }
