@@ -44,12 +44,22 @@ class TravelViewModel (application: Application) : AndroidViewModel(application)
     val onGoingTrip : LiveData<Int>
         get() = _onGoingTrip
 
+    /**
+     * Given an tripID, set the ongoing trip.
+     *
+     * @param tripID the id of the ongoing trip
+     */
     fun setOnGoingTrip(tripID: Int)
     {
         _onGoingTrip.value = tripID
         Log.d("TravelViewModel", "onGoingTrip variable:${_onGoingTrip.value}")
     }
 
+    /**
+     * Returns tripID of the ongoing trip.
+     *
+     * @return tripID the id of the ongoing trip
+     */
     fun getOnGoingTrip() : Int
     {
         return _onGoingTrip.value!!

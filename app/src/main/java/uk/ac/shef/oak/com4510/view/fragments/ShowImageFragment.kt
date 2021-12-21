@@ -17,7 +17,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import uk.ac.shef.oak.com4510.R
 import uk.ac.shef.oak.com4510.databinding.FragmentShowImageBinding
-import uk.ac.shef.oak.com4510.view.adapters.ImagesAdapter
 import uk.ac.shef.oak.com4510.viewModel.TravelViewModel
 import java.text.SimpleDateFormat
 import java.util.*

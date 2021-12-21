@@ -1,10 +1,7 @@
 package uk.ac.shef.oak.com4510.view.fragments
 
-import android.annotation.SuppressLint
 import android.app.PendingIntent
-import android.content.Context
 import android.content.Intent
-import android.location.Location
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -19,7 +16,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -32,7 +28,6 @@ import uk.ac.shef.oak.com4510.R
 import uk.ac.shef.oak.com4510.databinding.FragmentTravellingBinding
 import uk.ac.shef.oak.com4510.service.LocationService
 import uk.ac.shef.oak.com4510.util.decodeSampledBitmapFromResource
-import uk.ac.shef.oak.com4510.view.adapters.ImagesAdapter
 import uk.ac.shef.oak.com4510.viewModel.TravelViewModel
 
 /**
